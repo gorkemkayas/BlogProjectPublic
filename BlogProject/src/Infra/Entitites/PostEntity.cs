@@ -15,5 +15,8 @@ namespace BlogProject.src.Infra.Entitites
 
         public Guid AuthorId { get; set; }
         public UserEntity Author { get; set; }
+
+        public Guid CommentId { get; set; }
+        public virtual ICollection<CommentEntity> Comments { get; set; }
     }
 }

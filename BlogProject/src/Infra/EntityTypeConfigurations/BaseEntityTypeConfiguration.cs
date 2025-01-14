@@ -13,6 +13,7 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.Property(e => e.CreatedTime)
                    .HasColumnType("datetime2")
                    .IsRequired();
+
             builder.Property(e => e.ModifiedTime)
                    .HasColumnType("datetime2")
                    .IsRequired(false);
