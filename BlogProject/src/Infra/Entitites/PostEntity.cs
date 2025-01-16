@@ -16,7 +16,12 @@ namespace BlogProject.src.Infra.Entitites
         public Guid AuthorId { get; set; }
         public UserEntity Author { get; set; }
 
-        public Guid CommentId { get; set; }
+        public Guid CategoryId { get; set; }
+        public virtual CategoryEntity Category { get; set; }
+
+        //public Guid CommentId { get; set; }
         public virtual ICollection<CommentEntity> Comments { get; set; }
+        
+        public virtual ICollection<LikeEntity> Likes { get; set; }
     }
 }
