@@ -1,4 +1,5 @@
 ﻿using BlogProject.src.Infra.Entitites.Base;
+using BlogProject.src.Infra.Entitites.PartialEntities;
 
 namespace BlogProject.src.Infra.Entitites
 {
@@ -9,18 +10,5 @@ namespace BlogProject.src.Infra.Entitites
 
         public Guid UserId { get; set; }
         public UserEntity User { get; set; }
-    }
-
-    public enum Theme
-    {
-        Light = 0,
-        Dark = 1,
-        System = 2
-    }
-    public enum NotificationPreferences
-    {
-        OnlyUser = 0,
-        OnlyPost = 1,
-        All = 2
     }
 }

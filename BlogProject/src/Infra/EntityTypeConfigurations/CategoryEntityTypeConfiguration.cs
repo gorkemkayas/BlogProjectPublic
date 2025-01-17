@@ -22,6 +22,10 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.Property(e => e.IsDraft)
                    .HasDefaultValue(false);
 
+            builder.HasMany(c => c.Posts)
+                   .WithOne(p => p.Category)
+                   .HasForeignKey(f => f.CategoryId);
+
             base.Configure(builder);
         }
     }

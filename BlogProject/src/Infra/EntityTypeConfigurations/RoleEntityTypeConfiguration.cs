@@ -7,6 +7,10 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
     {
         public override void Configure(EntityTypeBuilder<RoleEntity> builder)
         {
+            builder.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(25);
+
             //RoleId
             builder.Property(e => e.UserId)
                    .IsRequired();

@@ -19,5 +19,6 @@ namespace BlogProject.src.Infra.Entitites
         public virtual UserEntity Author { get; set; }
 
         public virtual ICollection<CommentEntity>? Replies { get; set; }
+        public virtual ICollection<LikeEntity>? Likes { get; set; }
     }
 }

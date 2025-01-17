@@ -13,14 +13,10 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
                    .IsRequired()
                    .HasMaxLength(20);
 
-            builder.HasCheckConstraint("CK_Username_MinLength", "LEN(Username) >=5");
-
             // Email
             builder.Property(e => e.Email)
                    .IsRequired()
                    .HasMaxLength(50);
-
-            builder.HasCheckConstraint("CK_Email_EndsWith", "Email LIKE '%.com' AND Email LIKE '%@%'");
 
             // Password
             builder.Property(e => e.Password)

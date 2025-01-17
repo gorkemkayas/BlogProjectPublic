@@ -1,4 +1,5 @@
 ﻿using BlogProject.src.Infra.Entitites.Base;
+using BlogProject.src.Infra.Entitites.PartialEntities;
 
 namespace BlogProject.src.Infra.Entitites
 {
@@ -10,13 +11,5 @@ namespace BlogProject.src.Infra.Entitites
 
         public Guid UserId { get; set; }
         public UserEntity User { get; set; }
-    }
-
-    public enum NotificationType
-    {
-        FromUser = 0,
-        FromPost = 1,
-        FromSystem = 2,
-
     }
 }

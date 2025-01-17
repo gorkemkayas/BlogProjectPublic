@@ -12,7 +12,8 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
 
             builder.Property(e => e.CreatedTime)
                    .HasColumnType("datetime2")
-                   .IsRequired();
+                   .IsRequired()
+                   .HasDefaultValueSql("GETUTCDATE()");
 
             builder.Property(e => e.ModifiedTime)
                    .HasColumnType("datetime2")

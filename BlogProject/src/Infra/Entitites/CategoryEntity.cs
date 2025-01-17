@@ -8,6 +8,7 @@ namespace BlogProject.src.Infra.Entitites
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsDraft { get; set; }
+        public virtual ICollection<PostEntity>? Posts { get; set; }
 
     }
 }

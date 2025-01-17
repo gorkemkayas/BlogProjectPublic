@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Data;
 using BlogProject.src.Infra.Entitites.Base;
+using BlogProject.src.Infra.Entitites.PartialEntities;
 
 namespace BlogProject.src.Infra.Entitites
 {
@@ -12,17 +13,10 @@ namespace BlogProject.src.Infra.Entitites
 
         public byte[] RowVersion { get; set; }
         public Guid UserId { get; set; }
-        public UserEntity User { get; set; }
+        public virtual UserEntity User { get; set; }
 
-    }
-    public enum Currency
-    {
-        TurkishLira = 0,
-        Euro = 1,
-        Dollar = 2,
-        Dinar = 3,
-        BTC = 4,
-        DogeCoin = 5
+        public virtual ICollection<TransactionEntity>? TransactionEntities { get; set; }
+
     }
 
 }

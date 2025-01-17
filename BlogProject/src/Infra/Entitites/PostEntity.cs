@@ -5,12 +5,12 @@ namespace BlogProject.src.Infra.Entitites
 {
     public class PostEntity : BaseEntity
     {
-        public string Title { get; set; } = null!;
+        public string Title { get; set; }
         public string? Subtitle { get; set; }
-        public string Content { get; set; } = null!;
+        public string Content { get; set; }
         public string? SubContent { get; set; }
         public string? CoverImageUrl { get; set; }
-        public bool isDraft { get; set; } = false;
+        public bool IsDraft { get; set; }
         public int ViewCount { get; set; }
 
         public Guid AuthorId { get; set; }
@@ -20,8 +20,13 @@ namespace BlogProject.src.Infra.Entitites
         public virtual CategoryEntity Category { get; set; }
 
         //public Guid CommentId { get; set; }
-        public virtual ICollection<CommentEntity> Comments { get; set; }
+        public virtual ICollection<CommentEntity>? Comments { get; set; }
         
-        public virtual ICollection<LikeEntity> Likes { get; set; }
+        public virtual ICollection<LikeEntity>? Likes { get; set; }
+        public virtual ICollection<ShareEntity>? Shares { get; set; }
+
+        public virtual ICollection<ReportEntity>? Reports { get; set; }
+
+        public virtual ICollection<PostTagEntity>? TagPosts { get; set; }
     }
 }

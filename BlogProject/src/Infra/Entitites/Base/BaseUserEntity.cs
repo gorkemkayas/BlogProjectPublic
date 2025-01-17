@@ -12,8 +12,8 @@
         public string Country { get; set; }
         public DateTime BirthDate { get; set; }
 
-        public string ProfilePicture { get; set; }
-        public string CoverImagePicture { get; set; }
+        public string? ProfilePicture { get; set; }
+        public string? CoverImagePicture { get; set; }
 
         public int FollowersCount { get; set; } = 0;
         public int FollowingCount { get; set; } = 0;
