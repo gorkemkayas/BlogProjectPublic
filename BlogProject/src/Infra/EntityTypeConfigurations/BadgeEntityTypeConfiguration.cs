@@ -19,6 +19,9 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
 
             builder.Property(e => e.CreatedDate)
                    .HasDefaultValueSql("GETUTCDATE()");
+
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
         }
     }
 }

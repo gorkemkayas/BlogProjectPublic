@@ -9,10 +9,13 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<PaymentMethodEntity> builder)
         {
             builder.HasKey(e => e.Id);
-            
+
             builder.Property(e => e.Details)
                    .HasMaxLength(500)
                    .IsRequired();
+
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
 
             builder.Property(e => e.IsDefault).HasDefaultValue(false);
 

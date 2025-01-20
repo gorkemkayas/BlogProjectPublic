@@ -21,19 +21,19 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.HasOne(c => c.Post)
                    .WithMany(p => p.Comments)
                    .HasForeignKey(f => f.PostId)
-                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Cascade);
+                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Restrict);
 
             // Author - Comment Relation
             builder.HasOne(c => c.Author)
                    .WithMany(a => a.Comments)
                    .HasForeignKey(f => f.AuthorId)
-                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Cascade);
+                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Restrict);
 
             // ParentComment - Comment Relation
             builder.HasOne(c => c.ParentComment)
                    .WithMany(pc => pc.Replies)
                    .HasForeignKey(f => f.ParentCommentId)
-                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Cascade);
+                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Restrict);
 
 
             base.Configure(builder);

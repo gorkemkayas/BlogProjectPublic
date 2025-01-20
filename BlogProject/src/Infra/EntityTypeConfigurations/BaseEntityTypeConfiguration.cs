@@ -18,6 +18,9 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.Property(e => e.ModifiedTime)
                    .HasColumnType("datetime2")
                    .IsRequired(false);
+
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
         }
     }
 }

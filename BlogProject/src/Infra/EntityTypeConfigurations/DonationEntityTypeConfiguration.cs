@@ -23,16 +23,22 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.Property(e => e.Status)
                   .IsRequired();
 
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
+
             builder.Property(e => e.CreatedTime)
                    .HasDefaultValueSql("GETUTCDATE()");
 
             builder.HasOne(d => d.Receiver)
                    .WithMany(r => r.ReceivedDonations)
-                   .HasForeignKey(f => f.ReceiverId);
+                   .HasForeignKey(f => f.ReceiverId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(d => d.Sender)
                    .WithMany(s => s.SendedDonations)
-                   .HasForeignKey(f => f.SenderId);
+                   .HasForeignKey(f => f.SenderId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

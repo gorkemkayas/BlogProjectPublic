@@ -8,5 +8,7 @@ namespace BlogProject.src.Infra.Entitites
         public BadgeType BadgeType { get; set; }
         public DateTime CreatedDate { get; set; }
         public virtual ICollection<BadgeUserEntity>? BadgeUsers { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

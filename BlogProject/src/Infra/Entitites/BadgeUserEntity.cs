@@ -11,5 +11,7 @@
 
 
         public DateTime AwardDate { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

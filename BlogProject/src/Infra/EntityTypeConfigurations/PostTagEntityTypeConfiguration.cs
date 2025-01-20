@@ -10,6 +10,9 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
         {
             builder.HasKey(k => new {k.PostId,k.TagId});
 
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
+
             builder.Property(e => e.AssignedDate)
                    .HasDefaultValueSql("GETUTCDATE()");
 

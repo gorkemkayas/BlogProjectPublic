@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="src\Infra\Context\" />
     <Folder Include="src\Infra\DataGenerators\" />
     <Folder Include="src\Infra\Interceptors\" />
     <Folder Include="src\Infra\Repositories\" />

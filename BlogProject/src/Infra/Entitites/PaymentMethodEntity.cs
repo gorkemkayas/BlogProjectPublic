@@ -11,6 +11,8 @@ namespace BlogProject.src.Infra.Entitites
 
         public Guid DonationId { get; set; }
         public virtual DonationEntity Donation { get; set; }
-        
+
+        public bool IsDeleted { get; set; }
+
     }
 }

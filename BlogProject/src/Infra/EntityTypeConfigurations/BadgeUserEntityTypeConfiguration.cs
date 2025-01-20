@@ -20,6 +20,9 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.HasOne(e => e.User)
                    .WithMany(u => u.BadgeUsers)
                    .HasForeignKey(f => f.UserId);
+
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
         }
     }
 }

@@ -10,6 +10,9 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
         {
             builder.HasKey(k => new { k.FollowerId, k.FollowingId });
 
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
+
             builder.Property(e => e.IsActive).HasDefaultValue(false);
 
             builder.Property(e => e.SubscriptionDate)

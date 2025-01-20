@@ -35,7 +35,7 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.HasOne(e => e.Author)
                    .WithMany(a => a.Posts)
                    .HasForeignKey(f => f.AuthorId)
-                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Cascade);
+                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Restrict);
 
             base.Configure(builder);
         }

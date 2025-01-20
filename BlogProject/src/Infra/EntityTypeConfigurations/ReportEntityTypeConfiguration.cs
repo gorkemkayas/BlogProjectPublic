@@ -17,17 +17,17 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.HasOne(e => e.ReporterUser)
                    .WithMany(r => r.CreatedReports)
                    .HasForeignKey(e => e.ReporterId)
-                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.SetNull);
+                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.ReportedUser)
                    .WithMany(ru => ru.ReceivedReports)
                    .HasForeignKey(f => f.ReporteduserId)
-                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.SetNull);
+                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.ReportedPost)
                    .WithMany(rp => rp.Reports)
                    .HasForeignKey(f => f.ReportedPostId)
-                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Cascade);
+                   .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Restrict);
 
             base.Configure(builder);
         }

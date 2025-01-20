@@ -17,16 +17,21 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.Property(e => e.IsRead)
                    .HasDefaultValue(false);
 
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
+
             builder.Property(e => e.SentDate)
                 .HasDefaultValueSql("GETUTCDATE()");
 
             builder.HasOne(e => e.Sender)
                    .WithMany(s => s.SentMessages)
-                   .HasForeignKey(e => e.SenderId);
+                   .HasForeignKey(e => e.SenderId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.Receiver)
                    .WithMany(r => r.ReceivedMessages)
-                   .HasForeignKey(f => f.ReceiverId);
+                   .HasForeignKey(f => f.ReceiverId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

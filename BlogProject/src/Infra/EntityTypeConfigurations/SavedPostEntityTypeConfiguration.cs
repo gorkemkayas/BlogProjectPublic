@@ -10,6 +10,9 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
         {
             builder.HasKey(e => e.Id);
 
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
+
             builder.Property(e => e.SavedDate)
                 .IsRequired()
                 .HasDefaultValueSql("GETUTCDATE()");

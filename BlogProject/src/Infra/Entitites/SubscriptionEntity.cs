@@ -7,11 +7,13 @@
 
         public bool IsActive { get; set; }
 
-        public UserEntity FollowerId { get; set; }
+        public Guid FollowerId { get; set; }
         public UserEntity Follower {  get; set; }
 
-        public UserEntity FollowingId { get; set; }
+        public Guid FollowingId { get; set; }
         public UserEntity Following { get; set; }
+
+        public bool IsDeleted { get; set; }
 
     }
 }
