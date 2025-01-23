@@ -26,7 +26,11 @@ namespace BlogProject.src.Infra.Entitites
         public virtual ICollection<FollowEntity>? Followers { get; set; } // Kullanıcıyı takip edenler
         public virtual ICollection<FollowEntity>? Followings { get; set; } // Kullanıcının takip ettikleri
 
+
+        [InverseProperty("Following")]
         public virtual ICollection<SubscriptionEntity>? Subscriptions { get; set; }
+
+        [InverseProperty("Follower")]
         public virtual ICollection<SubscriptionEntity>? Subscribers { get; set; }
 
         public virtual ICollection<DonationEntity>? SendedDonations { get; set; }

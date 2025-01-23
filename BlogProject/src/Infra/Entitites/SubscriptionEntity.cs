@@ -1,4 +1,6 @@
-﻿namespace BlogProject.src.Infra.Entitites
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BlogProject.src.Infra.Entitites
 {
     public class SubscriptionEntity
     {

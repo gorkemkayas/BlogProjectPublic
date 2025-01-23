@@ -1,5 +1,7 @@
-﻿using BlogProject.src.Infra.Entitites;
+﻿using BlogProject.src.Infra.Context;
+using BlogProject.src.Infra.Entitites;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace BlogProject.src.Infra.Context
 {
@@ -46,21 +48,30 @@ namespace BlogProject.src.Infra.Context
 
             base.OnModelCreating(modelBuilder);
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (optionsBuilder.IsConfigured)
-                return;
-
-            var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            var connString = configuration.GetConnectionString("SqlServer");
-
-            optionsBuilder.UseSqlServer(connString, options =>
+            optionsBuilder.UseAsyncSeeding(async (BlogDbContext, _, ct) =>
             {
-                options.CommandTimeout(5_000);
-                options.EnableRetryOnFailure(5);
+                await DataGenerators.DataGenerators.SeedDatabaseAsync(BlogDbContext, _, ct);
             });
-
-
         }
+    }
+}
+public class DbContextFactory : IDesignTimeDbContextFactory<BlogDbContext>
+{
+    public BlogDbContext CreateDbContext(string[] args)
+    {
+        var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+        var connString = configuration.GetConnectionString("SqlServer");
+
+        var optionsBuilder = new DbContextOptionsBuilder<BlogDbContext>();
+        optionsBuilder.UseSqlServer(connString, options =>
+        {
+            options.CommandTimeout(5_000);
+            options.EnableRetryOnFailure(5);
+        });
+
+        return new BlogDbContext(optionsBuilder.Options);
     }
 }

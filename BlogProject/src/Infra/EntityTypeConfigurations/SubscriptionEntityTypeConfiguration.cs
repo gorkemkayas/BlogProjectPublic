@@ -20,11 +20,13 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
 
             builder.HasOne(s => s.Follower)
                    .WithMany(f => f.Subscribers)
-                   .HasForeignKey(s => s.FollowerId);
+                   .HasForeignKey(s => s.FollowerId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(s => s.Following)
                    .WithMany(f => f.Subscriptions)
-                   .HasForeignKey(n => n.FollowingId);
+                   .HasForeignKey(n => n.FollowingId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
