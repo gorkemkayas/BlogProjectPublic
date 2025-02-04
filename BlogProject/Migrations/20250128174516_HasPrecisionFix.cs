@@ -5,7 +5,7 @@
 namespace BlogProject.Migrations
 {
     /// <inheritdoc />
-    public partial class CheckDbConfextFactoryEffectonmİG : Migration
+    public partial class HasPrecisionFix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

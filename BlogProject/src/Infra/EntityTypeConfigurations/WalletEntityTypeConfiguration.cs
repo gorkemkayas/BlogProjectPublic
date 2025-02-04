@@ -11,7 +11,8 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             // Balance
             builder.Property(e => e.Balance)
                 .IsRequired()
-                .HasDefaultValue(0);
+                .HasDefaultValue(0)
+                .HasPrecision(18, 2);
 
             // Currency
             builder.Property(e => e.Currency)

@@ -1,0 +1,129 @@
+dbug: 1/28/2025 17:10:14.709 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'DonationEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'Receiver', 'Sender'} that could be matched with the properties on the other entity type - {'ReceivedDonations', 'SendedDonations'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.714 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'FollowEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'Follower', 'Following'} that could be matched with the properties on the other entity type - {'Followers', 'Followings'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.715 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'MessageEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'Receiver', 'Sender'} that could be matched with the properties on the other entity type - {'ReceivedMessages', 'SentMessages'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.726 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'ReportEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'ReportedUser', 'ReporterUser'} that could be matched with the properties on the other entity type - {'CreatedReports', 'ReceivedReports'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.730 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'SubscriptionEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'Follower', 'Following'} that could be matched with the properties on the other entity type - {'Subscribers', 'Subscriptions'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.735 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.735 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'FollowEntity' has been configured by convention because there are multiple properties on one entity type - {'Followers', 'Followings'} that could be matched with the properties on the other entity type - {'Follower', 'Following'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.735 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'DonationEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedDonations', 'SendedDonations'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.735 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'MessageEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedMessages', 'SentMessages'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.735 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'SubscriptionEntity' has been configured by convention because there are multiple properties on one entity type - {'Subscribers'} that could be matched with the properties on the other entity type - {'Follower'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.736 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'SubscriptionEntity' has been configured by convention because there are multiple properties on one entity type - {'Subscriptions'} that could be matched with the properties on the other entity type - {'Following'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.781 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.781 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'FollowEntity' has been configured by convention because there are multiple properties on one entity type - {'Followers', 'Followings'} that could be matched with the properties on the other entity type - {'Follower', 'Following'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.781 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'DonationEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedDonations', 'SendedDonations'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.781 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'MessageEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedMessages', 'SentMessages'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.811 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'DonationEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'Receiver', 'Sender'} that could be matched with the properties on the other entity type - {'ReceivedDonations', 'SendedDonations'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.811 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.811 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'FollowEntity' has been configured by convention because there are multiple properties on one entity type - {'Followers', 'Followings'} that could be matched with the properties on the other entity type - {'Follower', 'Following'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.811 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'DonationEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedDonations', 'SendedDonations'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.811 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'MessageEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedMessages', 'SentMessages'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.812 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.812 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'FollowEntity' has been configured by convention because there are multiple properties on one entity type - {'Followers', 'Followings'} that could be matched with the properties on the other entity type - {'Follower', 'Following'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.812 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'MessageEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedMessages', 'SentMessages'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.814 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'FollowEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'Follower', 'Following'} that could be matched with the properties on the other entity type - {'Followers', 'Followings'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.814 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.814 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'FollowEntity' has been configured by convention because there are multiple properties on one entity type - {'Followers', 'Followings'} that could be matched with the properties on the other entity type - {'Follower', 'Following'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.814 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'MessageEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedMessages', 'SentMessages'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.815 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.815 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'MessageEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedMessages', 'SentMessages'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.819 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'MessageEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'Receiver', 'Sender'} that could be matched with the properties on the other entity type - {'ReceivedMessages', 'SentMessages'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.819 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.819 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'MessageEntity' has been configured by convention because there are multiple properties on one entity type - {'ReceivedMessages', 'SentMessages'} that could be matched with the properties on the other entity type - {'Receiver', 'Sender'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.820 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.825 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'ReportEntity' to 'UserEntity' has been configured by convention because there are multiple properties on one entity type - {'ReportedUser', 'ReporterUser'} that could be matched with the properties on the other entity type - {'CreatedReports', 'ReceivedReports'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+dbug: 1/28/2025 17:10:14.826 CoreEventId.MultipleNavigationProperties[10607] (Microsoft.EntityFrameworkCore.Model) 
+      No relationship from 'UserEntity' to 'ReportEntity' has been configured by convention because there are multiple properties on one entity type - {'CreatedReports', 'ReceivedReports'} that could be matched with the properties on the other entity type - {'ReportedUser', 'ReporterUser'}. This message can be disregarded if explicit configuration has been specified in 'OnModelCreating'.
+warn: 1/28/2025 17:10:14.926 RelationalEventId.BoolWithDefaultWarning[20601] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The 'Status' property 'Status' on entity type 'TransactionEntity' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value 'Rejected', since this is the CLR default for the 'Status' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+warn: 1/28/2025 17:10:14.933 SqlServerEventId.DecimalTypeDefaultWarning[30000] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      No store type was specified for the decimal property 'Amount' on entity type 'DonationEntity'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: 1/28/2025 17:10:14.933 SqlServerEventId.DecimalTypeDefaultWarning[30000] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      No store type was specified for the decimal property 'Amount' on entity type 'TransactionEntity'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: 1/28/2025 17:10:14.933 SqlServerEventId.DecimalTypeDefaultWarning[30000] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      No store type was specified for the decimal property 'Balance' on entity type 'WalletEntity'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+dbug: 1/28/2025 17:10:14.970 CoreEventId.ContextInitialized[10403] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      Entity Framework Core 9.0.0 initialized 'BlogDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:9.0.0' with options: EngineType=SqlServer 
+dbug: 1/28/2025 17:10:14.976 RelationalEventId.ConnectionCreating[20005] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Creating DbConnection.
+dbug: 1/28/2025 17:10:14.993 RelationalEventId.ConnectionCreated[20006] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Created DbConnection. (15ms).
+dbug: 1/28/2025 17:10:14.993 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opening connection to database 'BlogProject' on server 'KAYAS'.
+dbug: 1/28/2025 17:10:15.074 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opened connection to database 'BlogProject' on server 'KAYAS'.
+dbug: 1/28/2025 17:10:15.076 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Creating DbCommand for 'ExecuteNonQuery'.
+dbug: 1/28/2025 17:10:15.078 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Created DbCommand for 'ExecuteNonQuery' (1ms).
+dbug: 1/28/2025 17:10:15.078 RelationalEventId.CommandInitialized[20106] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Initialized DbCommand for 'ExecuteNonQuery' (3ms).
+dbug: 1/28/2025 17:10:15.080 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executing DbCommand [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+info: 1/28/2025 17:10:15.090 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+dbug: 1/28/2025 17:10:15.090 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closing connection to database 'BlogProject' on server 'KAYAS'.
+dbug: 1/28/2025 17:10:15.093 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closed connection to database 'BlogProject' on server 'KAYAS' (1ms).
+dbug: 1/28/2025 17:10:15.093 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Creating DbCommand for 'ExecuteScalar'.
+dbug: 1/28/2025 17:10:15.093 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Created DbCommand for 'ExecuteScalar' (0ms).
+dbug: 1/28/2025 17:10:15.094 RelationalEventId.CommandInitialized[20106] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Initialized DbCommand for 'ExecuteScalar' (0ms).
+dbug: 1/28/2025 17:10:15.094 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opening connection to database 'BlogProject' on server 'KAYAS'.
+dbug: 1/28/2025 17:10:15.094 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opened connection to database 'BlogProject' on server 'KAYAS'.
+dbug: 1/28/2025 17:10:15.094 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executing DbCommand [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+info: 1/28/2025 17:10:15.103 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+dbug: 1/28/2025 17:10:15.103 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closing connection to database 'BlogProject' on server 'KAYAS'.
+dbug: 1/28/2025 17:10:15.103 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closed connection to database 'BlogProject' on server 'KAYAS' (0ms).
+dbug: 1/28/2025 17:10:15.107 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opening connection to database 'BlogProject' on server 'KAYAS'.
+dbug: 1/28/2025 17:10:15.107 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opened connection to database 'BlogProject' on server 'KAYAS'.
+dbug: 1/28/2025 17:10:15.107 RelationalEventId.CommandCreating[20103] (Microsoft.Entity

@@ -2,6 +2,7 @@
 using BlogProject.src.Infra.Entitites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Diagnostics;
 
 namespace BlogProject.src.Infra.Context
 {
@@ -46,18 +47,28 @@ namespace BlogProject.src.Infra.Context
             modelBuilder.HasDefaultSchema("ef");
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BlogDbContext).Assembly, predicate => predicate.Namespace == "BlogProject.src.Infra.EntityTypeConfigurations");
 
+
+            // Daha sonra global query filter in tüm entityler için olan hali eklenecek.
+            modelBuilder.Entity<PostEntity>().HasQueryFilter(p => !p.IsDeleted);
+
+
             base.OnModelCreating(modelBuilder);
         }
 
+        private readonly StreamWriter _logStream = new StreamWriter("mylog.txt", append: true);
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseAsyncSeeding(async (BlogDbContext, _, ct) =>
-            {
-                await DataGenerators.DataGenerators.SeedDatabaseAsync(BlogDbContext, _, ct);
-            });
+            //optionsBuilder.UseAsyncSeeding(async (BlogDbContext, _, ct) =>
+            //{
+            //    await DataGenerators.DataGenerators.SeedDatabaseAsync(BlogDbContext, _, ct);
+            //});
+
+            optionsBuilder.LogTo(m => Debug.WriteLine(m),LogLevel.Warning);
+            
         }
     }
 }
+
 public class DbContextFactory : IDesignTimeDbContextFactory<BlogDbContext>
 {
     public BlogDbContext CreateDbContext(string[] args)

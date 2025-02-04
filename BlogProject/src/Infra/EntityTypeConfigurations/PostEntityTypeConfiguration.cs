@@ -26,7 +26,7 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             // CoverImageUrl
             
             // IsDraft
-            builder.Property(e => e.IsDraft).HasDefaultValue(true);
+            builder.Property(e => e.IsDraft).HasDefaultValue(false);
 
             // ViewCount
             builder.Property(e => e.ViewCount).HasDefaultValue(0);

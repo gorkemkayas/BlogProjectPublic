@@ -11,7 +11,8 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
         {
             // Amount
             builder.Property(e => e.Amount)
-                   .IsRequired();
+                   .IsRequired()
+                   .HasPrecision(18, 2);
 
             // Status
             builder.Property(e => e.Status)

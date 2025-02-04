@@ -1,6 +1,6 @@
 ﻿namespace BlogProject.src.Infra.Entitites.Base
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         public Guid Id { get; set; }
         public DateTime CreatedTime { get; set; }

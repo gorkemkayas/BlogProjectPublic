@@ -15,7 +15,8 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
                    .HasMaxLength(500);
 
             builder.Property(e => e.Amount)
-                   .IsRequired();
+                   .IsRequired()
+                   .HasPrecision(18, 2); ;
 
             builder.Property(e => e.Currency)
                    .IsRequired();

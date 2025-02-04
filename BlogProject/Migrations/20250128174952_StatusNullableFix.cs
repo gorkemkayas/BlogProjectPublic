@@ -5,7 +5,7 @@
 namespace BlogProject.Migrations
 {
     /// <inheritdoc />
-    public partial class CheckMigration : Migration
+    public partial class StatusNullableFix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
