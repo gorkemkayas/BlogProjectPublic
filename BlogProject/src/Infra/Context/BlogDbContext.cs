@@ -1,5 +1,6 @@
 ﻿using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
+using BlogProject.src.Infra.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System.Diagnostics;
@@ -33,6 +34,7 @@ namespace BlogProject.src.Infra.Context
         public DbSet<UserMemberShipEntity> UserMemberShips { get; set; }
         public DbSet<WalletEntity> Wallets { get; set; }
 
+        public DbSet<AuditLogEntity> AuditLogs { get; set; }
         public BlogDbContext(DbContextOptions options) : base(options)
         {
 
@@ -55,7 +57,7 @@ namespace BlogProject.src.Infra.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        private readonly StreamWriter _logStream = new StreamWriter("mylog.txt", append: true);
+        //private readonly StreamWriter _logStream = new StreamWriter("BlogDbLogs.txt", append: true);
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseAsyncSeeding(async (BlogDbContext, _, ct) =>
@@ -64,6 +66,7 @@ namespace BlogProject.src.Infra.Context
             //});
 
             optionsBuilder.LogTo(m => Debug.WriteLine(m),LogLevel.Warning);
+            optionsBuilder.AddInterceptors(new AuditLogInterceptor());
             
         }
     }

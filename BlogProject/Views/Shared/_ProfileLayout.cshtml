@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApplication1</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+
+    @* FontAwesome *@
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+    <style>
+        header, main, footer {
+            max-width: 1200px; /* Maksimum genişlik */
+            margin: 0 auto; /* Merkezi hizalama */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 29px;
+            color: black !important;
+        }
+        
+        </style>
+
+</head>
+<body>
+    <header class="lh-1 py-3">
+        <!-- Üst Navbar -->
+        <div class="container">
+
+        </div>
+    </header>
+
+    <main class="flex-grow-1">
+        <div class="container mt-4">
+            <!-- Genişlik header ile uyumlu -->
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="bg-white py-3 border-top shadow-sm">
+        <div class="container d-flex justify-content-center">
+            <span class="text-muted">It will be <span class="text-danger">hard</span>,but I can do.</span>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,8 +1,12 @@
 ﻿
-body{
+body {
     font-family: "Pirata One", serif;
     font-weight: 400;
     font-style: normal;
+    /*font-family: "Oswald", serif;
+    font-optical-sizing: auto;
+    font-weight: <200>;
+    font-style: normal;*/
 }
 
 .nav-item{

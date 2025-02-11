@@ -163,15 +163,25 @@ namespace BlogProject.Services.Concrete
         {
             var totalPosts = await _blogDbContext.Posts.CountAsync();
 
-            var pagePosts = await _blogDbContext.Posts
+            var query = _blogDbContext.Posts;
+
+            var pagePosts = isDescending
+                ? 
+                query
                 .OrderByDescending(p => p.CreatedTime)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync()
+                : 
+                query.OrderBy(p => p.CreatedTime)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
+
             return new PaginationResult<PostEntity>
             {
-                Posts = pagePosts,
+                Posts = await pagePosts,
                 CurrentPage = page,
                 PageSize = pageSize,
                 TotalCount = totalPosts

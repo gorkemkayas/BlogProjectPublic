@@ -1,6 +1,11 @@
-﻿using BlogProject.Services.DTOs.MappingProfile;
+﻿using BlogProject.Services.Abstract;
+using BlogProject.Services.Concrete;
+using BlogProject.Services.DTOs.MappingProfile;
 using BlogProject.src.Infra.Context;
+using BlogProject.src.Infra.Entitites;
+using BlogProject.src.Infra.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,20 +17,24 @@ builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")), ServiceLifetime.Scoped);
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
+builder.Services.AddScoped<IPostService, PostService>();
 
 
 
 var app = builder.Build();
 
+
+
 //bekleyen migrationları otomatik veritabanına göndermek için.
 using (var scope = app.Services.CreateScope())
 {
+
     var services = scope.ServiceProvider;
 
     try
     {
         var dbContext = services.GetRequiredService<BlogDbContext>();
+
 
         if (dbContext.Database.GetPendingMigrations().Any())
         {

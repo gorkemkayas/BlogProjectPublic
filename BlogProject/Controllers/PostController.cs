@@ -14,9 +14,8 @@ namespace BlogProject.Controllers
 
         public IActionResult Index()
         {
-            var userPosts = _postService.GetPostsByAuthorIdAsync("4234324-23423--324234--324324",true);
 
-            return View(userPosts);
+            return View();
         }
     }
 }
