@@ -16,7 +16,7 @@ namespace BlogProject.src.Infra.Entitites
         public virtual CommentEntity? ParentComment { get; set; }
 
         public Guid AuthorId { get; set; }
-        public virtual UserEntity Author { get; set; }
+        public virtual AppUser Author { get; set; }
 
         public virtual ICollection<CommentEntity>? Replies { get; set; }
         public virtual ICollection<LikeEntity>? Likes { get; set; }

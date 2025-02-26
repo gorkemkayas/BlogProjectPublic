@@ -4,25 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BlogProject.src.Infra.EntityTypeConfigurations
 {
-    public class BaseUserEntityTypeConfiguration<TEntity> : BaseEntityTypeConfiguration<TEntity> where TEntity : BaseUserEntity
+    public class BaseUserEntityTypeConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : BaseUserEntity
     {
-        public override void Configure(EntityTypeBuilder<TEntity> builder)
+        public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
-            // Username
-            builder.Property(e => e.Username)
-                   .IsRequired()
-                   .HasMaxLength(20);
-
-            // Email
-            builder.Property(e => e.Email)
-                   .IsRequired()
-                   .HasMaxLength(50);
-
-            // Password
-            builder.Property(e => e.Password)
-                   .IsRequired()
-                   .HasMaxLength(50)
-                   .HasColumnType("nvarchar(64)");
 
             // Title
             builder.Property(e => e.Title)
@@ -61,10 +46,12 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             builder.Property(e => e.NotificationCount)
                 .HasDefaultValue(0);
 
+            // IsDeleted
+            builder.Property(e => e.IsDeleted)
+                   .HasDefaultValue(false);
+
             // ProfilePicture
             // CoverImagePicture
-
-            base.Configure(builder);
         }
     }
 }

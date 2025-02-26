@@ -5,7 +5,7 @@
 namespace BlogProject.Migrations
 {
     /// <inheritdoc />
-    public partial class StatusNullableFix : Migration
+    public partial class AppUserRegisterDateUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

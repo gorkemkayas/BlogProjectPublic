@@ -1,24 +1,44 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using BlogProject.src.Infra.Entitites.Base;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlogProject.src.Infra.Entitites
 {
-    public class UserEntity : BaseUserEntity
+    public class AppUser : IdentityUser<Guid>
     {
-        public Guid RoleId { get; set; }
-        public RoleEntity Role { get; set; }
+        public string Name { get; set; } = null!;
+        public string Surname { get; set; } = null!;
+
+        public string FullName { get { return Name + " " + Surname; } }
+        public string? Title { get; set; }
+        public string? Bio { get; set; }
+        public string? WorkingAt { get; set; }
+
+        public string? Country { get; set; }
+        public DateTime BirthDate { get; set; }
+
+        public DateTime? RegisteredDate { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+
+        public string? ProfilePicture { get; set; }
+        public string? CoverImagePicture { get; set; }
+
+        public int FollowersCount { get; set; } = 0;
+        public int FollowingCount { get; set; } = 0;
+        public int NotificationCount { get; set; } = 0;
 
         public Guid SettingsId { get; set; }
-        public virtual SettingsEntity Settings { get; set; }
+        public virtual SettingsEntity? Settings { get; set; }
 
         public Guid UserMembershipId { get; set; }
-        public virtual UserMemberShipEntity UserMemberShipEntity { get; set; }
+        public virtual UserMemberShipEntity? UserMemberShipEntity { get; set; }
 
         public virtual ICollection<PostEntity>? Posts { get; set; }
         public virtual ICollection<SavedPostEntity>? SavedPosts { get; set; }
         public virtual ICollection<CommentEntity>? Comments { get; set; }
         public virtual ICollection<NotificationEntity>? Notifications { get; set; }
-        public virtual ICollection<WalletEntity> Wallets { get; set; }
+        public virtual ICollection<WalletEntity> Wallets { get; set; } = new List<WalletEntity>();
         public virtual ICollection<BadgeUserEntity>? BadgeUsers { get; set; }
         public virtual ICollection<ShareEntity>? Shares { get; set; }
         public virtual ICollection<LikeEntity>? Likes { get; set; }

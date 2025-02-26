@@ -10,10 +10,10 @@ namespace BlogProject.src.Infra.Entitites
         public bool IsActive { get; set; }
 
         public Guid FollowerId { get; set; }
-        public UserEntity Follower {  get; set; }
+        public AppUser Follower {  get; set; }
 
         public Guid FollowingId { get; set; }
-        public UserEntity Following { get; set; }
+        public AppUser Following { get; set; }
 
         public bool IsDeleted { get; set; }
 

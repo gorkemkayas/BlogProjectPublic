@@ -1,5 +1,7 @@
 ﻿using BlogProject.Services.Abstract;
 using BlogProject.Services.Concrete;
+using BlogProject.Services.CustomMethods.Abstract;
+using BlogProject.Services.CustomMethods.Concrete;
 using BlogProject.Services.DTOs.MappingProfile;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
@@ -16,8 +18,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")), ServiceLifetime.Scoped);
 
+builder.Services.AddIdentity<AppUser,AppRole>()
+                .AddEntityFrameworkStores<BlogDbContext>();
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUsernameGenerator, UsernameGenerator>();
 
 
 
@@ -33,7 +40,7 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        var dbContext = services.GetRequiredService<BlogDbContext>();
+        var dbContext = services.GetRequiredService<BlogDbContext>(); 
 
 
         if (dbContext.Database.GetPendingMigrations().Any())

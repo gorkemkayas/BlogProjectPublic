@@ -260,6 +260,8 @@ namespace BlogProject.Services.Concrete
 
             post.IsDeleted = true;
 
+            _blogDbContext.Update(post);
+
             await _blogDbContext.SaveChangesAsync();
         }
     }

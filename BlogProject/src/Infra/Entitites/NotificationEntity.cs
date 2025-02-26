@@ -10,6 +10,6 @@ namespace BlogProject.src.Infra.Entitites
         public NotificationType NotificationType { get; set; }
 
         public Guid UserId { get; set; }
-        public UserEntity User { get; set; }
+        public AppUser User { get; set; }
     }
 }

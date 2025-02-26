@@ -8,10 +8,10 @@ namespace BlogProject.src.Infra.DataGenerators
 
         public static async Task SeedDatabaseAsync(DbContext context, bool isFirstRun, CancellationToken ct)
         {
-            if (!context.Set<UserEntity>().Any())
+            if (!context.Set<AppUser>().Any())
             {
-                context.Set<UserEntity>().Add(
-                    new UserEntity
+                context.Set<AppUser>().Add(
+                    new AppUser
                     {
                         Bio = string.Empty,
                         BirthDate = DateTime.UtcNow,

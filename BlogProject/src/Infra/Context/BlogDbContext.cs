@@ -1,13 +1,15 @@
 ﻿using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.src.Infra.Interceptors;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System.Diagnostics;
 
 namespace BlogProject.src.Infra.Context
 {
-    public class BlogDbContext : DbContext
+    public class BlogDbContext : IdentityDbContext<AppUser,AppRole,Guid>
     {
         public DbSet<BadgeEntity> Badges { get; set; }
         public DbSet<BadgeUserEntity> BadgeUsers { get; set; }
@@ -23,18 +25,20 @@ namespace BlogProject.src.Infra.Context
         public DbSet<PostEntity> Posts { get; set; }
         public DbSet<PostTagEntity> PostTags { get; set; }
         public DbSet<ReportEntity> Reports { get; set; }
-        public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<SavedPostEntity> SavedPosts { get; set; }
         public DbSet<SettingsEntity> Settings { get; set; }
         public DbSet<ShareEntity> Shares { get; set; }
         public DbSet<SubscriptionEntity> Subscriptions { get; set; }
         public DbSet<TagEntity> Tags { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
-        public DbSet<UserEntity> Users { get; set; }
+
+        // Identity kendi içinde 'Users' tablosu içeriyor.
+        //public DbSet<AppUser> Users { get; set; }
         public DbSet<UserMemberShipEntity> UserMemberShips { get; set; }
         public DbSet<WalletEntity> Wallets { get; set; }
 
         public DbSet<AuditLogEntity> AuditLogs { get; set; }
+
         public BlogDbContext(DbContextOptions options) : base(options)
         {
 

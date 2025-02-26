@@ -9,7 +9,7 @@ namespace BlogProject.src.Infra.Entitites
         public Platform Platform { get; set; }
         
         public Guid? UserId { get; set; }
-        public UserEntity? User { get; set; }
+        public AppUser? User { get; set; }
 
         public Guid? PostId { get; set; }
         public PostEntity? Post { get; set; }

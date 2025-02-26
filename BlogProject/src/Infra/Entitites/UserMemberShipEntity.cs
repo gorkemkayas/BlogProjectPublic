@@ -8,7 +8,7 @@ namespace BlogProject.src.Infra.Entitites
         public DateTime EndDate { get; set; }
 
         public Guid UserId { get; set; }
-        public UserEntity User { get; set; }
+        public AppUser User { get; set; }
 
         public virtual ICollection<MemberShipTypeEntity> MembershipTypes { get; set; }
     }

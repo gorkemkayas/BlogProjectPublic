@@ -9,10 +9,10 @@ namespace BlogProject.src.Infra.Entitites
         public Status Status { get; set; }
 
         public Guid? ReporterId { get; set; }
-        public virtual UserEntity? ReporterUser { get; set; }
+        public virtual AppUser? ReporterUser { get; set; }
 
         public Guid? ReporteduserId { get; set; }
-        public virtual UserEntity? ReportedUser { get; set; }
+        public virtual AppUser? ReportedUser { get; set; }
 
         public Guid? ReportedPostId { get; set; }
         public virtual PostEntity? ReportedPost { get; set; }

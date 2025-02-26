@@ -14,7 +14,7 @@ namespace BlogProject.src.Infra.Entitites
         public int ViewCount { get; set; }
 
         public Guid AuthorId { get; set; }
-        public UserEntity Author { get; set; }
+        public AppUser Author { get; set; }
 
         public Guid CategoryId { get; set; }
         public virtual CategoryEntity Category { get; set; }

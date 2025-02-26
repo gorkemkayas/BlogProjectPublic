@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogProject.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    [Migration("20250128174516_HasPrecisionFix")]
-    partial class HasPrecisionFix
+    [Migration("20250226080717_AppUserRegisterDateUpdate2")]
+    partial class AppUserRegisterDateUpdate2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,189 @@ namespace BlogProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("BlogProject.src.Infra.Entitites.AppRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", "ef");
+                });
+
+            modelBuilder.Entity("BlogProject.src.Infra.Entitites.AppUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoverImagePicture")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("FollowersCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowingCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("NotificationCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RegisteredDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SettingsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("UserMembershipId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("WorkingAt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", "ef");
+                });
+
+            modelBuilder.Entity("BlogProject.src.Infra.Entitites.AuditLogEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NewValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Operation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLogs", "ef");
+                });
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.BadgeEntity", b =>
                 {
@@ -476,7 +659,7 @@ namespace BlogProject.Migrations
                     b.Property<bool>("IsDraft")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("datetime2");
@@ -577,41 +760,6 @@ namespace BlogProject.Migrations
                     b.HasIndex("ReporterId");
 
                     b.ToTable("Reports", "ef");
-                });
-
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.RoleEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Roles", "ef");
                 });
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.SavedPostEntity", b =>
@@ -830,104 +978,6 @@ namespace BlogProject.Migrations
                     b.ToTable("Transactions", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.UserEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Bio")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .HasDefaultValue("Biyografi bilgisi girilmedi.");
-
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<string>("CoverImagePicture")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("FollowersCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("FollowingCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NotificationCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("ProfilePicture")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SettingsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("");
-
-                    b.Property<Guid>("UserMembershipId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("WorkingAt")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("Çalışılan yer bilgisi girilmedi.");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users", "ef");
-                });
-
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.UserMemberShipEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1012,6 +1062,109 @@ namespace BlogProject.Migrations
                     b.ToTable("Wallets", "ef");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", "ef");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", "ef");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", "ef");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", "ef");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", "ef");
+                });
+
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.BadgeUserEntity", b =>
                 {
                     b.HasOne("BlogProject.src.Infra.Entitites.BadgeEntity", "Badge")
@@ -1020,7 +1173,7 @@ namespace BlogProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
                         .WithMany("BadgeUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1033,7 +1186,7 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.CommentEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Author")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Author")
                         .WithMany("Comments")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1059,12 +1212,12 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.DonationEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Receiver")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Receiver")
                         .WithMany("ReceivedDonations")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Sender")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Sender")
                         .WithMany("SendedDonations")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1076,13 +1229,13 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.FollowEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Follower")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Follower")
                         .WithMany("Followings")
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Following")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Following")
                         .WithMany("Followers")
                         .HasForeignKey("FollowingId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1105,7 +1258,7 @@ namespace BlogProject.Migrations
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
                         .WithMany("Likes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1131,12 +1284,12 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.MessageEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Receiver")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Receiver")
                         .WithMany("ReceivedMessages")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Sender")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Sender")
                         .WithMany("SentMessages")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1148,7 +1301,7 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.NotificationEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
                         .WithMany("Notifications")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1170,7 +1323,7 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.PostEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Author")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1213,12 +1366,12 @@ namespace BlogProject.Migrations
                         .HasForeignKey("ReportedPostId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "ReportedUser")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "ReportedUser")
                         .WithMany("ReceivedReports")
                         .HasForeignKey("ReporteduserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "ReporterUser")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "ReporterUser")
                         .WithMany("CreatedReports")
                         .HasForeignKey("ReporterId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1230,20 +1383,9 @@ namespace BlogProject.Migrations
                     b.Navigation("ReporterUser");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.RoleEntity", b =>
-                {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
-                        .WithOne("Role")
-                        .HasForeignKey("BlogProject.src.Infra.Entitites.RoleEntity", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.SavedPostEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
                         .WithMany("SavedPosts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1254,7 +1396,7 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.SettingsEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
                         .WithOne("Settings")
                         .HasForeignKey("BlogProject.src.Infra.Entitites.SettingsEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1269,7 +1411,7 @@ namespace BlogProject.Migrations
                         .WithMany("Shares")
                         .HasForeignKey("PostId");
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
                         .WithMany("Shares")
                         .HasForeignKey("UserId");
 
@@ -1280,13 +1422,13 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.SubscriptionEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Follower")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Follower")
                         .WithMany("Subscribers")
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "Following")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Following")
                         .WithMany("Subscriptions")
                         .HasForeignKey("FollowingId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1310,7 +1452,7 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.UserMemberShipEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
                         .WithOne("UserMemberShipEntity")
                         .HasForeignKey("BlogProject.src.Infra.Entitites.UserMemberShipEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1321,13 +1463,107 @@ namespace BlogProject.Migrations
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.WalletEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserEntity", "User")
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
                         .WithMany("Wallets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogProject.src.Infra.Entitites.AppUser", b =>
+                {
+                    b.Navigation("BadgeUsers");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("CreatedReports");
+
+                    b.Navigation("Followers");
+
+                    b.Navigation("Followings");
+
+                    b.Navigation("Likes");
+
+                    b.Navigation("Notifications");
+
+                    b.Navigation("Posts");
+
+                    b.Navigation("ReceivedDonations");
+
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("ReceivedReports");
+
+                    b.Navigation("SavedPosts");
+
+                    b.Navigation("SendedDonations");
+
+                    b.Navigation("SentMessages");
+
+                    b.Navigation("Settings");
+
+                    b.Navigation("Shares");
+
+                    b.Navigation("Subscribers");
+
+                    b.Navigation("Subscriptions");
+
+                    b.Navigation("UserMemberShipEntity");
+
+                    b.Navigation("Wallets");
                 });
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.BadgeEntity", b =>
@@ -1368,54 +1604,6 @@ namespace BlogProject.Migrations
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.TagEntity", b =>
                 {
                     b.Navigation("TagPosts");
-                });
-
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.UserEntity", b =>
-                {
-                    b.Navigation("BadgeUsers");
-
-                    b.Navigation("Comments");
-
-                    b.Navigation("CreatedReports");
-
-                    b.Navigation("Followers");
-
-                    b.Navigation("Followings");
-
-                    b.Navigation("Likes");
-
-                    b.Navigation("Notifications");
-
-                    b.Navigation("Posts");
-
-                    b.Navigation("ReceivedDonations");
-
-                    b.Navigation("ReceivedMessages");
-
-                    b.Navigation("ReceivedReports");
-
-                    b.Navigation("Role")
-                        .IsRequired();
-
-                    b.Navigation("SavedPosts");
-
-                    b.Navigation("SendedDonations");
-
-                    b.Navigation("SentMessages");
-
-                    b.Navigation("Settings")
-                        .IsRequired();
-
-                    b.Navigation("Shares");
-
-                    b.Navigation("Subscribers");
-
-                    b.Navigation("Subscriptions");
-
-                    b.Navigation("UserMemberShipEntity")
-                        .IsRequired();
-
-                    b.Navigation("Wallets");
                 });
 
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.UserMemberShipEntity", b =>

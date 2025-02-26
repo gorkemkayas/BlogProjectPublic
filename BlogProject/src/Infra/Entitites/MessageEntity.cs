@@ -8,10 +8,10 @@
         public DateTime SentDate { get; set; }
 
         public Guid? SenderId { get; set; }
-        public virtual UserEntity? Sender { get; set; }
+        public virtual AppUser? Sender { get; set; }
 
         public Guid? ReceiverId { get; set; }
-        public virtual UserEntity? Receiver { get; set; }
+        public virtual AppUser? Receiver { get; set; }
 
         public bool IsDeleted { get; set; }
     }
