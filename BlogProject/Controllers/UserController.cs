@@ -32,7 +32,13 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> SignUp(SignUpViewModel request)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
             var result = await _userService.SignUp(request);
+
             if(result.Item1)
             {
                 TempData["Succeed"] = "User created successfully. You are being redirected to the login page...";

@@ -26,7 +26,7 @@ namespace BlogProject.Services.Concrete
                 Email = request.Email,
                 Name = request.Name,
                 Surname = request.Surname,
-                BirthDate = request.BirthDate
+                BirthDate = (DateTime)request.BirthDate!
             },request.Password);
 
             if (identityResult.Succeeded)

@@ -18,7 +18,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")), ServiceLifetime.Scoped);
 
-builder.Services.AddIdentity<AppUser,AppRole>()
+builder.Services.AddIdentity<AppUser,AppRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    options.Password.RequireNonAlphanumeric = false;
+    
+})
                 .AddEntityFrameworkStores<BlogDbContext>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
