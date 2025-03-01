@@ -1,4 +1,6 @@
-﻿using BlogProject.src.Infra.Context;
+﻿using BlogProject.CustomValidators;
+using BlogProject.Localizations;
+using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 
 namespace BlogProject.Extensions
@@ -13,7 +15,10 @@ namespace BlogProject.Extensions
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
                 options.Password.RequireNonAlphanumeric = false;
 
-            }).AddEntityFrameworkStores<BlogDbContext>();
+            }).AddPasswordValidator<PasswordValidator>()
+              .AddUserValidator<UserValidator>()
+              .AddErrorDescriber<LocalizationIdentityErrorDescriber>()
+              .AddEntityFrameworkStores<BlogDbContext>();
         }
     }
 }
