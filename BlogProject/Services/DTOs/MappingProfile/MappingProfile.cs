@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BlogProject.Areas.Admin.Models;
 using BlogProject.src.Infra.Entitites;
 
 namespace BlogProject.Services.DTOs.MappingProfile
@@ -9,6 +10,7 @@ namespace BlogProject.Services.DTOs.MappingProfile
         {
             CreateMap<CreatePostDto, PostEntity>();
             CreateMap<UpdatePostDto, PostEntity>().ReverseMap();
+            CreateMap<AppUser, UserViewModel>().ReverseMap();
         }
     }
 }

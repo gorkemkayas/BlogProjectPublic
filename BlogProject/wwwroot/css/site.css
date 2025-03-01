@@ -44,6 +44,16 @@ body {
         color: red !important;
     }
 
+
+.whitetored {
+    color: white !important;
+    transition: color 0.3s ease-in;
+}
+
+    .whitetored:hover {
+        color: red !important;
+    }
+
 .fa-brands:hover{
     color:red !important;
 }

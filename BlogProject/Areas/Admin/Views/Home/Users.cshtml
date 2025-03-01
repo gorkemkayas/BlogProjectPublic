@@ -1,0 +1,180 @@
+﻿@using BlogProject.Areas.Admin.Models
+
+@{
+    Layout = "_AdminLayout";
+}
+@model CombinedViewModel
+
+    <div class="d-flex text-center flex-column justify-content-center">
+
+        <div class="container">
+        <div class="">
+            <section class="py-3 py-md-5">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-10 col-md-7 col-lg-6 col-xl-5 col-xxl-4">
+                            <div class="card widget-card border-light shadow-sm">
+                                <div class="card-body p-4">
+                                    <h5 class="card-title widget-card-title mb-2">User Registration Chart</h5>
+                                    <div class="row gy-0">
+                                        <div class="col-12">
+                                            <h4>20,184</h4>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex align-items-center">
+                                                <span class="fs-6 bsb-w-25 bsb-h-25 bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                    <i class="bi bi-arrow-right-short bsb-rotate-45"></i>
+                                                </span>
+                                                <div>
+                                                    <span class="fs-7">-15%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="bsb-chart-9" class="mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        @* <div class="col-md-6"></div> *@
+        </div>
+
+    <div class="d-flex text-center justify-content-center">
+
+        <h1 class=""> Users<h1 class="text-danger">.</h1></h1>
+    </div>
+   
+<hr class="shadow" style="color:black" />
+<div class="table-responsive">
+    <table class="table table-hover table-bordered table-striped shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Username</td>
+                    <td>@user.Name @user.Surname</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <a href="#" class="btn btn-dark btn-sm mx-1">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm mx-1">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="d-flex text-center justify-content-center">
+
+                <h1 class=""> Most Contributors<h1 class="text-danger">.</h1></h1>
+            </div>
+            <hr />
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped shadow">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Username</th>
+                            <th>Registered Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.MostContributors)
+                        {
+                            <tr>
+                                <td>@user.Username</td>
+                                <td>@user.RegisteredDate</td>
+                                <td>
+                                    <a href="#" class="btn btn-dark btn-sm mx-1">Edit</a>
+                                    <a href="#" class="btn btn-danger btn-sm mx-1">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex text-center justify-content-center">
+
+                <h1 class=""> New Members<h1 class="text-danger">.</h1></h1>
+            </div>
+            <hr />
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped shadow">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Username</th>
+                            <th>Registered Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.NewMembers)
+                        {
+                            <tr>
+                                <td>@user.Username</td>
+                                <td>@user.RegisteredDate</td>
+                                <td>
+                                    <a href="#" class="btn btn-dark btn-sm mx-1">Edit</a>
+                                    <a href="#" class="btn btn-danger btn-sm mx-1">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .circle-text {
+        font-size: 2rem;
+        color: #007bff;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    hr.text-dark {
+        border-color: #000;
+    }
+</style>
