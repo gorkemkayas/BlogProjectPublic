@@ -1,4 +1,5 @@
-﻿using BlogProject.Services.Abstract;
+﻿using BlogProject.Extensions;
+using BlogProject.Services.Abstract;
 using BlogProject.Services.Concrete;
 using BlogProject.Services.CustomMethods.Abstract;
 using BlogProject.Services.CustomMethods.Concrete;
@@ -18,14 +19,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")), ServiceLifetime.Scoped);
 
-builder.Services.AddIdentity<AppUser,AppRole>(options =>
-{
-    options.User.RequireUniqueEmail = true;
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    options.Password.RequireNonAlphanumeric = false;
-    
-})
-                .AddEntityFrameworkStores<BlogDbContext>();
+builder.Services.AddIdentityWithExtension();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IPostService, PostService>();
