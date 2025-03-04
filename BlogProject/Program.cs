@@ -20,6 +20,15 @@ builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")), ServiceLifetime.Scoped);
 
 builder.Services.AddIdentityWithExtension();
+builder.Services.ConfigureApplicationCookie(opt =>
+{
+    opt.Cookie.Name = "BlogCookie";
+
+    opt.ExpireTimeSpan = TimeSpan.FromDays(30);
+    opt.SlidingExpiration = true;
+
+    opt.LoginPath = new PathString("/User/SignIn");
+});
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IPostService, PostService>();
