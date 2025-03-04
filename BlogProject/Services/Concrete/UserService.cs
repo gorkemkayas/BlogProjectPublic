@@ -1,4 +1,5 @@
-﻿using BlogProject.Models.ViewModels;
+﻿using BlogProject.Extensions;
+using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
 using BlogProject.Services.CustomMethods.Abstract;
 using BlogProject.src.Infra.Entitites;
@@ -72,13 +73,21 @@ namespace BlogProject.Services.Concrete
                 return (false, errors);
             }
 
-            var signInResult = await _signInManager.PasswordSignInAsync(hasUser,request.Password, request.RememberMe, false);
+            var signInResult = await _signInManager.PasswordSignInAsync(hasUser,request.Password, request.RememberMe, true);
 
             if(signInResult.Succeeded)
             {
                 return (true, null);
             }
 
+            if(signInResult.IsLockedOut)
+            {
+                errors.Add(new IdentityError() { Code = "SignInError", Description = $"Your account is locked, will be accesible at {hasUser.LockoutEnd}" });
+                return (false, errors);
+            }
+
+
+            errors.Add(new IdentityError() { Code = "SignInError", Description = $"You have tried {hasUser.AccessFailedCount} times. Remain attempts: {5 - hasUser.AccessFailedCount}" });
             errors.Add(new IdentityError() { Code = "SignInError", Description = "The email or password is incorrect." });
             return (false, errors);
 

@@ -13,7 +13,11 @@ namespace BlogProject.Extensions
             {
                 options.User.RequireUniqueEmail = true;
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
                 options.Password.RequireNonAlphanumeric = false;
+
+                options.Lockout.DefaultLockoutTimeSpan.Add(TimeSpan.FromMinutes(3));
+                options.Lockout.MaxFailedAccessAttempts = 5;
 
             }).AddPasswordValidator<PasswordValidator>()
               .AddUserValidator<UserValidator>()
