@@ -1,4 +1,5 @@
-﻿using BlogProject.Models.ViewModels;
+﻿using BlogProject.Extensions;
+using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,9 +19,26 @@ namespace BlogProject.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult SignIn()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SignInViewModel request, string? returnUrl = null)
+        {
+            var result = await _userService.SignInAsync(request, returnUrl);
+            
+            if(!result.Item1)
+            {
+                ModelState.AddModelErrorList(result.Item2!.ToList());
+                return View();
+            }
+
+            returnUrl = returnUrl ?? Url.Action("Index","Home");
+
+            return Redirect(returnUrl!);
         }
 
         [HttpGet]

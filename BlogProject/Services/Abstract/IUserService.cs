@@ -6,7 +6,8 @@ namespace BlogProject.Services.Abstract
 {
     public interface IUserService
     {
-        public Task<(bool, IEnumerable<IdentityError>?)> SignUp(SignUpViewModel request);
+        Task<(bool, IEnumerable<IdentityError>?)> SignUp(SignUpViewModel request);
+        Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request, string? returnUrl = null);
 
         Task<List<AppUser>> MostContributors(int countUser);
         Task<List<AppUser>> NewUsers(int countUser);
