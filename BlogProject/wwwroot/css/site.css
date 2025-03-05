@@ -9,14 +9,32 @@ body {
     font-style: normal;*/
 }
 
-.nav-item{
+/*.nav-item{
     color:black !important;
     transition: color 0.3s ease-in;
 }
 .nav-item:hover
 {
     color:red !important;
+}*/
+.login-item {
+    color: black !important;
+    transition: color 0.3s ease-in;
 }
+
+    .login-item:hover {
+        color: black !important;
+    }
+
+.nav-item-under {
+    color: black !important;
+    transition: color 0.3s ease-in;
+}
+
+    .nav-item-under:hover {
+        color: red !important;
+    }
+
 .blacktored {
     color: black !important;
     transition: color 0.3s ease-in;

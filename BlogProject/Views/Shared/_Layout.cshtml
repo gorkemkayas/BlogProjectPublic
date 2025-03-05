@@ -26,17 +26,17 @@
 
 
         header, main, footer {
-            max-width: 1200px; /* Maksimum genişlik */
-            margin: 0 auto; /* Merkezi hizalama */
+        max-width: 1200px; /* Maksimum genişlik */
+        margin: 0 auto; /* Merkezi hizalama */
         }
 
         .nav-links {
-            display: flex;
-            gap: 29px;
-            color: black !important;
+        display: flex;
+        gap: 29px;
+        color: black !important;
         }
-        
-        </style>
+
+    </style>
 
 </head>
 <body>
@@ -45,35 +45,87 @@
         <div class="container">
 
             <nav class="navbar navbar-expand-sm navbar-light bg-white mb-1">
-                <div class="container d-flex justify-content-between">
+                <div class="container d-flex justify-content-between pe-0">
                     <div class="mt-3">
                         <a href="https://github.com/gorkemkayas" class="fa-brands fs-5 blacktored text-decoration-none fa-github me-1"></a>
                         <a href="https://www.linkedin.com/in/gorkemkayas/" class="fa-brands fs-5 blacktored text-decoration-none fa-linkedin-in me-1"></a>
                         <a href="https://x.com/gorkemkayaz" class="fa-brands fs-5 blacktored text-decoration-none fa-x-twitter"></a>
                     </div>
                     <a class="navbar-brand pirata-one-regular" style="font-size:50px" asp-area="" asp-controller="Home" asp-action="Index">kayas<span class="text-danger">.</span></a>
+
+                    @if(User.Identity.IsAuthenticated)
+                    {
+                        <div class="d-flex mt-4">
+                            <img class="rounded-pill" src="/img/ben3.jpg" width="30" height="30">
+                        <li class="nav-item dropdown" style="list-style-type:none">
+                            <a class="nav-link dropdown-toggle ps-2 pe-0 login-item position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @User.Identity.Name
+                                    <span class="position-absolute top-0 start-80 translate-middle p-2 bg-danger border border-light rounded-circle">
+                                        <span class="visually-hidden">New alerts</span>
+                                    </span>
+                            </a>
+                                <ul class="dropdown-menu">
+                                    <!-- Bildirimler -->
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#">
+                                            <span><i class="bi bi-bell me-2"></i> Notifications</span>
+                                            <span class="badge rounded-pill bg-danger ms-auto">99+</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Mesajlar -->
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center" href="#">
+                                            <i class="bi bi-envelope me-2"></i> Messages
+                                        </a>
+                                    </li>
+
+                                    <!-- Profil -->
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center" href="#">
+                                            <i class="bi bi-person me-2"></i> Profile
+                                        </a>
+                                    </li>
+
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    <!-- Çıkış -->
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center text-danger" href="#">
+                                            <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+
+                        </li>
+                        </div>
+                    }
+                    else
+                    {
                     <div>
                     <a href="/user/signup" class="btn btn-sm btn-danger rounded-pill" style="">Sign Up</a>
                     <a href="/user/signin" class="btn btn-sm btn-dark rounded-pill" style="">Sign In</a>
-                    </div>
+                    </div>    
+                    }
+
                 </div>
             </nav>
 
             <!-- Alt Navigation Bar -->
             <div class="py-1 mb-3 border-bottom border-top">
                 <nav class="nav nav-links nav-underline justify-content-center">
-                    <a class="nav-item nav-link link-body-emphasis active" href="#">World</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">U.S.</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Technology</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Design</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Culture</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Business</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Politics</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Opinion</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Science</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Health</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Style</a>
-                    <a class="nav-item nav-link link-body-emphasis" href="#">Travel</a>
+                    <a class="nav-item-under nav-link link-body-emphasis active" href="#">World</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">U.S.</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Technology</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Design</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Culture</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Business</a>
+                    <a class="nav-item-under  nav-link link-body-emphasis" href="#">Politics</a>
+                    <a class="nav-item-under  nav-link link-body-emphasis" href="#">Opinion</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Science</a>
+                    <a class="nav-item-under  nav-link link-body-emphasis" href="#">Health</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Style</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Travel</a>
                 </nav>
             </div>
         </div>
