@@ -4,6 +4,7 @@ using BlogProject.Services.Abstract;
 using BlogProject.Services.CustomMethods.Abstract;
 using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
@@ -61,7 +62,7 @@ namespace BlogProject.Services.Concrete
             return (false, identityResult.Errors);
         }
         
-        public async Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request, string? returnUrl = null)
+        public async Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request)
         {
             var errors = new List<IdentityError>();
 
@@ -90,6 +91,12 @@ namespace BlogProject.Services.Concrete
             errors.Add(new IdentityError() { Code = "SignInError", Description = $"You have tried {hasUser.AccessFailedCount} times. Remain attempts: {5 - hasUser.AccessFailedCount}" });
             errors.Add(new IdentityError() { Code = "SignInError", Description = "The email or password is incorrect." });
             return (false, errors);
+
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
 
         }
     }

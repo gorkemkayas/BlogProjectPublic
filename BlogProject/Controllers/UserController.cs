@@ -28,7 +28,7 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInViewModel request, string? returnUrl = null)
         {
-            var result = await _userService.SignInAsync(request, returnUrl);
+            var result = await _userService.SignInAsync(request);
             
             if(!result.Item1)
             {
@@ -73,6 +73,11 @@ namespace BlogProject.Controllers
 
             }
             return View();
+        }
+
+        public async Task Logout()
+        {
+            await _userService.LogoutAsync();
         }
 
         public IActionResult Profile()

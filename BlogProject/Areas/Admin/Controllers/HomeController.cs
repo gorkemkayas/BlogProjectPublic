@@ -2,6 +2,7 @@
 using BlogProject.Areas.Admin.Models;
 using BlogProject.Services.Abstract;
 using BlogProject.src.Infra.Entitites;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms.Mapping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BlogProject.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
+    [Authorize]
     public class HomeController : Controller
     {
         UserManager<AppUser> _userManager;

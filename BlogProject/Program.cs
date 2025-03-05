@@ -28,6 +28,7 @@ builder.Services.ConfigureApplicationCookie(opt =>
     opt.SlidingExpiration = true;
 
     opt.LoginPath = new PathString("/User/SignIn");
+    opt.LogoutPath = new PathString("/User/Logout");
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -78,6 +79,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 
