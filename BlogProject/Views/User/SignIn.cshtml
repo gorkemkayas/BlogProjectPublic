@@ -1,6 +1,7 @@
 ﻿
 @{
     Layout = "_SignInUp";
+    ViewData["Title"] = "Signin";
 }
 
 @section Scripts {
@@ -10,7 +11,7 @@
 @model SignInViewModel
 
 <!-- Login 12 - Bootstrap Brain Component -->
-<section class="py-3 py-md-5 py-xl-8">
+<section class="py-3 py-md-5 py-xl-8" style="margin-top:10%">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -45,14 +46,14 @@
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input asp-for="RememberMe" class="form-check-input" type="checkbox" >
-                                                <label asp-for="RememberMe" class="form-check-label text-secondary">
+                                                <label asp-for="RememberMe" class="graytoblack form-check-label text-secondary">
                                                     Remember me
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="text-end">
-                                                <a href="#!" class="link-secondary text-decoration-none">Forgot password?</a>
+                                                <a asp-controller="user" asp-action="forgetpassword" class="graytoblack text-decoration-none">Forgot password?</a>
                                             </div>
                                         </div>
                                     </div>

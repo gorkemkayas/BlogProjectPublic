@@ -7,6 +7,9 @@ using BlogProject.Services.DTOs.MappingProfile;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.src.Infra.Interceptors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -15,6 +18,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Service sınıflarından IUrlHelper ve IActionContextAccessor'ı kullanabilmek için ekledik.
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")), ServiceLifetime.Scoped);
@@ -35,6 +41,11 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUsernameGenerator, UsernameGenerator>();
+builder.Services.AddScoped<IUserTokenGenerator, UserTokenGenerator>();
+
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+builder.Services.AddScoped<IUrlGenerator, UrlGenerator>();
+builder.Services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 
 
 

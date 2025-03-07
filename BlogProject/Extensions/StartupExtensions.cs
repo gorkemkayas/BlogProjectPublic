@@ -2,6 +2,7 @@
 using BlogProject.Localizations;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
+using Microsoft.AspNetCore.Identity;
 
 namespace BlogProject.Extensions
 {
@@ -9,6 +10,13 @@ namespace BlogProject.Extensions
     {
         public static void AddIdentityWithExtension(this IServiceCollection services)
         {
+
+            // Oluşturulan tokenlerın ömrünü belirliyoruz.
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+            {
+                opt.TokenLifespan = TimeSpan.FromHours(1);
+            });
+
             services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
@@ -22,6 +30,7 @@ namespace BlogProject.Extensions
             }).AddPasswordValidator<PasswordValidator>()
               .AddUserValidator<UserValidator>()
               .AddErrorDescriber<LocalizationIdentityErrorDescriber>()
+              .AddDefaultTokenProviders()
               .AddEntityFrameworkStores<BlogDbContext>();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using BlogProject.Extensions;
 using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProject.Controllers
@@ -78,6 +79,28 @@ namespace BlogProject.Controllers
         public async Task Logout()
         {
             await _userService.LogoutAsync();
+        }
+
+        [HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel request)
+        {
+            (bool isOk,IEnumerable<IdentityError>? errors) = await _userService.ResetPasswordLinkAsync(request);
+
+            if(!isOk)
+            {
+                ModelState.AddModelErrorList(errors!.ToList());
+
+                return View();
+            }
+
+            TempData["Succeed"] = "Password reset link has been sent to your e-mail address.";
+            return RedirectToAction("forgetpassword", "user");
         }
 
         public IActionResult Profile()

@@ -2,9 +2,11 @@
 using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
 using BlogProject.Services.CustomMethods.Abstract;
+using BlogProject.Services.CustomMethods.Concrete;
 using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
@@ -18,12 +20,16 @@ namespace BlogProject.Services.Concrete
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IUsernameGenerator _usernameGenerator;
+        private readonly IUserTokenGenerator _userTokenGenerator;
+        private readonly IUrlGenerator _urlGenerator;
 
-        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager)
+        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator)
         {
             _userManager = userManager;
             _usernameGenerator = usernameGenerator;
             _signInManager = signInManager;
+            _userTokenGenerator = userTokenService;
+            _urlGenerator = urlGenerator;
         }
 
         public async Task<List<AppUser>> GetUsers()
@@ -99,5 +105,27 @@ namespace BlogProject.Services.Concrete
             await _signInManager.SignOutAsync();
 
         }
+
+        public async Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordLinkAsync(ForgetPasswordViewModel request)
+        {
+            var errors = new List<IdentityError>();
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+
+            if (user == null)
+            {
+                errors.Add(new IdentityError() { Code = "ResetPasswordError", Description = "The email is not registered." });
+                return (false, errors);
+            }
+
+            var passwordResetToken = await _userTokenGenerator.GeneratePasswordResetTokenAsync(user);
+
+            var passwordResetLink = _urlGenerator.GenerateResetPasswordUrl(user, passwordResetToken);
+
+            // Email Service
+
+            return (true, null);
+        }
     }
+
 }

@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApplication1</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+
+    @* FontAwesome *@
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+    <style>
+
+
+        header, main, footer {
+        max-width: 1200px; /* Maksimum genişlik */
+        margin: 0 auto; /* Merkezi hizalama */
+        }
+
+        .nav-links {
+        display: flex;
+        gap: 29px;
+        color: black !important;
+        }
+
+    </style>
+
+</head>
+<body>
+    <header class="lh-1 py-3">
+        <!-- Üst Navbar -->
+        <div class="container">
+
+            @* Sol kısım *@
+            <nav class="navbar navbar-expand-sm navbar-light bg-white mb-2 position-relative">
+                <div class="container d-flex justify-content-between align-items-center w-100 pe-0">
+
+                    <div class="mt-3">
+                        <a href="https://github.com/gorkemkayas" class="fa-brands fs-5 blacktored text-decoration-none fa-github me-1"></a>
+                        <a href="https://www.linkedin.com/in/gorkemkayas/" class="fa-brands fs-5 blacktored text-decoration-none fa-linkedin-in me-1"></a>
+                        <a href="https://x.com/gorkemkayaz" class="fa-brands fs-5 blacktored text-decoration-none fa-x-twitter"></a>
+                    </div>
+
+                    <a class="navbar-brand pirata-one-regular position-absolute start-50 translate-middle-x" style="font-size:50px" asp-area="" asp-controller="Home" asp-action="Index">
+                        kayas<span class="text-danger">.</span>
+                    </a>
+                    <div class="d-flex ms-auto align-items-center mt-1">
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <img class="rounded-pill" src="/img/ben3.jpg" width="30" height="30">
+                            <li class="nav-item dropdown list-unstyled ms-2">
+                                <a class="nav-link dropdown-toggle ps-1 login-item position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @User.Identity.Name
+                                    <span class="position-absolute top-0 translate-middle p-2 bg-danger border border-light rounded-circle">
+                                        <span class="visually-hidden">New alerts</span>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center" href="#">
+                                            <i class="bi bi-person me-2"></i> Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#">
+                                            <span><i class="bi bi-bell me-2"></i> Notifications</span>
+                                            <span class="badge rounded-pill bg-danger ms-auto">99+</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center" href="#">
+                                            <i class="bi bi-envelope me-2"></i> Messages
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center text-danger" asp-route-returnUrl="/Home/Index" asp-controller="User" asp-action="Logout">
+                                            <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <a href="/user/signup" class="btn btn-sm btn-danger rounded-pill ms-2">Sign Up</a>
+                            <a href="/user/signin" class="btn btn-sm btn-dark rounded-pill ms-2">Sign In</a>
+                        }
+                    </div>
+
+                </div>
+            </nav>
+
+
+
+            <!-- Alt Navigation Bar -->
+            <div class="py-1 mb-3 border-bottom border-top">
+                <nav class="nav nav-links nav-underline justify-content-center">
+                    <a class="nav-item-under nav-link link-body-emphasis active" href="#">World</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">U.S.</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Technology</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Design</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Culture</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Business</a>
+                    <a class="nav-item-under  nav-link link-body-emphasis" href="#">Politics</a>
+                    <a class="nav-item-under  nav-link link-body-emphasis" href="#">Opinion</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Science</a>
+                    <a class="nav-item-under  nav-link link-body-emphasis" href="#">Health</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Style</a>
+                    <a class="nav-item-under nav-link link-body-emphasis" href="#">Travel</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow-1">
+        <div class="container mt-4">
+            <!-- Genişlik header ile uyumlu -->
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="bg-white py-3 border-top shadow-sm">
+        <div class="container d-flex justify-content-center">
+            <span class="text-muted">It will be <span class="text-danger">hard</span>,but I can do.</span>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

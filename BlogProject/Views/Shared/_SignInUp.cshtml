@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApplication1</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="~/favicon.png" />
 
 
     @* FontAwesome *@
@@ -31,11 +33,59 @@
             display: flex;
             gap: 29px;
         }
+
+        .custom-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index: 1050;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            color: white;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            color: white;
+        }
+
+        .custom-alert i {
+            font-size: 22px;
+        }
+
+        .show-alert {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 
 </head>
 <body>
-    
+    <div class="ad-left-full">
+        <video class="ad-video" autoplay loop muted playsinline>
+            <source src="~/img/AdLeft.webm" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="ad-right-full">
+        <video class="ad-video" autoplay loop muted playsinline>
+            <source src="~/img/AdRight.webm" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
     <main class="flex-grow-1">
         <div class="container mt-4">
@@ -46,7 +96,7 @@
 
     <footer class="bg-white py-3 border-top shadow-sm">
         <div class="container d-flex justify-content-center">
-            <span class="text-muted">It will be <span class="text-danger">hard</span>,but I can do.</span>
+            <span class="text-muted fst-italic"> developed by <span class="link-dark">gorkemkayas</span><span class="text-danger">.</span></span>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

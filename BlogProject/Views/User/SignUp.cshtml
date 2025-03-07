@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "_SignInUp";
+    ViewData["Title"] = "Signup";
 }
 
 
@@ -58,6 +59,7 @@
 </div> *@
 
 <!-- Registration 12 - Bootstrap Brain Component -->
+
 @if (TempData["Succeed"] != null)
 {
     <div id="successAlert" class="custom-alert alert-success">
@@ -72,8 +74,7 @@ else if (TempData["Failed"] != null)
     </div>
 }
 
-
-<section class="py-3 py-md-4 py-xl-6">
+<section class="py-3 py-md-4 py-xl-6" style="margin-top:5rem">
     
     <div class="container">
         <div class="row">
