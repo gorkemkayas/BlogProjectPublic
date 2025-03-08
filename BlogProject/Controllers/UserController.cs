@@ -10,7 +10,7 @@ namespace BlogProject.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
         }

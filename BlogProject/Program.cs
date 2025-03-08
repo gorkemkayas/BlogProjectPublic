@@ -1,4 +1,5 @@
 ﻿using BlogProject.Extensions;
+using BlogProject.Models;
 using BlogProject.Services.Abstract;
 using BlogProject.Services.Concrete;
 using BlogProject.Services.CustomMethods.Abstract;
@@ -25,6 +26,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")), ServiceLifetime.Scoped);
 
+
+// app.settings.dev deki email uygulama tarafında temsil edebilmek için bir sınıf ile eşleştiriyorum.
+// Ne zaman EmailSettings sınıfına ihtiyaç duyarsam bana appsetting.json dosyasındaki EmailSettings bölümünü verecek.
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 builder.Services.AddIdentityWithExtension();
 builder.Services.ConfigureApplicationCookie(opt =>
 {
@@ -42,6 +48,7 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUsernameGenerator, UsernameGenerator>();
 builder.Services.AddScoped<IUserTokenGenerator, UserTokenGenerator>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddScoped<IUrlGenerator, UrlGenerator>();

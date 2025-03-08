@@ -19,17 +19,19 @@ namespace BlogProject.Services.Concrete
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailService _emailService;
         private readonly IUsernameGenerator _usernameGenerator;
         private readonly IUserTokenGenerator _userTokenGenerator;
         private readonly IUrlGenerator _urlGenerator;
 
-        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator)
+        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService)
         {
             _userManager = userManager;
             _usernameGenerator = usernameGenerator;
             _signInManager = signInManager;
             _userTokenGenerator = userTokenService;
             _urlGenerator = urlGenerator;
+            _emailService = emailService;
         }
 
         public async Task<List<AppUser>> GetUsers()
@@ -121,6 +123,8 @@ namespace BlogProject.Services.Concrete
             var passwordResetToken = await _userTokenGenerator.GeneratePasswordResetTokenAsync(user);
 
             var passwordResetLink = _urlGenerator.GenerateResetPasswordUrl(user, passwordResetToken);
+
+            await _emailService.SendResetPasswordEmailAsync(passwordResetLink, user.Email!);
 
             // Email Service
 
