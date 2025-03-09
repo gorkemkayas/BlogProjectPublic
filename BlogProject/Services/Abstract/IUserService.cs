@@ -10,6 +10,8 @@ namespace BlogProject.Services.Abstract
         Task<(bool, IEnumerable<IdentityError>?)> SignUp(SignUpViewModel request);
         Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request);
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordLinkAsync(ForgetPasswordViewModel request);
+
+        Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token);
         Task LogoutAsync();
 
         Task<List<AppUser>> MostContributors(int countUser);

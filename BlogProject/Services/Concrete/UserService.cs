@@ -121,14 +121,41 @@ namespace BlogProject.Services.Concrete
             }
 
             var passwordResetToken = await _userTokenGenerator.GeneratePasswordResetTokenAsync(user);
-
             var passwordResetLink = _urlGenerator.GenerateResetPasswordUrl(user, passwordResetToken);
 
             await _emailService.SendResetPasswordEmailAsync(passwordResetLink, user.Email!);
 
-            // Email Service
-
             return (true, null);
+        }
+
+        public async Task<(bool,IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token)
+        {
+            var errors = new List<IdentityError>();
+
+            if (userId == null || token == null)
+            {
+                errors.Add(new IdentityError() { Code = "ResetPasswordError", Description = "Token or userId not found." });
+                return (false, errors);
+            }
+
+            var hasUser = await _userManager.FindByIdAsync(userId.ToString()!);
+
+            if (hasUser == null)
+            {
+                errors.Add(new IdentityError() { Code = "ResetPasswordError", Description = "User not found." });
+                return (false, errors);
+            }
+
+            var result = await _userManager.ResetPasswordAsync(hasUser, token.ToString()!, request.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return (true, null);
+            }
+
+            errors.AddRange(result.Errors);
+
+            return (false, errors);
         }
     }
 
