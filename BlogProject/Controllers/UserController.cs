@@ -108,7 +108,7 @@ namespace BlogProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ResetPassword(string token, string userId)
+        public IActionResult ResetPassword(string token, string userId)
         {
             TempData["Token"] = token;
             TempData["userId"] = userId;

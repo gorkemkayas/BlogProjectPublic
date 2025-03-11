@@ -16,6 +16,11 @@ namespace BlogProject.Extensions
             {
                 opt.TokenLifespan = TimeSpan.FromHours(1);
             });
+            // SecurityStamp değerinin hangi aralıklar ile kontrol edileceğini belirliyoruz.
+            services.Configure<SecurityStampValidatorOptions>(opt =>
+            {
+                opt.ValidationInterval = TimeSpan.FromMinutes(30);
+            });
 
             services.AddIdentity<AppUser, AppRole>(options =>
             {
