@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Profile";
-    Layout = "_ProfileLayout"; 
+    Layout = "_ProfileLayout";
 }
+
+@model VisitorProfileViewModel
 @* <div class="ad-left-full">
     <video class="ad-video" autoplay loop muted playsinline>
         <source src="~/img/AdLeft.webm" type="video/mp4">
@@ -36,136 +38,161 @@
 <section class="h-100 gradient-custom-2">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center">
-            <div class="col col-lg-9 col-xl-8">
-                <div class="card">
+            <div class="col col-lg-9 col-xl-10">
+                <div class="card shadow-lg">
                     <!-- Profile Header -->
-                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
-                        <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                            <img src="/img/ben2.jpg"
-                            alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                            style="width: 150px;height:150px; z-index: 1" />
+                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
+                        <!-- Cover Image -->
+                        <div class="w-100 h-100 position-absolute">
+                            @if(string.IsNullOrEmpty(Model.CoverImagePicture))
+                            {
+                                <img src="~/img/defaultCoverPicture.jpg"
+                                     alt="Cover Image"
+                                     class="w-100 h-100"
+                                     style="object-fit: cover;" />
+                            }
+                            else
+                            {
+                                
+
+                                <img src="~/img/@Model.CoverImagePicture"
+                                     alt="Cover Image"
+                                     class="w-100 h-100"
+                                     style="object-fit: cover;" />
+                            }
                         </div>
-                        <div class="ms-3" style="margin-top: 130px;">
-                            <h5>Andy Horwitz</h5>
-                            <p>New York</p>
+
+                        <!-- Profile Picture and Basic Info -->
+                        <div class="ms-4 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -100px;">
+                            @if(string.IsNullOrEmpty(Model.ProfilePicture))
+                            {
+                                <img src="/img/defaultProfilePhoto.jpg"
+                                alt="Profile Picture"
+                                class="img-fluid img-thumbnail mt-4 mb-2 border-4 border-white"
+                                style="width: 175px; height: 175px; border-radius: 25%;" />
+                            }
+                            else
+                            {
+                                <img src="/img/@Model.ProfilePicture"
+                                     alt="Profile Picture"
+                                     class="img-fluid img-thumbnail mt-4 mb-2 border-4 border-white"
+                                     style="width:200px; height: 200px; border-radius: 50%;" />
+                            }
                         </div>
                     </div>
 
                     <!-- Profile Stats and Buttons -->
-                    <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-center">
-                        <div>
-                            @if(User.Identity.IsAuthenticated)
-                            {
-                            <a href="#" class="btn btn-dark">Edit profile</a>
-                            <a href="#" class="btn btn-outline-dark ms-2">Follow</a>
-                            }
-                        </div>
+                    <div class="p-4 text-black bg-body-tertiary justify-content-end d-flex align-items-center">
                         <div class="d-flex justify-content-end text-center py-1 text-body">
-                            <div>
-                                <p class="mb-1 h5">253</p>
-                                <p class="small text-muted mb-0">Posts</p>
-                            </div>
                             <div class="px-3">
-                                <p class="mb-1 h5">1026</p>
+                                <p class="mb-1 h5">@Model.FollowersCount</p>
                                 <p class="small text-muted mb-0">Followers</p>
                             </div>
-                            <div>
-                                <p class="mb-1 h5">478</p>
+                            <div class="px-3">
+                                <p class="mb-1 h5">@Model.FollowingCount</p>
                                 <p class="small text-muted mb-0">Following</p>
                             </div>
                         </div>
                     </div>
-
+                    <div class="container d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-column" style="position: relative; bottom: 20px; left: 30px; top:0px">
+                            <h4 class="mb-1 align-content-center">@Model.FullName <i  class="fa-solid fs-5 fa-circle-check text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i></h4>
+                        <p class="mb-2 text-muted">@Model.Title</p>
+                        <small class="text-muted ">@Model.Country</small>
+                    </div>
+                    <div class="me-3 d-flex alignalign-content-center">
+                        <img src="/img/bimser.jpg" class="me-2" style="height:20px;width:20px" />
+                        Working on @Model.WorkingAt 
+                    </div>
+                        </div>
                     <!-- About Section -->
                     <div class="card-body p-4 text-black">
-                        <div class="mb-5 text-body">
-                            <p class="lead fw-normal mb-1">About</p>
-                            <div class="p-4 bg-body-tertiary rounded-3">
-                                <p class="font-italic mb-1">Web Developer</p>
-                                <p class="font-italic mb-1">Lives in New York</p>
-                                <p class="font-italic mb-0">Photographer</p>
+                        <div class="mb-5">
+                            <h4 class="fw-bold mb-3">About</h4>
+                            <div class="p-4 bg-light rounded-3">
+                                <p class="mb-2"><strong>Title:</strong> @Model.Title</p>
+                                <p class="mb-2"><strong>Working at:</strong> @Model.WorkingAt</p>
+                                <p class="mb-2"><strong>Lives in:</strong> @Model.Country</p>
+                                <p class="mb-2"><strong>Born on:</strong> @Model.BirthDate?.ToString("MMMM dd, yyyy")</p>
+                                <p class="mb-2"><strong>Member since:</strong> @Model.RegisteredDate?.ToString("MMMM yyyy")</p>
+                                <p class="mb-0"><strong>Bio:</strong> @Model.Bio</p>
                             </div>
                         </div>
+
+                        <!-- Contact Information (Visible only to the profile owner) -->
+                        @if (Model is ExtendedProfileViewModel extendedProfile)
+                        {
+                            <div class="mb-5">
+                                <h4 class="fw-bold mb-3">Contact Information</h4>
+                                <div class="p-4 bg-light rounded-3">
+                                    <p class="mb-2"><strong>Email:</strong> @extendedProfile.Email</p>
+                                    <p class="mb-2"><strong>Phone:</strong> @extendedProfile.PhoneNumber</p>
+                                    <p class="mb-0"><strong>Two-Factor Authentication:</strong> @(extendedProfile.TwoFactorEnabled ? "Enabled" : "Disabled")</p>
+                                </div>
+                            </div>
+                        }
 
                         <!-- Recent Posts Section -->
-                        <div class="d-flex justify-content-between align-items-center mb-4 text-body">
-                            <p class="lead fw-normal mb-0">Recent Posts</p>
-                            <p class="mb-0"><a href="#!" class="text-muted">Show all</a></p>
-                        </div>
-
-                        <div class="row g-2">
-                            <!-- Post 1 -->
-                            <div class="col mb-2">
-                                <div class="p-3 bg-body-tertiary rounded-3">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
-                                         alt="Post Image 1"
-                                         class="img-fluid rounded-3 mb-3">
-                                    <p class="fw-normal mb-1">This is a sample post title</p>
-                                    <p class="text-muted mb-1">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
-                                    <p class="mb-0">5 likes | 2 comments</p>
-                                </div>
+                        <div class="mb-5">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="fw-bold mb-0">Recent Posts</h4>
+                                <a href="#!" class="text-muted text-decoration-none">Show all</a>
                             </div>
-
-                            <!-- Post 2 -->
-                            <div class="col mb-2">
-                                <div class="p-3 bg-body-tertiary rounded-3">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
-                                         alt="Post Image 2"
-                                         class="img-fluid rounded-3 mb-3">
-                                    <p class="fw-normal mb-1">Another post title</p>
-                                    <p class="text-muted mb-1">This is another post description. It can be a bit longer to provide more context.</p>
-                                    <p class="mb-0">12 likes | 4 comments</p>
+                            <div class="row g-3">
+                                <!-- Post 1 -->
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
+                                             alt="Post Image 1"
+                                             class="img-fluid rounded-3 mb-3">
+                                        <h5 class="fw-bold mb-2">This is a sample post title</h5>
+                                        <p class="text-muted mb-2">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
+                                        <p class="mb-0 text-muted">5 likes | 2 comments</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row g-2">
-                            <!-- Post 3 -->
-                            <div class="col">
-                                <div class="p-3 bg-body-tertiary rounded-3">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(108).webp"
-                                         alt="Post Image 3"
-                                         class="img-fluid rounded-3 mb-3">
-                                    <p class="fw-normal mb-1">Yet another post title</p>
-                                    <p class="text-muted mb-1">This post description can be even longer to show how the layout handles more text.</p>
-                                    <p class="mb-0">8 likes | 3 comments</p>
-                                </div>
-                            </div>
-
-                            <!-- Post 4 -->
-                            <div class="col">
-                                <div class="p-3 bg-body-tertiary rounded-3">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(114).webp"
-                                         alt="Post Image 4"
-                                         class="img-fluid rounded-3 mb-3">
-                                    <p class="fw-normal mb-1">One more post title</p>
-                                    <p class="text-muted mb-1">This is the last post description in this section. It can be as long as needed.</p>
-                                    <p class="mb-0">15 likes | 6 comments</p>
+                                <!-- Post 2 -->
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
+                                             alt="Post Image 2"
+                                             class="img-fluid rounded-3 mb-3">
+                                        <h5 class="fw-bold mb-2">Another post title</h5>
+                                        <p class="text-muted mb-2">This is another post description. It can be a bit longer to provide more context.</p>
+                                        <p class="mb-0 text-muted">12 likes | 4 comments</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- New Stats Section -->
-                        <div class="card-body p-4 text-black">
-                            <div class="d-flex justify-content-between text-center py-2">
-                                <div>
-                                    <p class="mb-1 h5">320</p>
-                                    <p class="small text-muted mb-0">Total Likes</p>
-                                </div>
-                                <div>
-                                    <p class="mb-1 h5">35</p>
-                                    <p class="small text-muted mb-0">Comments</p>
+                        <div class="mb-5">
+                            <h4 class="fw-bold mb-3">Activity</h4>
+                            <div class="p-4 bg-light rounded-3">
+                                <div class="row text-center d-flex">
+                                    <div class="col-md-4">
+                                        <p class="mb-1 h4">@Model.PostCount</p>
+                                        <p class="small text-muted mb-0">Posts</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="mb-1 h4">@Model.CommentCount</p>
+                                        <p class="small text-muted mb-0">Comments</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3 mb-md-0">
+                                        <p class="mb-1 h4">8172</p>
+                                        <p class="small text-muted mb-0">Total Likes</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Comments Section -->
                         <div class="mb-4">
-                            <p class="lead fw-normal mb-1">Recent Comments</p>
-                            <div class="p-3 bg-body-tertiary rounded-3">
-                                <p class="font-italic mb-1">"Great post!" - John Doe</p>
-                                <p class="font-italic mb-1">"Very insightful." - Jane Smith</p>
-                                <p class="font-italic mb-1">"I learned a lot from this." - Alex Johnson</p>
+                            <h4 class="fw-bold mb-3">Recent Comments</h4>
+                            <div class="p-3 bg-light rounded-3">
+                                <p class="mb-2"><i>"Great post!"</i> - John Doe</p>
+                                <p class="mb-2"><i>"Very insightful."</i> - Jane Smith</p>
+                                <p class="mb-0"><i>"I learned a lot from this."</i> - Alex Johnson</p>
                             </div>
                         </div>
                     </div>

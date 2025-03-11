@@ -2,8 +2,10 @@
 using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
 using BlogProject.src.Infra.Entitites;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Reflection.Metadata;
 
 namespace BlogProject.Controllers
@@ -11,12 +13,14 @@ namespace BlogProject.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly ICommentService _commentService;
         private readonly UserManager<AppUser> userManager;
 
-        public UserController(IUserService userService, IEmailService emailService, UserManager<AppUser> userManager)
+        public UserController(IUserService userService, IEmailService emailService, UserManager<AppUser> userManager, ICommentService commentService)
         {
             _userService = userService;
             this.userManager = userManager;
+            _commentService = commentService;
         }
 
         public IActionResult Index()
@@ -34,14 +38,14 @@ namespace BlogProject.Controllers
         public async Task<IActionResult> SignIn(SignInViewModel request, string? returnUrl = null)
         {
             var result = await _userService.SignInAsync(request);
-            
-            if(!result.Item1)
+
+            if (!result.Item1)
             {
                 ModelState.AddModelErrorList(result.Item2!.ToList());
                 return View();
             }
 
-            returnUrl = returnUrl ?? Url.Action("Index","Home");
+            returnUrl = returnUrl ?? Url.Action("Index", "Home");
 
             return Redirect(returnUrl!);
         }
@@ -55,14 +59,14 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> SignUp(SignUpViewModel request)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(request);
             }
 
             var result = await _userService.SignUp(request);
 
-            if(result.Item1)
+            if (result.Item1)
             {
                 TempData["Succeed"] = "User created successfully. You are being redirected to the login page...";
 
@@ -94,9 +98,9 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel request)
         {
-            (bool isOk,IEnumerable<IdentityError>? errors) = await _userService.ResetPasswordLinkAsync(request);
+            (bool isOk, IEnumerable<IdentityError>? errors) = await _userService.ResetPasswordLinkAsync(request);
 
-            if(!isOk)
+            if (!isOk)
             {
                 ModelState.AddModelErrorList(errors!.ToList());
 
@@ -130,15 +134,82 @@ namespace BlogProject.Controllers
 
                 return RedirectToAction("resetpassword", "user");
             }
-            
+
             ModelState.AddModelErrorList(isOk.Item2!.ToList());
 
             return View();
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile(string? userName)
         {
-            return View();
+            if(userName == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var visitedUser = await userManager.FindByNameAsync(userName);
+            
+            if(visitedUser == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var currentUser = await userManager.GetUserAsync(User);
+
+            var postCount = await _commentService.GetCommentCountByUserAsync(visitedUser!);
+            var commentCount = await _userService.GetCommentCountByUserAsync(visitedUser!);
+
+
+            if (currentUser == visitedUser)
+            {
+                ViewBag.IsOwner = true;
+
+                var extendedProfileInfo = new ExtendedProfileViewModel()
+                {
+                    Id = currentUser!.Id.ToString(),
+                    Name = currentUser.Name,
+                    Surname = currentUser.Surname,
+                    Bio = currentUser.Bio,
+                    BirthDate = currentUser.BirthDate,
+                    Country = currentUser.Country,
+                    Email = currentUser.Email,
+                    PhoneNumber = currentUser.PhoneNumber,
+                    Title = currentUser.Title,
+                    RegisteredDate = currentUser.RegisteredDate,
+                    ProfilePicture = currentUser.ProfilePicture,
+                    CoverImagePicture = currentUser.CoverImagePicture,
+                    FollowersCount = currentUser.FollowersCount,
+                    FollowingCount = currentUser.FollowingCount,
+                    TwoFactorEnabled = currentUser.TwoFactorEnabled,
+                    WorkingAt = currentUser.WorkingAt,
+                    CommentCount = commentCount,
+                    PostCount = postCount
+                };
+
+                return View(extendedProfileInfo);
+            }
+
+            var visitorProfileInfo = new VisitorProfileViewModel()
+            {
+
+                Name = visitedUser.Name,
+                Surname = visitedUser.Surname,
+                Bio = visitedUser.Bio,
+                BirthDate = visitedUser.BirthDate,
+                Country = visitedUser.Country,
+                Title = visitedUser.Title,
+                RegisteredDate = visitedUser.RegisteredDate,
+                ProfilePicture = visitedUser.ProfilePicture,
+                CoverImagePicture = visitedUser.CoverImagePicture,
+                FollowersCount = visitedUser.FollowersCount,
+                FollowingCount = visitedUser.FollowingCount,
+                WorkingAt = visitedUser.WorkingAt,
+            };
+
+
+            return View(visitorProfileInfo);
         }
+
+        // Başka kullanıcının profiline ziyaret etmek için VisitProfile() metodu ekleyeceğim.
     }
 }

@@ -3,6 +3,7 @@ using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
 using BlogProject.Services.CustomMethods.Abstract;
 using BlogProject.Services.CustomMethods.Concrete;
+using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,13 @@ namespace BlogProject.Services.Concrete
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly BlogDbContext _blogdbContext;
         private readonly IEmailService _emailService;
         private readonly IUsernameGenerator _usernameGenerator;
         private readonly IUserTokenGenerator _userTokenGenerator;
         private readonly IUrlGenerator _urlGenerator;
 
-        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService)
+        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext)
         {
             _userManager = userManager;
             _usernameGenerator = usernameGenerator;
@@ -32,8 +34,14 @@ namespace BlogProject.Services.Concrete
             _userTokenGenerator = userTokenService;
             _urlGenerator = urlGenerator;
             _emailService = emailService;
+            _blogdbContext = blogdbContext;
         }
 
+        public async Task<int> GetCommentCountByUserAsync(AppUser user)
+        {
+            var commentCount = await _blogdbContext.Comments.CountAsync(x => x.AuthorId == user.Id);
+            return commentCount;
+        }
         public async Task<List<AppUser>> GetUsers()
         {
             var users = await _userManager.Users.ToListAsync();

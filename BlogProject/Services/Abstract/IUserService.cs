@@ -14,6 +14,8 @@ namespace BlogProject.Services.Abstract
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token);
         Task LogoutAsync();
 
+        Task<int> GetCommentCountByUserAsync(AppUser user);
+
         Task<List<AppUser>> MostContributors(int countUser);
         Task<List<AppUser>> NewUsers(int countUser);
         Task<List<AppUser>> GetUsers();

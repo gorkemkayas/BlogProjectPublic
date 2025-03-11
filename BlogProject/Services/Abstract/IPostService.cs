@@ -9,6 +9,8 @@ namespace BlogProject.Services.Abstract
 
         // post silme( buna ayrı önem ver, soft delete olayı var).
 
+
+        // CreatePostDto ile UpdatePostDto ları baştan yapıcam şuanda boş, hata vermesin diye.
         public Task AddPostAsync(CreatePostDto createPostDto);
         public Task UpdatePostAsync(Guid postId, UpdatePostDto updatePostDto);
 
