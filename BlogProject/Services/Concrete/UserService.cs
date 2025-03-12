@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
 using System.Reflection.Metadata;
+using System.Security.Claims;
 using System.Security.Policy;
 
 namespace BlogProject.Services.Concrete
@@ -22,11 +23,12 @@ namespace BlogProject.Services.Concrete
         private readonly SignInManager<AppUser> _signInManager;
         private readonly BlogDbContext _blogdbContext;
         private readonly IEmailService _emailService;
+        private readonly ICommentService _commentService;
         private readonly IUsernameGenerator _usernameGenerator;
         private readonly IUserTokenGenerator _userTokenGenerator;
         private readonly IUrlGenerator _urlGenerator;
 
-        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext)
+        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext, ICommentService commentService)
         {
             _userManager = userManager;
             _usernameGenerator = usernameGenerator;
@@ -35,6 +37,7 @@ namespace BlogProject.Services.Concrete
             _urlGenerator = urlGenerator;
             _emailService = emailService;
             _blogdbContext = blogdbContext;
+            _commentService = commentService;
         }
 
         public async Task<int> GetCommentCountByUserAsync(AppUser user)
@@ -46,6 +49,56 @@ namespace BlogProject.Services.Concrete
         {
             var users = await _userManager.Users.ToListAsync();
             return users;
+        }
+
+        public async Task<ExtendedProfileViewModel> GetExtendedProfileInformationAsync(AppUser currentUser)
+        {
+            var extendedProfileInfo = new ExtendedProfileViewModel()
+            {
+                Id = currentUser!.Id.ToString(),
+                Name = currentUser.Name,
+                Surname = currentUser.Surname,
+                Bio = currentUser.Bio,
+                BirthDate = currentUser.BirthDate,
+                Country = currentUser.Country,
+                Email = currentUser.Email,
+                PhoneNumber = currentUser.PhoneNumber,
+                Title = currentUser.Title,
+                RegisteredDate = currentUser.RegisteredDate,
+                ProfilePicture = currentUser.ProfilePicture,
+                CoverImagePicture = currentUser.CoverImagePicture,
+                FollowersCount = currentUser.FollowersCount,
+                FollowingCount = currentUser.FollowingCount,
+                TwoFactorEnabled = currentUser.TwoFactorEnabled,
+                WorkingAt = currentUser.WorkingAt,
+                CommentCount = await GetCommentCountByUserAsync(currentUser!),
+                PostCount = await _commentService.GetCommentCountByUserAsync(currentUser!)
+            };
+
+            return extendedProfileInfo;
+
+        }
+        public VisitorProfileViewModel GetVisitorProfileInformation(AppUser visitedUser)
+        {
+            var visitorProfileInfo = new VisitorProfileViewModel()
+            {
+
+                Name = visitedUser.Name,
+                Surname = visitedUser.Surname,
+                Bio = visitedUser.Bio,
+                BirthDate = visitedUser.BirthDate,
+                Country = visitedUser.Country,
+                Title = visitedUser.Title,
+                RegisteredDate = visitedUser.RegisteredDate,
+                ProfilePicture = visitedUser.ProfilePicture,
+                CoverImagePicture = visitedUser.CoverImagePicture,
+                FollowersCount = visitedUser.FollowersCount,
+                FollowingCount = visitedUser.FollowingCount,
+                WorkingAt = visitedUser.WorkingAt,
+            };
+
+            return visitorProfileInfo;
+
         }
 
         public async Task<List<AppUser>> MostContributors(int countUser)
@@ -113,6 +166,40 @@ namespace BlogProject.Services.Concrete
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+
+        }
+
+        public async Task<(bool,IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user)
+        {
+            var errors = new List<IdentityError>();
+
+            var currentUser = await _userManager.GetUserAsync(user);
+
+            var isSame = await _userManager.CheckPasswordAsync(currentUser, request.OldPassword);
+            
+            if(!isSame)
+            {
+                errors.Add(new IdentityError() { Code = "ChangePasswordError", Description = "The old password is incorrect." });
+                return (false, errors);
+            }
+
+            var result = await _userManager.ChangePasswordAsync(currentUser,request.OldPassword, request.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                errors.AddRange(result.Errors);
+                return (false,errors);
+            }
+
+            await _userManager.UpdateSecurityStampAsync(currentUser);
+            await _signInManager.SignOutAsync();
+
+            await _signInManager.SignInAsync(currentUser, true);
+
+            return (true, null);
+
+
+
 
         }
 

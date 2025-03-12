@@ -17,6 +17,46 @@
     </video>
 </div> *@
 
+<style>
+    .custom-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        z-index: 1050;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #ff4e50, #f9d423);
+        color: white;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #56ab2f, #a8e063);
+        color: white;
+    }
+
+    .custom-alert i {
+        font-size: 22px;
+    }
+
+    .show-alert {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+
+
 <!-- Sol Reklam Alanı -->
 <div class="ad-left">
     <!-- Video reklamı buraya gelecek -->
@@ -38,7 +78,7 @@
 <section class="h-100 gradient-custom-2">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center">
-            <div class="col col-lg-9 col-xl-10">
+            <div class="col col-lg-9 col-xl-0">
                 <div class="card shadow-lg">
                     <!-- Profile Header -->
                     <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
@@ -60,6 +100,17 @@
                                      class="w-100 h-100"
                                      style="object-fit: cover;" />
                             }
+                        </div>
+                        
+                        <div class="dropdown-center position-absolute" style="right:5px; top:2px">
+                            <i class="bi bi-gear fs-4 " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                
+                            </i>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Action two</a></li>
+                                <li><a class="dropdown-item" href="#">Action three</a></li>
+                            </ul>
                         </div>
 
                         <!-- Profile Picture and Basic Info -->
@@ -83,7 +134,7 @@
 
                     <!-- Profile Stats and Buttons -->
                     <div class="p-4 text-black bg-body-tertiary justify-content-end d-flex align-items-center">
-                        <div class="d-flex justify-content-end text-center py-1 text-body">
+                        <div class="d-flex justify-content-end text-center py-1 text-body align-items-center">
                             <div class="px-3">
                                 <p class="mb-1 h5">@Model.FollowersCount</p>
                                 <p class="small text-muted mb-0">Followers</p>

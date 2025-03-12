@@ -87,10 +87,19 @@ body {
 
 .graytored {
     color:darkgray !important;
-    transition: color 0.3s ease-in;
+    transition: color 0.1s ease-in;
 }
 
     .graytored:hover {
+        color: red !important;
+    }
+
+.lightredtovividred {
+    color: indianred !important;
+    transition: color 0.1s ease-in;
+}
+
+    .lightredtovividred:hover {
         color: red !important;
     }
 

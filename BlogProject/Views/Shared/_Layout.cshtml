@@ -86,24 +86,30 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center" asp-controller="User" asp-action="Profile" asp-route-userName="@User.Identity.Name">
+                                        <a class="dropdown-item d-flex align-items-center graytoblack" asp-controller="User" asp-action="Profile" asp-route-userName="@User.Identity.Name">
                                             <i class="bi bi-person me-2"></i> Profile
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#">
-                                            <span><i class="bi bi-bell me-2"></i> Notifications</span>
+                                        <a class="dropdown-item d-flex align-items-center justify-content-between graytoblack" href="#">
+                                            <span><i class="bi bi-bell fs-6 me-2"></i>Notifications</span>
                                             <span class="badge rounded-pill bg-danger ms-auto">99+</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <a class="dropdown-item d-flex align-items-center graytoblack" href="#">
                                             <i class="bi bi-envelope me-2"></i> Messages
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center text-danger" asp-route-returnUrl="/Home/Index" asp-controller="User" asp-action="Logout">
+                                        <a class="dropdown-item d-flex align-items-center graytoblack" asp-controller="User" asp-action="ChangePassword">
+                                            <i class="bi bi-box-arrow-right me-2"></i> Change Password
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center lightredtovividred " asp-route-returnUrl="/Home/Index" asp-controller="User" asp-action="Logout">
                                             <i class="bi bi-box-arrow-right me-2"></i> Logout
                                         </a>
                                     </li>

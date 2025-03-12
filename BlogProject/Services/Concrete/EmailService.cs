@@ -135,7 +135,7 @@ a[x-apple-data-detectors],
                   <td valign=""top"" align=""center"" class=""es-m-p0r"" style=""padding:0;Margin:0;width:560px"">
                    <table role=""presentation"" cellpadding=""0"" cellspacing=""0"" width=""100%"" style=""mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"">
                      <tr>
-                      <td align=""center"" style=""padding:0;Margin:0""><h3 style=""Margin:0;font-family:Orbitron, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:28px;font-style:normal;font-weight:bold;line-height:33.6px;color:#10054D""><strong>kayas.com</strong></h3></td>
+                      <td align=""center"" style=""padding:0;Margin:0""><h3 style=""Margin:0;font-family:Orbitron, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:28px;font-style:normal;font-weight:bold;line-height:33.6px;color:#10054D""><strong></strong></h3></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -386,6 +386,260 @@ a[x-apple-data-detectors],
    </table>
   </div>
  </body>
+</html>";
+
+            mailMessage.IsBodyHtml = true;
+
+            await smtpClient.SendMailAsync(mailMessage);
+        }
+
+        public async Task SendPasswordChangedNotificationAsync(string subject, string receiverEmail)
+        {
+            var smtpClient = new SmtpClient();
+
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Host = _emailSettings.Host;
+            smtpClient.Port = _emailSettings.Port;
+            smtpClient.Credentials = new NetworkCredential(_emailSettings.Email, _emailSettings.Password);
+            smtpClient.EnableSsl = true;
+
+            var mailMessage = new MailMessage();
+
+            mailMessage.From = new MailAddress(_emailSettings.Email, "kayas.com");
+            mailMessage.To.Add(receiverEmail);
+            mailMessage.Subject = $"{subject}";
+            mailMessage.Body = @$"<!DOCTYPE html>
+<html xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:o=""urn:schemas-microsoft-com:office:office"" lang=""en"">
+
+<head>
+	<title></title>
+	<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">
+	<meta name=""viewport"" content=""width=device-width, initial-scale=1.0""><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!-->
+	<link href=""https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900"" rel=""stylesheet"" type=""text/css""><!--<![endif]-->
+	<style>
+		* {{
+			box-sizing: border-box;
+		}}
+
+		body {{
+			margin: 0;
+			padding: 0;
+		}}
+
+		a[x-apple-data-detectors] {{
+			color: inherit !important;
+			text-decoration: inherit !important;
+		}}
+
+		#MessageViewBody a {{
+			color: inherit;
+			text-decoration: none;
+		}}
+
+		p {{
+			line-height: inherit
+		}}
+
+		.desktop_hide,
+		.desktop_hide table {{
+			mso-hide: all;
+			display: none;
+			max-height: 0px;
+			overflow: hidden;
+		}}
+
+		.image_block img+div {{
+			display: none;
+		}}
+
+		sup,
+		sub {{
+			font-size: 75%;
+			line-height: 0;
+		}}
+
+		@media (max-width:660px) {{
+			.desktop_hide table.icons-inner {{
+				display: inline-block !important;
+			}}
+
+			.icons-inner {{
+				text-align: center;
+			}}
+
+			.icons-inner td {{
+				margin: 0 auto;
+			}}
+
+			.mobile_hide {{
+				display: none;
+			}}
+
+			.row-content {{
+				width: 100% !important;
+			}}
+
+			.stack .column {{
+				width: 100%;
+				display: block;
+			}}
+
+			.mobile_hide {{
+				min-height: 0;
+				max-height: 0;
+				max-width: 0;
+				overflow: hidden;
+				font-size: 0px;
+			}}
+
+			.desktop_hide,
+			.desktop_hide table {{
+				display: table !important;
+				max-height: none !important;
+			}}
+		}}
+	</style><!--[if mso ]><style>sup, sub {{ font-size: 100% !important; }} sup {{ mso-text-raise:10% }} sub {{ mso-text-raise:-10% }}</style> <![endif]-->
+</head>
+
+<body class=""body"" style=""background-color: #f8f8f9; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;"">
+	<table class=""nl-container"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f8f8f9;"">
+		<tbody>
+			<tr>
+				<td>
+					<table class=""row row-1"" align=""center"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #1aa19c;"">
+						<tbody>
+							<tr>
+								<td>
+									<table class=""row-content stack"" align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; background-color: #1aa19c; width: 640px; margin: 0 auto;"" width=""640"">
+										<tbody>
+											<tr>
+												<td class=""column column-1"" width=""100%"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top;"">
+													<table class=""divider_block block-1"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"">
+														<tr>
+															<td class=""pad"">
+																<div class=""alignment"" align=""center"">
+																	<table border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" width=""100%"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"">
+																		<tr>
+																			<td class=""divider_inner"" style=""font-size: 1px; line-height: 1px; border-top: 4px solid #1AA19C;""><span style=""word-break: break-word;"">&#8202;</span></td>
+																		</tr>
+																	</table>
+																</div>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table class=""row row-2"" align=""center"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"">
+						<tbody>
+							<tr>
+								<td>
+									<table class=""row-content stack"" align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #fff; color: #000000; width: 640px; margin: 0 auto;"" width=""640"">
+										<tbody>
+											<tr>
+												<td class=""column column-1"" width=""100%"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top;"">
+													<table class=""image_block block-1"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"">
+														<tr>
+															<td class=""pad"" style=""width:100%;"">
+																<div class=""alignment"" align=""center"" style=""line-height:10px"">
+																	<div style=""max-width: 640px;""><a style=""outline:none"" tabindex=""-1""><img src=""https://d1oco4z2z1fhwp.cloudfront.net/templates/default/4036/___passwordreset.gif"" style=""display: block; height: auto; border: 0; width: 100%;"" width=""640"" alt=""Image of lock &amp; key."" title=""Image of lock &amp; key."" height=""auto""></a></div>
+																</div>
+															</td>
+														</tr>
+													</table>
+													<table class=""divider_block block-2"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"">
+														<tr>
+															<td class=""pad"" style=""padding-top:30px;"">
+																<div class=""alignment"" align=""center"">
+																	<table border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" width=""100%"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"">
+																		<tr>
+																			<td class=""divider_inner"" style=""font-size: 1px; line-height: 1px; border-top: 0px solid #BBBBBB;""><span style=""word-break: break-word;"">&#8202;</span></td>
+																		</tr>
+																	</table>
+																</div>
+															</td>
+														</tr>
+													</table>
+													<table class=""paragraph_block block-3"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"">
+														<tr>
+															<td class=""pad"" style=""padding-bottom:10px;padding-left:40px;padding-right:40px;padding-top:10px;"">
+																<div style=""color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:30px;line-height:120%;text-align:center;mso-line-height-alt:36px;"">
+																	<p style=""margin: 0; word-break: break-word;"">You changed your password.</p>
+																</div>
+															</td>
+														</tr>
+													</table>
+													<table class=""paragraph_block block-4"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"">
+														<tr>
+															<td class=""pad"" style=""padding-bottom:10px;padding-left:40px;padding-right:40px;padding-top:10px;"">
+																<div style=""color:#555555;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:15px;line-height:150%;text-align:center;mso-line-height-alt:22.5px;"">
+																	<p style=""margin: 0;"">This is an informational message. You have recently changed your password. <strong>If this is not yours, please contact +90 543 872 61 77</strong></p>
+																</div>
+															</td>
+														</tr>
+													</table>
+													<table class=""divider_block block-5"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"">
+														<tr>
+															<td class=""pad"" style=""padding-bottom:12px;padding-top:60px;"">
+																<div class=""alignment"" align=""center"">
+																	<table border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" width=""100%"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"">
+																		<tr>
+																			<td class=""divider_inner"" style=""font-size: 1px; line-height: 1px; border-top: 0px solid #BBBBBB;""><span style=""word-break: break-word;"">&#8202;</span></td>
+																		</tr>
+																	</table>
+																</div>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table class=""row row-3"" align=""center"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;"">
+						<tbody>
+							<tr>
+								<td>
+									<table class=""row-content stack"" align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; background-color: #ffffff; width: 640px; margin: 0 auto;"" width=""640"">
+										<tbody>
+											<tr>
+												<td class=""column column-1"" width=""100%"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top;"">
+													<table class=""icons_block block-1"" width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: center; line-height: 0;"">
+														<tr>
+															<td class=""pad"" style=""vertical-align: middle; color: #1e0e4b; font-family: 'Inter', sans-serif; font-size: 15px; padding-bottom: 5px; padding-top: 5px; text-align: center;""><!--[if vml]><table align=""center"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" style=""display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;""><![endif]-->
+																<!--[if !vml]><!-->
+																<table class=""icons-inner"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block; padding-left: 0px; padding-right: 0px;"" cellpadding=""0"" cellspacing=""0"" role=""presentation""><!--<![endif]-->
+																	<tr>
+																		<td style=""vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 6px;""><a href=""http://designedwithbeefree.com/"" target=""_blank"" style=""text-decoration: none;""><img class=""icon"" alt=""Beefree Logo"" src=""https://d1oco4z2z1fhwp.cloudfront.net/assets/Beefree-logo.png"" height=""auto"" width=""34"" align=""center"" style=""display: block; height: auto; margin: 0 auto; border: 0;""></a></td>
+																		<td style=""font-family: 'Inter', sans-serif; font-size: 15px; font-weight: undefined; color: #1e0e4b; vertical-align: middle; letter-spacing: undefined; text-align: center; line-height: normal;""><a href=""http://designedwithbeefree.com/"" target=""_blank"" style=""color: #1e0e4b; text-decoration: none;"">Designed with Beefree</a></td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table><!-- End -->
+</body>
+
 </html>";
 
             mailMessage.IsBodyHtml = true;

@@ -2,6 +2,7 @@
 using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BlogProject.Services.Abstract
 {
@@ -12,9 +13,12 @@ namespace BlogProject.Services.Abstract
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordLinkAsync(ForgetPasswordViewModel request);
 
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token);
+        Task<(bool, IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user);
         Task LogoutAsync();
 
         Task<int> GetCommentCountByUserAsync(AppUser user);
+        Task<ExtendedProfileViewModel> GetExtendedProfileInformationAsync(AppUser currentUser);
+        VisitorProfileViewModel GetVisitorProfileInformation(AppUser visitedUser);
 
         Task<List<AppUser>> MostContributors(int countUser);
         Task<List<AppUser>> NewUsers(int countUser);

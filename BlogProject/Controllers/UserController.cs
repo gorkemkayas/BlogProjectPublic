@@ -14,6 +14,7 @@ namespace BlogProject.Controllers
     {
         private readonly IUserService _userService;
         private readonly ICommentService _commentService;
+        private readonly IEmailService _emailService;
         private readonly UserManager<AppUser> userManager;
 
         public UserController(IUserService userService, IEmailService emailService, UserManager<AppUser> userManager, ICommentService commentService)
@@ -21,6 +22,7 @@ namespace BlogProject.Controllers
             _userService = userService;
             this.userManager = userManager;
             _commentService = commentService;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -132,12 +134,50 @@ namespace BlogProject.Controllers
             {
                 TempData["Succeed"] = "Password reset successfully.";
 
+                var user = await userManager.FindByIdAsync(userId!.ToString()!);
+                var userEmail = user!.Email;
+
+                await _emailService.SendPasswordChangedNotificationAsync("You changed your password", userEmail!);
+
                 return RedirectToAction("resetpassword", "user");
             }
 
+           
             ModelState.AddModelErrorList(isOk.Item2!.ToList());
 
             return View();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(PasswordChangeViewModel request)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(request);
+            }
+            
+            var result = await _userService.ChangePasswordAsync(request, User);
+            if(!result.Item1)
+            {
+                ModelState.AddModelErrorList(result.Item2!.ToList());
+                return View();
+            }
+
+            var user = await userManager.GetUserAsync(User);
+            var userEmail = user!.Email;
+
+            TempData["Succeed"] = "Password changed successfully.";
+            await _emailService.SendPasswordChangedNotificationAsync("You changed your password",userEmail!);
+
+            return RedirectToAction(nameof(Profile), "User", new { userName = User.Identity!.Name});
         }
 
         public async Task<IActionResult> Profile(string? userName)
@@ -164,52 +204,15 @@ namespace BlogProject.Controllers
             {
                 ViewBag.IsOwner = true;
 
-                var extendedProfileInfo = new ExtendedProfileViewModel()
-                {
-                    Id = currentUser!.Id.ToString(),
-                    Name = currentUser.Name,
-                    Surname = currentUser.Surname,
-                    Bio = currentUser.Bio,
-                    BirthDate = currentUser.BirthDate,
-                    Country = currentUser.Country,
-                    Email = currentUser.Email,
-                    PhoneNumber = currentUser.PhoneNumber,
-                    Title = currentUser.Title,
-                    RegisteredDate = currentUser.RegisteredDate,
-                    ProfilePicture = currentUser.ProfilePicture,
-                    CoverImagePicture = currentUser.CoverImagePicture,
-                    FollowersCount = currentUser.FollowersCount,
-                    FollowingCount = currentUser.FollowingCount,
-                    TwoFactorEnabled = currentUser.TwoFactorEnabled,
-                    WorkingAt = currentUser.WorkingAt,
-                    CommentCount = commentCount,
-                    PostCount = postCount
-                };
+                var extendedProfileInfo = await _userService.GetExtendedProfileInformationAsync(currentUser);
 
                 return View(extendedProfileInfo);
             }
 
-            var visitorProfileInfo = new VisitorProfileViewModel()
-            {
-
-                Name = visitedUser.Name,
-                Surname = visitedUser.Surname,
-                Bio = visitedUser.Bio,
-                BirthDate = visitedUser.BirthDate,
-                Country = visitedUser.Country,
-                Title = visitedUser.Title,
-                RegisteredDate = visitedUser.RegisteredDate,
-                ProfilePicture = visitedUser.ProfilePicture,
-                CoverImagePicture = visitedUser.CoverImagePicture,
-                FollowersCount = visitedUser.FollowersCount,
-                FollowingCount = visitedUser.FollowingCount,
-                WorkingAt = visitedUser.WorkingAt,
-            };
+            var visitorProfileInfo = _userService.GetVisitorProfileInformation(visitedUser);
 
 
             return View(visitorProfileInfo);
         }
-
-        // Başka kullanıcının profiline ziyaret etmek için VisitProfile() metodu ekleyeceğim.
     }
 }

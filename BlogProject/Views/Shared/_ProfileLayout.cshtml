@@ -52,6 +52,19 @@
 
 </head>
 <body>
+    @if (TempData["Succeed"] != null)
+    {
+        <div id="successAlert" class="custom-alert alert-success">
+            <i class="fa-solid fa-check"></i>
+            @TempData["Succeed"]!.ToString()
+        </div>
+    }
+    else if (TempData["Failed"] != null)
+    {
+        <div id="errorAlert" class="custom-alert alert-danger">
+            <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+        </div>
+    }
     <header class="lh-1 py-3">
         <!-- Üst Navbar -->
         <div class="container">
@@ -97,6 +110,12 @@
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
+                                        <a class="dropdown-item d-flex align-items-center graytoblack" asp-controller="User" asp-action="ChangePassword">
+                                            <i class="bi bi-box-arrow-right me-2"></i> Change Password
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
                                         <a class="dropdown-item d-flex align-items-center text-danger" asp-route-returnUrl="/Home/Index" asp-controller="User" asp-action="Logout">
                                             <i class="bi bi-box-arrow-right me-2"></i> Logout
                                         </a>
@@ -131,3 +150,33 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    function showAlertSuccess(alertId) {
+        var alertBox = document.getElementById(alertId);
+        if (alertBox) {
+            alertBox.classList.add("show-alert");
+            setTimeout(() => {
+                alertBox.classList.remove("show-alert");
+
+                // Yönlendirme işlemi
+                // window.location.href = '/user/profile';
+
+            }, 3000); // 3 saniye sonra kaybolur
+        }
+    }
+
+    function showAlertError(alertId) {
+        var alertBox = document.getElementById(alertId);
+        if (alertBox) {
+            alertBox.classList.add("show-alert");
+            setTimeout(() => {
+                alertBox.classList.remove("show-alert");
+            }, 3000); // 3 saniye sonra kaybolur
+        }
+    }
+
+    // Örnek: Alertleri açmak için
+    showAlertSuccess('successAlert'); // Başarılı mesajı göster
+    showAlertError('errorAlert'); // Başarısız mesajı göster
+</script>
