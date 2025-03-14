@@ -1,8 +1,14 @@
 ﻿using BlogProject.CustomValidators;
 using BlogProject.Localizations;
+using BlogProject.Services.Abstract;
+using BlogProject.Services.Concrete;
+using BlogProject.Services.CustomMethods.Abstract;
+using BlogProject.Services.CustomMethods.Concrete;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace BlogProject.Extensions
 {
@@ -37,6 +43,20 @@ namespace BlogProject.Extensions
               .AddErrorDescriber<LocalizationIdentityErrorDescriber>()
               .AddDefaultTokenProviders()
               .AddEntityFrameworkStores<BlogDbContext>();
+        }
+
+        public static void AddServicesWithLifeTimes(this IServiceCollection services)
+        {
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IUsernameGenerator, UsernameGenerator>();
+            services.AddScoped<IUserTokenGenerator, UserTokenGenerator>();
+            services.AddScoped<IUrlGenerator, UrlGenerator>();
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
         }
     }
 }

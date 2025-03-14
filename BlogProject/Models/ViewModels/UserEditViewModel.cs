@@ -2,12 +2,10 @@
 
 namespace BlogProject.Models.ViewModels
 {
-    public class VisitorProfileViewModel : BaseProfileViewModel
+    public class UserEditViewModel
     {
         public string Name { get; set; } = null!;
         public string Surname { get; set; } = null!;
-
-        public string FullName { get { return Name + " " + Surname; } }
         public string? Title { get; set; }
         public string? Bio { get; set; }
         public string? WorkingAt { get; set; }
@@ -34,15 +32,11 @@ namespace BlogProject.Models.ViewModels
         public string? UniversityStartYear { get; set; }
         public string? UniversityGraduationYear { get; set; }
 
-        public ICollection<PostEntity> FeaturedPosts { get; set; } = new List<PostEntity>();
-
 
 
         // sonu
         public DateTime BirthDate { get; set; }
-
-        public DateTime? RegisteredDate { get; set; }
-        public string? ProfilePicture { get; set; }
-        public string? CoverImagePicture { get; set; }
+        public IFormFile? ProfilePicture { get; set; }
+        public IFormFile? CoverImagePicture { get; set; }
     }
 }

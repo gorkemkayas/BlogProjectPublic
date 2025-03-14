@@ -1,0 +1,41 @@
+﻿@using BlogProject.src.Infra.Entitites
+@model List<AppUser>
+
+    <style>
+    /* Reklam alanları için stil */
+    .locationSuggestedUsers {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 200px; /* Reklam genişliği */
+        height: 600px; /* Reklam yüksekliği */
+        background-color: #ffff; /* Reklam arka plan rengi */
+        border: 1px solid #ccc; /* Reklam kenarlık */
+        z-index: 1000; /* Diğer içeriklerin üzerinde görünmesi için */
+        overflow: hidden; /* İçerik taşmasını engelle */
+    }
+
+
+
+    .locationSuggestedUsers-left {
+        left: 1px; /* Sol kenardan boşluk */
+    }
+
+    .alocationSuggestedUsers-right {
+        right: 1px; /* Sağ kenardan boşluk */
+    }
+    </style>
+
+<div class="locationSuggestedUsers">
+    <h5 class="text-center">People you may know</h5>
+    <ul class="align-content-center d-flex justify-content-center flex-column">
+        @foreach(var user in Model)
+        {
+            <li>
+
+            <img src="/img/profile1.jpg" style="width:16px;height:16px" />
+            @user.FullName
+            </li>
+        }
+    </ul>
+</div>

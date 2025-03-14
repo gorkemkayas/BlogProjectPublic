@@ -17,6 +17,7 @@
     </video>
 </div> *@
 
+
 <style>
     .custom-alert {
         position: fixed;
@@ -57,7 +58,7 @@
 </style>
 
 
-<!-- Sol Reklam Alanı -->
+@* <!-- Sol Reklam Alanı -->
 <div class="ad-left">
     <!-- Video reklamı buraya gelecek -->
     <video class="ad-video" autoplay loop muted playsinline>
@@ -73,7 +74,107 @@
         <source src="~/img/AdRight.webm" type="video/mp4">
         Your browser does not support the video tag.
     </video>
-</div>
+</div> *@
+
+@* <section class="h-100 gradient-custom-2">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-9">
+                <div class="card shadow-lg">
+                    <!-- Profile Header -->
+                    <div class="rounded-top text-white d-flex flex-column align-items-center" style="background-color: #000; height: 300px; position: relative;">
+                        <!-- Cover Image -->
+                        <div class="w-100 h-100 position-absolute">
+                            <img src="/img/defaultCoverPicture.jpg" alt="Cover Image" class="w-100 h-100" style="object-fit: cover; opacity: 0.7;" />
+                        </div>
+                        <!-- Profile Picture -->
+                        <div class="mt-auto mb-n5 position-relative">
+                            <img src="/img/defaultProfilePhoto.jpg" alt="Profile Picture" class="img-fluid img-thumbnail border-4 border-white" style="width: 160px; height: 160px; border-radius: 50%;" />
+                        </div>
+                    </div>
+
+                    <div class="container p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h3 class="fw-bold">John Doe <i class="fa-solid fa-circle-check text-success" title="Verified Account"></i></h3>
+                                <p class="text-muted">Senior Software Engineer | Tech Enthusiast</p>
+                                <small class="text-muted">San Francisco, CA</small>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <button class="btn btn-primary">Follow</button>
+                                <button class="btn btn-outline-secondary">Message</button>
+                            </div>
+                        </div>
+                        <!-- Stats -->
+                        <div class="row text-center mt-4">
+                            <div class="col-3">
+                                <h5 class="fw-bold">150</h5>
+                                <p class="text-muted">Followers</p>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="fw-bold">120</h5>
+                                <p class="text-muted">Following</p>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="fw-bold">34</h5>
+                                <p class="text-muted">Posts</p>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="fw-bold">2.5k</h5>
+                                <p class="text-muted">Likes</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="fw-bold">About</h5>
+                                <p><strong>Current Position:</strong> Senior Developer at Google</p>
+                                <p><strong>Education:</strong> MIT (2009 - 2013)</p>
+                                <p><strong>Skills:</strong> C#, ASP.NET, JavaScript, SQL, Cloud Computing</p>
+                                <p><strong>Interests:</strong> AI, Blockchain, Open Source</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="fw-bold">Social Links</h5>
+                                <p><strong>LinkedIn:</strong> <a href="#">linkedin.com/in/johndoe</a></p>
+                                <p><strong>GitHub:</strong> <a href="#">github.com/johndoe</a></p>
+                                <p><strong>Website:</strong> <a href="#">johndoe.com</a></p>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h5 class="fw-bold">Recent Posts</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">How to Optimize Your C# Code - 10k views</li>
+                                    <li class="list-group-item">Understanding ASP.NET Core - 8.5k views</li>
+                                    <li class="list-group-item">Design Patterns in Software - 7.2k views</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="fw-bold">Recent Comments</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item">"Great article on ASP.NET!" - Mark</li>
+                                    <li class="list-group-item">"Thanks for sharing your knowledge!" - Sarah</li>
+                                    <li class="list-group-item">"Loved the C# optimization tips!" - Alex</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-12 text-center">
+                                <button class="btn btn-outline-dark">View Full Profile</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> *@
+
 
 <section class="h-100 gradient-custom-2">
     <div class="container py-5 h-100">
@@ -84,27 +185,15 @@
                     <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
                         <!-- Cover Image -->
                         <div class="w-100 h-100 position-absolute">
-                            @if(string.IsNullOrEmpty(Model.CoverImagePicture))
-                            {
-                                <img src="~/img/defaultCoverPicture.jpg"
-                                     alt="Cover Image"
-                                     class="w-100 h-100"
-                                     style="object-fit: cover;" />
-                            }
-                            else
-                            {
-                                
-
-                                <img src="~/img/@Model.CoverImagePicture"
-                                     alt="Cover Image"
-                                     class="w-100 h-100"
-                                     style="object-fit: cover;" />
-                            }
+                            <img src="~/img/defaultCoverPicture.jpg"
+                                 alt="Cover Image"
+                                 class="w-100 h-100"
+                                 style="object-fit: cover;" />
                         </div>
-                        
+
                         <div class="dropdown-center position-absolute" style="right:5px; top:2px">
                             <i class="bi bi-gear fs-4 " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                
+
                             </i>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">Action</a></li>
@@ -114,85 +203,139 @@
                         </div>
 
                         <!-- Profile Picture and Basic Info -->
-                        <div class="ms-4 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -100px;">
-                            @if(string.IsNullOrEmpty(Model.ProfilePicture))
-                            {
-                                <img src="/img/defaultProfilePhoto.jpg"
-                                alt="Profile Picture"
-                                class="img-fluid img-thumbnail mt-4 mb-2 border-4 border-white"
-                                style="width: 175px; height: 175px; border-radius: 25%;" />
-                            }
-                            else
-                            {
-                                <img src="/img/@Model.ProfilePicture"
-                                     alt="Profile Picture"
-                                     class="img-fluid img-thumbnail mt-4 mb-2 border-4 border-white"
-                                     style="width:200px; height: 200px; border-radius: 50%;" />
-                            }
+                        <div class="ms-5 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
+                            <img src="/img/ben4transparan.png"
+                                 alt="Profile Picture"
+                                 class="img-fluid img-thumbnail mt-4 mb-2 "
+                                 style="width: 175px; height: 175px; " />
                         </div>
                     </div>
 
                     <!-- Profile Stats and Buttons -->
-                    <div class="p-4 text-black bg-body-tertiary justify-content-end d-flex align-items-center">
+                    <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-center">
+                        <div class="d-flex flex-column" style="position: relative; bottom: 20px; left: 30px; top:0px">
+                            <h3 class="mb-1 align-content-center">John Doe <i class="fa-solid fs-5 fa-circle-check text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i></h3>
+                            <p class="mb-2 text-muted">Software Engineer</p>
+                            <small class="text-muted ">United States</small>
+                        </div>
                         <div class="d-flex justify-content-end text-center py-1 text-body align-items-center">
                             <div class="px-3">
-                                <p class="mb-1 h5">@Model.FollowersCount</p>
+                                <p class="mb-1 h4">1,234</p>
                                 <p class="small text-muted mb-0">Followers</p>
                             </div>
                             <div class="px-3">
-                                <p class="mb-1 h5">@Model.FollowingCount</p>
+                                <p class="mb-1 h4">567</p>
                                 <p class="small text-muted mb-0">Following</p>
                             </div>
                         </div>
                     </div>
-                    <div class="container d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-column" style="position: relative; bottom: 20px; left: 30px; top:0px">
-                            <h4 class="mb-1 align-content-center">@Model.FullName <i  class="fa-solid fs-5 fa-circle-check text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i></h4>
-                        <p class="mb-2 text-muted">@Model.Title</p>
-                        <small class="text-muted ">@Model.Country</small>
-                    </div>
-                    <div class="me-3 d-flex alignalign-content-center">
-                        <img src="/img/bimser.jpg" class="me-2" style="height:20px;width:20px" />
-                        Working on @Model.WorkingAt 
-                    </div>
+                    <div class="container mt-2 d-flex justify-content-between align-items-center">
+                        <div class="ms-1">
+                            <div class="d-flex ms-4 align-content-center flex-column">
+
+                                <div class="d-flex"> <p class="me-2" style="font-weight:400">Lives in:</p><p class="">123 Main St, New York, United States</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:400">Born on:</p><p class="">January 1, 1990</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:400">Member since:</p><p class="">January 1, 2024</p></div>
+                            </div>
                         </div>
+                        <div class="me-3 mb-auto" style="height:100%">
+                            <img src="/img/bimser.jpg" class="me-2" style="height:20px;width:20px" />
+                            Working at Bimser
+                        </div>
+                    </div>
+                    <hr class="" style="margin-top:25px" />
+                    <div class="container d-flex justify-content-around align-items-center">
+                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-github me-1"></a>
+                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-linkedin-in me-1"></a>
+                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-medium me-1"></a>
+                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-x-twitter me-1"></a>
+                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-youtube me-1"></a>
+                    </div>
+                    <hr class="" style="margin-top:15px" />
                     <!-- About Section -->
                     <div class="card-body p-4 text-black">
-                        <div class="mb-5">
-                            <h4 class="fw-bold mb-3">About</h4>
-                            <div class="p-4 bg-light rounded-3">
-                                <p class="mb-2"><strong>Title:</strong> @Model.Title</p>
-                                <p class="mb-2"><strong>Working at:</strong> @Model.WorkingAt</p>
-                                <p class="mb-2"><strong>Lives in:</strong> @Model.Country</p>
-                                <p class="mb-2"><strong>Born on:</strong> @Model.BirthDate?.ToString("MMMM dd, yyyy")</p>
-                                <p class="mb-2"><strong>Member since:</strong> @Model.RegisteredDate?.ToString("MMMM yyyy")</p>
-                                <p class="mb-0"><strong>Bio:</strong> @Model.Bio</p>
-                            </div>
-                        </div>
-
-                        <!-- Contact Information (Visible only to the profile owner) -->
-                        @if (Model is ExtendedProfileViewModel extendedProfile)
-                        {
-                            <div class="mb-5">
-                                <h4 class="fw-bold mb-3">Contact Information</h4>
-                                <div class="p-4 bg-light rounded-3">
-                                    <p class="mb-2"><strong>Email:</strong> @extendedProfile.Email</p>
-                                    <p class="mb-2"><strong>Phone:</strong> @extendedProfile.PhoneNumber</p>
-                                    <p class="mb-0"><strong>Two-Factor Authentication:</strong> @(extendedProfile.TwoFactorEnabled ? "Enabled" : "Disabled")</p>
+                        <div class="mb-3">
+                            <h4 class="fw-bold ms-4 mb-3">About</h4>
+                            <div class="px-4">
+                                <div class="row mt-4">
+                                    <!-- Left Column -->
+                                    <div class="col-md-12">
+                                        <p>
+                                            To grow as a backend developer, I am actively improving myself in .NET Core technologies. I have a strong passion for building robust, scalable, and efficient web applications, and I believe that mastering the .NET ecosystem is key to achieving this goal. Currently, I am working extensively with ASP.NET Core MVC, which allows me to create dynamic and responsive web applications with a clean separation of concerns. I also leverage Entity Framework Core for database management, enabling me to work with data in an object-oriented manner while ensuring high performance and maintainability.
+                                            <br />
+                                            <br />
+                                            In addition, I utilize ASP.NET Core Identity Framework to implement secure authentication and authorization mechanisms, ensuring that the applications I build are both user-friendly and secure. For database operations, I work with Microsoft SQL Server (MSSQL), where I design and optimize relational databases to support complex queries and ensure data integrity.
+                                            <br />
+                                            <br />
+                                            Continuous learning is a core part of my development journey. I regularly research and explore new features, best practices, and advanced techniques in the .NET ecosystem. To solidify my understanding and contribute to the developer community, I document the topics I learn and research as articles on the Medium platform. These articles cover a wide range of subjects, from beginner-friendly tutorials to in-depth discussions on advanced topics, and they serve as a valuable resource for both myself and others in the community.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        }
+                        </div>
+                    </div>
+                    <hr class="m-0" style="margin-top:10px" />
 
-                        <!-- Recent Posts Section -->
-                        <div class="mb-5">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4 class="fw-bold mb-0">Recent Posts</h4>
-                                <a href="#!" class="text-muted text-decoration-none">Show all</a>
+                    <div class="card-body p-2 text-black">
+                        <!-- Contact Information -->
+                        <div class="mb-2">
+                            <h5 class="mb-1 ms-5 mt-4 d-flex">Security Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
+                            <div class="d-flex justify-content-around">
+
+                                <div class="p-4">
+                                    <p class="mb-0"><strong>Two-Factor Authentication:</strong> Enabled <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                </div>
+                                <div class="p-4">
+                                    <p class="mb-0"><strong>Email Confirmed:</strong> Enabled <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                </div>
+                                <div class="p-4">
+                                    <p class="mb-0"><strong>Lockout:</strong> Enabled <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                </div>
                             </div>
-                            <div class="row g-3">
+                        </div>
+                    </div>
+                    <hr class="" style="margin-top:10px" />
+
+                    <div class="card-body p-4 text-black">
+                        <!-- Featured Posts Section -->
+                        <div class="mb-2">
+                            <h4 class="fw-bold ms-4 mb-3">Featured Posts</h4>
+                            <div class="row g-3 px-2">
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded-3 h-100">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
+                                             alt="Post Image"
+                                             class="img-fluid rounded-3 mb-3">
+                                        <h5 class="fw-bold mb-2">This is a sample post title</h5>
+                                        <p class="text-muted mb-2">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
+                                        <p class="mb-0 text-muted">5 likes | 2 comments</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3  rounded-3 h-100">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
+                                             alt="Post Image"
+                                             class="img-fluid rounded-3 mb-3">
+                                        <h5 class="fw-bold mb-2">Another post title</h5>
+                                        <p class="text-muted mb-2">This is another post description. It can be a bit longer to provide more context.</p>
+                                        <p class="mb-0 text-muted">12 likes | 4 comments</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card-body p-4 text-black">
+                        <!-- Recent Posts Section -->
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="fw-bold ms-4 mb-0">Recent Posts</h4>
+                                <a href="#!" class="text-muted text-decoration-none pe-4">Show all</a>
+                            </div>
+                            <div class="row g-3 px-2">
                                 <!-- Post 1 -->
                                 <div class="col-md-6">
-                                    <div class="p-3 bg-light rounded-3 h-100">
+                                    <div class="p-3  rounded-3 h-100">
                                         <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
                                              alt="Post Image 1"
                                              class="img-fluid rounded-3 mb-3">
@@ -204,7 +347,7 @@
 
                                 <!-- Post 2 -->
                                 <div class="col-md-6">
-                                    <div class="p-3 bg-light rounded-3 h-100">
+                                    <div class="p-3  rounded-3 h-100">
                                         <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
                                              alt="Post Image 2"
                                              class="img-fluid rounded-3 mb-3">
@@ -215,40 +358,55 @@
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <hr />
+                    <div class="card-body p-0 text-black">
                         <!-- New Stats Section -->
-                        <div class="mb-5">
-                            <h4 class="fw-bold mb-3">Activity</h4>
-                            <div class="p-4 bg-light rounded-3">
+                        <div class="">
+                            <div class="p-0">
                                 <div class="row text-center d-flex">
                                     <div class="col-md-4">
-                                        <p class="mb-1 h4">@Model.PostCount</p>
+                                        <p class="mb-1 h6">123</p>
                                         <p class="small text-muted mb-0">Posts</p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="mb-1 h4">@Model.CommentCount</p>
+                                        <p class="mb-1 h6">456</p>
                                         <p class="small text-muted mb-0">Comments</p>
                                     </div>
                                     <div class="col-md-4 mb-3 mb-md-0">
-                                        <p class="mb-1 h4">8172</p>
+                                        <p class="mb-1 h6">8172</p>
                                         <p class="small text-muted mb-0">Total Likes</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <hr class="" />
 
+                    <div class="card-body box mb-2 px-4 text-black">
                         <!-- Comments Section -->
-                        <div class="mb-4">
-                            <h4 class="fw-bold mb-3">Recent Comments</h4>
-                            <div class="p-3 bg-light rounded-3">
-                                <p class="mb-2"><i>"Great post!"</i> - John Doe</p>
-                                <p class="mb-2"><i>"Very insightful."</i> - Jane Smith</p>
-                                <p class="mb-0"><i>"I learned a lot from this."</i> - Alex Johnson</p>
+                        <div class="mb-2">
+                            <h4 class="fw-bold ms-4 mb-4">Recent Comments</h4>
+                            <div class="px-4 mt-4 d-flex justify-content-center flex-column  align-items-center">
+                                <div class="d-flex">
+
+                                    <p class="mb-3"><i>"Great post!"</i> - John Doe</p> <img class="ms-2" src="/img/profile3.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                </div>
+                                <div class="d-flex">
+
+                                    <p class="mb-3"><i>"Very insightful."</i> - Jane Smith</p> <img class="ms-2" src="/img/profile2.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                </div>
+                                <div class="d-flex">
+                                <p class="mb-0"><i>"I learned a lot from this."</i> - Alex Johnson</p> <img class="ms-2" src="/img/profile1.jpg" style="height:20px;width:20px;border-radius:50%" />
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </section>
+
