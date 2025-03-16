@@ -1,0 +1,473 @@
+﻿<style>
+    .custom-input {
+        /* #007bff */
+        border: 1px solid;
+        border-color: white;
+        border-radius: 5px;
+        padding: 12px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+        .custom-input:focus {
+            /* #0056b3 */
+            border-color: greenyellow;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+
+    .custom-label {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .text-area-custom:focus {
+        border-color: greenyellow;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    }
+
+    .image-container-profile {
+        position: relative;
+        display: inline-block;
+    }
+
+    .overlay-icon-profile {
+        position: absolute;
+        top: 50%; /* İkonu dikeyde ortala */
+        left: 90%; /* İkonu yatayda ortala */
+        transform: translate(-50%, -50%); /* Tam ortalamak için */
+        opacity: 0; /* Başlangıçta gizli */
+        transition: opacity 0.3s ease; /* Geçiş efekti */
+        font-size: 24px; /* İkon boyutu */
+        color: white; /* İkon rengi */
+        /* background-color: rgba(0, 0, 0, 0.5); /* Arkaplan rengi */ */
+        padding: 10px; /* İkon etrafına boşluk */
+        border-radius: 50%; /* İkonu yuvarlak yapar */
+    }
+
+    .image-container-profile:hover .overlay-icon-profile {
+        opacity: 1;} /* Üzerine gelindiğinde göster */
+    .image-container-header {
+        position: relative;
+        display: inline-block;
+    }
+
+    .overlay-icon-header {
+        position: absolute;
+        top:99%; /* İkonu dikeyde ortala */
+        left: 97%; /* İkonu yatayda ortala */
+        transform: translate(-50%, -50%); /* Tam ortalamak için */
+        opacity: 0; /* Başlangıçta gizli */
+        transition: opacity 0.3s ease; /* Geçiş efekti */
+        font-size: 24px; /* İkon boyutu */
+        color: white; /* İkon rengi */
+        /* background-color: rgba(0, 0, 0, 0.5); /* Arkaplan rengi */ */ padding: 10px; /* İkon etrafına boşluk */
+        border-radius: 50%; /* İkonu yuvarlak yapar */
+    }
+
+    .image-container-header:hover .overlay-icon-header {
+        opacity: 1;
+    }
+    /* Üzerine gelindiğinde göster */
+</style>
+
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Profili Düzenle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container py-5 h-100">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col col-lg-9 col-xl-0">
+                            <div class="card shadow-lg">
+                                <!-- Profile Header -->
+                                <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
+                                    <!-- Cover Image -->
+                                    <div class="w-100 h-100 position-absolute image-container-header">
+                                        <img src="~/img/defaultCoverPicture.jpg"
+                                             alt="Cover Image"
+                                             class="w-100 h-100"
+                                             style="object-fit: cover;" />
+                                        <div class="position-absolute overlay-icon-header" style="right:5px; top:20px">
+                                            <i class="fa-solid fa-pen" id="uploadIconCover" type="button" style="cursor:pointer">
+                                            </i>
+                                            <input type="file" accept=".jpg,.png,.jpeg" id="fileInputCover" style="display: none;">
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <!-- Profile Picture and Basic Info -->
+                                    <div class="ms-5 mt-5 d-flex flex-column image-container-profile" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
+                                        <img src="/img/ben4transparan.png"
+                                             alt="Profile Picture"
+                                             class="img-fluid img-thumbnail mt-4 mb-2 "
+                                             style="width: 175px; height: 175px; " />
+                                        <div class="dropdown-center position-absolute overlay-icon-profile" style="right:5px; top:2px">
+                                            
+                                            <i class="fa-solid fa-pen" id="uploadIconProfile" type="button" style="cursor:pointer">
+                                            </i>
+                                            <input type="file" accept=".jpg,.png,.jpeg" id="fileInputProfile" style="display: none;">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Profile Stats and Buttons -->
+                                <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-center">
+                                    <div class="d-flex ms-3 flex-column" style="position: relative; bottom: 20px; top:0px">
+                                        <div class="d-flex input-group-sm  align-items-center mb-1">
+                                            <label class="me-1 col-md-4 custom-label">Name:</label>
+                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Görkem Kaya" aria-label="MemberSince"><i class="fa-solid fs-5 fa-circle-check ms-2 text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i>
+
+                                        </div>
+                                        <div class="d-flex input-group-sm   align-items-center mb-1">
+                                            <label class="me-1 col-md-4 custom-label">Title:</label>
+                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Software Engineer" aria-label="MemberSince">
+
+                                        </div>
+                                        <div class="d-flex input-group-sm align-items-center mb-1">
+                                            <label class="me-1 col-md-4 custom-label">Country:</label>
+                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Turkey" aria-label="MemberSince">
+
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end text-center py-2 text-body align-items-center">
+                                        <div class="px-3">
+                                            <p class="mb-1 h4">1,234</p>
+                                            <p class="small text-muted mb-0">Followers</p>
+                                        </div>
+                                        <div class="px-3">
+                                            <p class="mb-1 h4">567</p>
+                                            <p class="small text-muted mb-0">Following</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container mt-2 d-flex justify-content-between align-items-center">
+
+                                    <div class="d-flex ms-4 flex-column" style="position: relative; bottom: 20px; top:0px">
+                                        <div class="d-flex input-group-sm  align-items-center mb-1">
+                                            <label class="me-1 col-md-4 custom-label">Lives in:</label>
+                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Cumhuriyet Mahallesi, 121.Sokak, No:8, Biga/Çanakkale" aria-label="MemberSince">
+
+                                        </div>
+                                        <div class="d-flex input-group-sm  align-items-center mb-1">
+                                            <label class="me-1 col-md-4 custom-label">Born on:</label>
+                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Çanakkale" aria-label="MemberSince">
+
+                                        </div>
+                                        <div class="d-flex input-group-sm   align-items-center mb-1">
+                                            <label class="me-1 col-md-4 custom-label">Member Since:</label>
+                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="April 3, 2025" aria-label="MemberSince">
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="me-3 mb-auto d-flex align-content-center" style="height:100%">
+                                        <div class="d-flex align-items-center">
+
+                                            <img src="/img/bimser.jpg" class="me-2" style="height:25px;width:25px" />
+                                            <div class="d-flex">
+
+                                                <div class="input-group-sm">
+                                                    <input type="text" class="form-control custom-input" style="width:10em" placeholder="Working at Bimser" aria-label="WorkingAt">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="" style="margin-top:25px" />
+                                @* <div class="container d-flex justify-content-around align-items-center">
+                                    <a class="fa-brands fs-4 blacktored text-decoration-none fa-github me-1"></a>
+                                    <a class="fa-brands fs-4 blacktored text-decoration-none fa-linkedin-in me-1"></a>
+                                    <a class="fa-brands fs-4 blacktored text-decoration-none fa-medium me-1"></a>
+                                    <a class="fa-brands fs-4 blacktored text-decoration-none fa-x-twitter me-1"></a>
+                                    <a class="fa-brands fs-4 blacktored text-decoration-none fa-youtube me-1"></a>
+                                </div> *@
+                                <div class="card-body p-4 text-black">
+                                    <h4 class="fw-bold ms-4 mb-4">Social Platforms</h4>
+                                    <div class="px-4 d-flex mt-4">
+                                        <div class="col-md-6 d-flex flex-column">
+                                            <div class="input-group mb-3 align-items-center">
+                                                <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-github"></span>
+                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://github.com/gorkemkayas" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                            <div class="input-group mb-3 align-items-center">
+                                                <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-linkedin-in"></span>
+                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://www.linkedin.com/in/gorkemkayas/" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                            <div class="input-group mb-3 align-items-center">
+                                                <span class="fa-brands fs-5 text-decoration-none col-md-1 me-3 fa-medium"></span>
+                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://medium.com/gorkemkayas" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 d-flex flex-column">
+
+                                            <div class="input-group mb-3 align-items-center">
+                                                <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-x-twitter"></span>
+                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://x.com/gorkemkayaz" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                            <div class="input-group mb-3 align-items-center">
+                                                <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-youtube"></span>
+                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://youtube.com/gorkemkayaz" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                            <div class="input-group mb-3 align-items-center">
+                                                <span class="fa-solid fs-4 text-decoration-none col-md-1 me-3 fa-earth-europe"></span>
+                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://gorkemkayas.com" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+
+                                </div>
+                                <hr class="" style="margin-top:15px" />
+                                <!-- About Section -->
+                                <div class="card-body p-4 text-black">
+                                    <div class="mb-3">
+                                        <h4 class="fw-bold ms-4 mb-3">About</h4>
+                                        <div class="px-4">
+                                            <div class="row mt-4">
+                                                <!-- Left Column -->
+                                                <div class="col-md-12">
+                                                    <div class="input-group">
+                                                        <textarea class="form-control text-area-custom" style="height:25rem" placeholder="" aria-label="With textarea">To grow as a backend developer, I am actively improving myself in .NET Core technologies. I have a strong passion for building robust, scalable, and efficient web applications, and I believe that mastering the .NET ecosystem is key to achieving this goal. Currently, I am working extensively with ASP.NET Core MVC, which allows me to create dynamic and responsive web applications with a clean separation of concerns. I also leverage Entity Framework Core for database management, enabling me to work with data in an object-oriented manner while ensuring high performance and maintainability.
+
+In addition, I utilize ASP.NET Core Identity Framework to implement secure authentication and authorization mechanisms, ensuring that the applications I build are both user-friendly and secure. For database operations, I work with Microsoft SQL Server (MSSQL), where I design and optimize relational databases to support complex queries and ensure data integrity.
+
+Continuous learning is a core part of my development journey. I regularly research and explore new features, best practices, and advanced techniques in the .NET ecosystem. To solidify my understanding and contribute to the developer community, I document the topics I learn and research as articles on the Medium platform. These articles cover a wide range of subjects, from beginner-friendly tutorials to in-depth discussions on advanced topics, and they serve as a valuable resource for both myself and others in the community.</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="m-0" style="margin-top:10px" />
+
+                                <div class="card-body p-2 text-black">
+                                    <!-- Contact Information -->
+                                    <div class="mb-2">
+                                        <div class="d-flex ms-5 align-items-center">
+                                        
+                                            <h5 class="mb-1 mt-4 d-flex ">Security Information |<p class="text-muted align-items-center ms-1" style="font-weight:300">Hidden from users </p></h5>
+
+                                        </div>
+                                        <div class="d-flex justify-content-around">
+
+                                            <div class="py-4" style="padding-inline-start:0px">
+                                                <strong>Two-Factor Authentication:</strong><input class="form-check-input mt-0 ms-2" type="checkbox" value="" aria-label="Checkbox for following text input">
+                                            </div>
+                                            <div class="py-4">
+                                                <strong>Email Confirmed:</strong><input class="form-check-input mt-0 ms-2" type="checkbox" value="" aria-label="Checkbox for following text input">
+                                            </div>
+                                            <div class="py-4 pe-3">
+                                                <strong>Lockout:</strong><input class="form-check-input mt-0 ms-2" type="checkbox" value="" aria-label="Checkbox for following text input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="" style="margin-top:10px" />
+                                <div class="card-body p-2 text-black">
+                                    <!-- Contact Information -->
+                                    <div class="mb-2">
+                                        <h5 class="mb-1 ms-5 mt-4 d-flex">Contact Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
+                                        <div class="d-flex ms-5 justify-content-between">
+
+                                            <div class="py-1 d-flex align-items-center col-md-6">
+                                                <strong class="col-md-5 ps-1" >Email Address:</strong>
+                                                <input type="email" class="form-control px-0 custom-input col-md-7" placeholder="gorkemkayas@hotmail.com" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                            <div class="py-1 d-flex align-items-center col-md-6">
+                                                <strong>Phone Number:</strong><input type="tel" class="form-control col-md-6 ps-1 custom-input" placeholder="0543 872 61 77" aria-label="Username" aria-describedby="basic-addon1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="" style="margin-top:10px" />
+
+                                <div class="card-body p-2 text-black">
+                                    <!-- Featured Posts Section -->
+                                    <div class="mb-2">
+                                        <h4 class="fw-bold ms-5 mb-3">Featured Posts</h4>
+                                        <div class="row g-3 px-2">
+                                            <div class="card col-md-6 pe-0 border-0" aria-hidden="true">
+                                                <div class="p-3  rounded-3 h-100">
+                                                    <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
+                                                    <div class="card-body ms-1 pe-0">
+                                                        <h5 class="card-title placeholder-glow">
+                                                            <span class="placeholder col-6"></span>
+                                                        </h5>
+                                                        <p class="card-text placeholder-glow">
+                                                            <span class="placeholder col-7"></span>
+                                                            <span class="placeholder col-4"></span>
+                                                            <span class="placeholder col-4"></span>
+                                                            <span class="placeholder col-6"></span>
+                                                            <span class="placeholder col-8"></span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card col-md-6 ps-0 border-0" aria-hidden="true">
+                                                <div class="p-3  rounded-3 h-100">
+                                                    <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
+                                                    <div class="card-body ms-1 pe-0">
+                                                        <h5 class="card-title placeholder-glow">
+                                                            <span class="placeholder col-6"></span>
+                                                        </h5>
+                                                        <p class="card-text placeholder-glow">
+                                                            <span class="placeholder col-7"></span>
+                                                            <span class="placeholder col-4"></span>
+                                                            <span class="placeholder col-4"></span>
+                                                            <span class="placeholder col-6"></span>
+                                                            <span class="placeholder col-8"></span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="card-body p-2 text-black">
+                                    <!-- Recent Posts Section -->
+                                    <div class="mb-2">
+                                        <h4 class="fw-bold ms-5 mb-3">Recent Posts</h4>
+                                        <div class="row g-3 px-2">
+                                            <div class="card col-md-6 pe-0 border-0" aria-hidden="true">
+                                                <div class="p-3  rounded-3 h-100">
+                                                    <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
+                                                    <div class="card-body ms-1 pe-0">
+                                                        <h5 class="card-title placeholder-glow">
+                                                            <span class="placeholder col-6"></span>
+                                                        </h5>
+                                                        <p class="card-text placeholder-glow">
+                                                            <span class="placeholder col-7"></span>
+                                                            <span class="placeholder col-4"></span>
+                                                            <span class="placeholder col-4"></span>
+                                                            <span class="placeholder col-6"></span>
+                                                            <span class="placeholder col-8"></span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card col-md-6 ps-0 border-0" aria-hidden="true">
+                                                <div class="p-3  rounded-3 h-100">
+                                                    <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
+                                                    <div class="card-body ms-1 pe-0">
+                                                        <h5 class="card-title placeholder-glow">
+                                                            <span class="placeholder col-6"></span>
+                                                        </h5>
+                                                        <p class="card-text placeholder-glow">
+                                                            <span class="placeholder col-7"></span>
+                                                            <span class="placeholder col-4"></span>
+                                                            <span class="placeholder col-4"></span>
+                                                            <span class="placeholder col-6"></span>
+                                                            <span class="placeholder col-8"></span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="card-body p-0 text-black">
+                                    <!-- New Stats Section -->
+                                    <div class="">
+                                        <div class="p-0">
+                                            <div class="row text-center d-flex">
+                                                <div class="col-md-4">
+                                                    <p class="mb-1 h6">123</p>
+                                                    <p class="small text-muted mb-0">Posts</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="mb-1 h6">456</p>
+                                                    <p class="small text-muted mb-0">Comments</p>
+                                                </div>
+                                                <div class="col-md-4 mb-3 mb-md-0">
+                                                    <p class="mb-1 h6">8172</p>
+                                                    <p class="small text-muted mb-0">Total Likes</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="" />
+
+                                <div class="card-body box mb-2 px-4 text-black">
+                                    <!-- Comments Section -->
+                                    <div class="mb-2">
+                                        <h4 class="fw-bold ms-4 mb-5">Recent Comments</h4>
+                                        <div class="px-2 mt-4 d-flex justify-content-center flex-column  align-items-center">
+                                            <p class="placeholder-glow">
+                                                <span class="placeholder" style="width:15rem"></span>
+                                                <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                            </p>
+                                            <p class="placeholder-glow">
+                                                <span class="placeholder" style="width:25rem"></span>
+                                                <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                            </p>
+                                            <p class="placeholder-glow">
+                                                <span class="placeholder" style="width:35rem"></span>
+                                                <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const uploadIcon = document.getElementById('uploadIconProfile');
+        const fileInput = document.getElementById('fileInputProfile');
+
+        // İkona tıklandığında dosya seçme alanını tetikle
+        uploadIcon.addEventListener('click', function () {
+            fileInput.click(); // Dosya seçme penceresini aç
+        });
+
+        // Dosya seçildiğinde yapılacak işlemler
+        fileInput.addEventListener('change', function (event) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                console.log('Seçilen dosya:', selectedFile.name);
+                // Dosya yükleme işlemleri burada yapılabilir
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const uploadIcon = document.getElementById('uploadIconCover');
+        const fileInput = document.getElementById('fileInputCover');
+
+        // İkona tıklandığında dosya seçme alanını tetikle
+        uploadIcon.addEventListener('click', function () {
+            fileInput.click(); // Dosya seçme penceresini aç
+        });
+
+        // Dosya seçildiğinde yapılacak işlemler
+        fileInput.addEventListener('change', function (event) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                console.log('Seçilen dosya:', selectedFile.name);
+                // Dosya yükleme işlemleri burada yapılabilir
+            }
+        });
+    });
+</script>

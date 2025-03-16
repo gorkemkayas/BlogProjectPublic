@@ -55,6 +55,7 @@
         opacity: 1;
         transform: translateY(0);
     }
+
 </style>
 
 
@@ -177,6 +178,7 @@
 
 
 <section class="h-100 gradient-custom-2">
+
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center">
             <div class="col col-lg-9 col-xl-0">
@@ -192,9 +194,7 @@
                         </div>
 
                         <div class="dropdown-center position-absolute" style="right:5px; top:2px">
-                            <i class="bi bi-gear fs-4 " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-
-                            </i>
+                            
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">Action</a></li>
                                 <li><a class="dropdown-item" href="#">Action two</a></li>
@@ -210,6 +210,12 @@
                                  style="width: 175px; height: 175px; " />
                         </div>
                     </div>
+                    <button type="button" class="btn btn-dark" style="border-radius:0%" data-toggle="modal" data-target="#editProfileModal">
+                        Edit Profile
+                    </button>
+
+                    <!-- Modal -->
+                    <partial name="_EditProfileModalPartial"/>
 
                     <!-- Profile Stats and Buttons -->
                     <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-center">
@@ -231,14 +237,14 @@
                     </div>
                     <div class="container mt-2 d-flex justify-content-between align-items-center">
                         <div class="ms-1">
-                            <div class="d-flex ms-4 align-content-center flex-column">
+                            <div class="d-flex ms-4 ps-2 align-content-center flex-column">
 
-                                <div class="d-flex"> <p class="me-2" style="font-weight:400">Lives in:</p><p class="">123 Main St, New York, United States</p></div>
-                                <div class="d-flex"> <p class="me-2" style="font-weight:400">Born on:</p><p class="">January 1, 1990</p></div>
-                                <div class="d-flex"> <p class="me-2" style="font-weight:400">Member since:</p><p class="">January 1, 2024</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Lives in:</p><p class="text-muted">123 Main St, New York, United States</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Born on:</p><p class="text-muted">January 1, 1990</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Member since:</p><p class="text-muted">January 1, 2024</p></div>
                             </div>
                         </div>
-                        <div class="me-3 mb-auto" style="height:100%">
+                        <div class="me-3 mb-auto pe-2" style="height:100%">
                             <img src="/img/bimser.jpg" class="me-2" style="height:20px;width:20px" />
                             Working at Bimser
                         </div>
@@ -246,10 +252,11 @@
                     <hr class="" style="margin-top:25px" />
                     <div class="container d-flex justify-content-around align-items-center">
                         <a class="fa-brands fs-4 blacktored text-decoration-none fa-github me-1"></a>
-                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-linkedin-in me-1"></a>
+                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-linkedin-in me-1" href="asdasd"></a>
                         <a class="fa-brands fs-4 blacktored text-decoration-none fa-medium me-1"></a>
                         <a class="fa-brands fs-4 blacktored text-decoration-none fa-x-twitter me-1"></a>
                         <a class="fa-brands fs-4 blacktored text-decoration-none fa-youtube me-1"></a>
+                        <a class="fa-solid fs-4 blacktored text-decoration-none fa-earth-europe me-1"></a>
                     </div>
                     <hr class="" style="margin-top:15px" />
                     <!-- About Section -->
@@ -280,16 +287,16 @@
                         <!-- Contact Information -->
                         <div class="mb-2">
                             <h5 class="mb-1 ms-5 mt-4 d-flex">Security Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
-                            <div class="d-flex justify-content-around">
+                            <div class="d-flex mt-2 justify-content-around">
 
-                                <div class="p-4">
-                                    <p class="mb-0"><strong>Two-Factor Authentication:</strong> Enabled <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                <div class="p-1">
+                                    <p class="mb-0 "><strong>Two-Factor Authentication:</strong>  <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
                                 </div>
-                                <div class="p-4">
-                                    <p class="mb-0"><strong>Email Confirmed:</strong> Enabled <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                <div class="p-1">
+                                    <p class="mb-0 "><strong>Email Confirmed:</strong>  <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
                                 </div>
-                                <div class="p-4">
-                                    <p class="mb-0"><strong>Lockout:</strong> Enabled <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                <div class="p-1">
+                                    <p class="mb-0 "><strong>Lockout:</strong>  <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
                                 </div>
                             </div>
                         </div>
@@ -397,7 +404,7 @@
                                     <p class="mb-3"><i>"Very insightful."</i> - Jane Smith</p> <img class="ms-2" src="/img/profile2.jpg" style="height:20px;width:20px;border-radius:50%" />
                                 </div>
                                 <div class="d-flex">
-                                <p class="mb-0"><i>"I learned a lot from this."</i> - Alex Johnson</p> <img class="ms-2" src="/img/profile1.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                    <p class="mb-0"><i>"I learned a lot from this."</i> - Alex Johnson</p> <img class="ms-2" src="/img/profile1.jpg" style="height:20px;width:20px;border-radius:50%" />
 
                                 </div>
                             </div>
@@ -409,4 +416,3 @@
         </div>
     </div>
 </section>
-
