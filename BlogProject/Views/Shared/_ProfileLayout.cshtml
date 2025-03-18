@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,8 +30,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">
 
-    <link rel="icon" type="image/png" href="~/favicon.png" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     @* FontAwesome *@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -91,7 +91,7 @@
                         <a href="https://x.com/gorkemkayaz" class="fa-brands fs-5 blacktored text-decoration-none fa-x-twitter"></a>
                     </div>
 
-                    <a class="navbar-brand pirata-one-regular position-absolute start-50 translate-middle-x" style="font-size:50px;font-weight:500" asp-area="" asp-controller="Home" asp-action="Index">
+                    <a class="navbar-brand pirata-one-regular position-absolute Lacquer-Font start-50 translate-middle-x" style="font-size:50px;font-weight:500;margin-bottom:10px" asp-area="" asp-controller="Home" asp-action="Index">
                         kayas<span class="text-danger">.</span>
                     </a>
                     <div class="d-flex ms-auto align-items-center mt-1">
@@ -107,7 +107,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <a class="dropdown-item d-flex align-items-center" asp-controller="User" asp-action="Profile" asp-route-userName="@User.Identity.Name">
                                             <i class="bi bi-person me-2"></i> Profile
                                         </a>
                                     </li>
@@ -153,9 +153,9 @@
         </div>
     </main>
 
-    <footer class="bg-white py-3 border-top shadow-sm">
+    <footer class="container bg-white py-3 border-top shadow-sm">
         <div class="container d-flex justify-content-center">
-            <span class="text-muted">gorkemkayas<span class="text-danger">.</span></span>
+            <span class="text-dark" style="letter-spacing:2px;">gorkemkayas<span class="text-danger">.</span></span>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

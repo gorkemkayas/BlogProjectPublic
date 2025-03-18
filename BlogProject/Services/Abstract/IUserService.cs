@@ -17,6 +17,7 @@ namespace BlogProject.Services.Abstract
         Task LogoutAsync();
 
         Task<int> GetCommentCountByUserAsync(AppUser user);
+        Task<int> GetUserTotalLikeCount(AppUser user);
         Task<ExtendedProfileViewModel> GetExtendedProfileInformationAsync(AppUser currentUser);
         VisitorProfileViewModel GetVisitorProfileInformation(AppUser visitedUser);
 

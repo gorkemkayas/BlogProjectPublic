@@ -62,6 +62,14 @@ footer {
     }
 }
 
+.Lacquer-Font {
+    /*font-family: "Rock Salt", cursive;*/
+    font-family: "Yellowtail", cursive;
+    /*font-family: "Lacquer", system-ui;*/
+    font-weight: 900;
+    font-style: normal;
+}
+
 body {
     /*font-family: "Pirata One", serif;*/
     /*font-weight: 400;

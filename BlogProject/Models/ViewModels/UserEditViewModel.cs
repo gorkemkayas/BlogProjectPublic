@@ -8,8 +8,12 @@ namespace BlogProject.Models.ViewModels
         public string Surname { get; set; } = null!;
         public string? Title { get; set; }
         public string? Bio { get; set; }
+        public string EmailAddress { get; set; } = null!;
         public string? WorkingAt { get; set; }
+        public string? PhoneNumber { get; set; }
+        //public IFormFile? WorkingAtLogo { get; set; }
 
+        public string? LivesIn { get; set; }
         public string? Country { get; set; }
 
         // yeni eklediklerim
@@ -36,7 +40,7 @@ namespace BlogProject.Models.ViewModels
 
         // sonu
         public DateTime BirthDate { get; set; }
-        public IFormFile? ProfilePicture { get; set; }
-        public IFormFile? CoverImagePicture { get; set; }
+        //public IFormFile? ProfilePicture { get; set; }
+        //public IFormFile? CoverImagePicture { get; set; }
     }
 }

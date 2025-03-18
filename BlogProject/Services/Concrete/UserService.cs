@@ -51,6 +51,12 @@ namespace BlogProject.Services.Concrete
             return users;
         }
 
+        public async Task<int> GetUserTotalLikeCount(AppUser user)
+        {
+            var likeCount = await _blogdbContext.Likes.CountAsync(x => x.UserId == user.Id);
+            return likeCount;
+        }
+
         public async Task<ExtendedProfileViewModel> GetExtendedProfileInformationAsync(AppUser currentUser)
         {
             var extendedProfileInfo = new ExtendedProfileViewModel()
@@ -61,7 +67,8 @@ namespace BlogProject.Services.Concrete
                 Bio = currentUser.Bio,
                 BirthDate = currentUser.BirthDate,
                 Country = currentUser.Country,
-                Email = currentUser.Email,
+                EmailAddress = currentUser.Email!,
+                EmailConfirmed = currentUser.EmailConfirmed,
                 PhoneNumber = currentUser.PhoneNumber,
                 Title = currentUser.Title,
                 RegisteredDate = currentUser.RegisteredDate,
@@ -70,9 +77,20 @@ namespace BlogProject.Services.Concrete
                 FollowersCount = currentUser.FollowersCount,
                 FollowingCount = currentUser.FollowingCount,
                 TwoFactorEnabled = currentUser.TwoFactorEnabled,
+                LockoutEnabled = currentUser.LockoutEnabled,
                 WorkingAt = currentUser.WorkingAt,
                 CommentCount = await GetCommentCountByUserAsync(currentUser!),
-                PostCount = await _commentService.GetCommentCountByUserAsync(currentUser!)
+                PostCount = await GetCommentCountByUserAsync(currentUser!),
+                LikeCount = await GetUserTotalLikeCount(currentUser),
+                Address = currentUser.Address,
+                XAddress = currentUser.XAddress,
+                LinkedinAddress = currentUser.LinkedinAddress,
+                GithubAddress = currentUser.GithubAddress,
+                MediumAddress = currentUser.MediumAddress,
+                YoutubeAddress = currentUser.YoutubeAddress,
+                PersonalWebAddress = currentUser.PersonalWebAddress
+
+
             };
 
             return extendedProfileInfo;

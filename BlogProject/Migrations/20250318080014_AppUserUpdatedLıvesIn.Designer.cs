@@ -4,6 +4,7 @@ using BlogProject.src.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogProject.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    partial class BlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318080014_AppUserUpdatedLıvesIn")]
+    partial class AppUserUpdatedLıvesIn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,6 +119,9 @@ namespace BlogProject.Migrations
                     b.Property<string>("LinkedinAddress")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LivesIn")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -155,7 +161,7 @@ namespace BlogProject.Migrations
                     b.Property<string>("ProfilePicture")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("RegisteredDate")
+                    b.Property<DateTime?>("RegisteredDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
@@ -193,9 +199,6 @@ namespace BlogProject.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("WorkingAt")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WorkingAtLogo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("XAddress")

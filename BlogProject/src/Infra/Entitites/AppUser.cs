@@ -13,6 +13,9 @@ namespace BlogProject.src.Infra.Entitites
         public string? Title { get; set; }
         public string? Bio { get; set; }
         public string? WorkingAt { get; set; }
+        public string? WorkingAtLogo { get; set; }
+
+        //public string? LivesIn { get; set; }
 
         public string? Country { get; set; }
 
@@ -43,7 +46,7 @@ namespace BlogProject.src.Infra.Entitites
         // sonu
         public DateTime BirthDate { get; set; }
 
-        public DateTime? RegisteredDate { get; set; }
+        public DateTime RegisteredDate { get; set; }
 
         public bool IsDeleted { get; set; } = false;
 

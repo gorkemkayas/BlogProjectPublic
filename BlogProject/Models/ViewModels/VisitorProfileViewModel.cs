@@ -1,29 +1,46 @@
-﻿using BlogProject.src.Infra.Entitites;
+﻿using BlogProject.CustomValidators;
+using BlogProject.src.Infra.Entitites;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlogProject.Models.ViewModels
 {
     public class VisitorProfileViewModel : BaseProfileViewModel
     {
+        [Required]
         public string Name { get; set; } = null!;
+        [Required]
         public string Surname { get; set; } = null!;
-
-        public string FullName { get { return Name + " " + Surname; } }
         public string? Title { get; set; }
         public string? Bio { get; set; }
         public string? WorkingAt { get; set; }
+        //public IFormFile? WorkingAtLogo { get; set; }
 
+        public string? LivesIn { get; set; }
         public string? Country { get; set; }
 
         // yeni eklediklerim
+
+        public int FollowersCount { get; set; }
+        public int FollowingCount { get; set; }
+
+        public int PostCount { get; set; }
+        public int CommentCount { get; set; }
+        public int LikeCount { get; set; }
         public string? CurrentPosition { get; set; }
         public string? City { get; set; }
         public string? Address { get; set; }
 
+        [HttpsValidator]
         public string? XAddress { get; set; }
+        [HttpsValidator]
         public string? LinkedinAddress { get; set; }
+        [HttpsValidator]
         public string? GithubAddress { get; set; }
+        [HttpsValidator]
         public string? MediumAddress { get; set; }
+        [HttpsValidator]
         public string? YoutubeAddress { get; set; }
+        [HttpsValidator]
         public string? PersonalWebAddress { get; set; }
 
         public string? HighSchoolName { get; set; }
@@ -34,14 +51,10 @@ namespace BlogProject.Models.ViewModels
         public string? UniversityStartYear { get; set; }
         public string? UniversityGraduationYear { get; set; }
 
-        public ICollection<PostEntity> FeaturedPosts { get; set; } = new List<PostEntity>();
-
-
-
         // sonu
         public DateTime BirthDate { get; set; }
 
-        public DateTime? RegisteredDate { get; set; }
+        public DateTime RegisteredDate { get; set; }
         public string? ProfilePicture { get; set; }
         public string? CoverImagePicture { get; set; }
     }

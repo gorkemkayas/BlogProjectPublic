@@ -20,40 +20,40 @@
 
 <style>
     .custom-alert {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        font-size: 18px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        opacity: 0;
-        transform: translateY(-20px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
-        z-index: 1050;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 1050;
     }
 
     .alert-danger {
-        background: linear-gradient(135deg, #ff4e50, #f9d423);
-        color: white;
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    color: white;
     }
 
     .alert-success {
-        background: linear-gradient(135deg, #56ab2f, #a8e063);
-        color: white;
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    color: white;
     }
 
     .custom-alert i {
-        font-size: 22px;
+    font-size: 22px;
     }
 
     .show-alert {
-        opacity: 1;
-        transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
     }
 
 </style>
@@ -188,49 +188,47 @@
                         <!-- Cover Image -->
                         <div class="w-100 h-100 position-absolute">
                             <img src="~/img/defaultCoverPicture.jpg"
-                                 alt="Cover Image"
-                                 class="w-100 h-100"
-                                 style="object-fit: cover;" />
-                        </div>
-
-                        <div class="dropdown-center position-absolute" style="right:5px; top:2px">
-                            
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Action two</a></li>
-                                <li><a class="dropdown-item" href="#">Action three</a></li>
-                            </ul>
+                            alt="Cover Image"
+                            class="w-100 h-100"
+                            style="object-fit: cover;" />
                         </div>
 
                         <!-- Profile Picture and Basic Info -->
                         <div class="ms-5 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
                             <img src="/img/ben4transparan.png"
-                                 alt="Profile Picture"
-                                 class="img-fluid img-thumbnail mt-4 mb-2 "
-                                 style="width: 175px; height: 175px; " />
+                            alt="Profile Picture"
+                            class="img-fluid img-thumbnail mt-4 mb-2 "
+                            style="width: 175px; height: 175px; " />
                         </div>
                     </div>
-                    <button type="button" class="btn btn-dark" style="border-radius:0%" data-toggle="modal" data-target="#editProfileModal">
-                        Edit Profile
-                    </button>
+                    @if (ViewBag.IsOwner != null && ViewBag.IsOwner == true)
+                    {
 
-                    <!-- Modal -->
-                    <partial name="_EditProfileModalPartial"/>
+                        <button type="button" class="btn btn-dark" style="border-radius:0%" data-toggle="modal" data-target="#editProfileModal">
+                            Edit Profile
+                        </button>
+
+                        <!-- Modal -->
+
+                        <partial name="_EditProfileModalPartial" />
+                    }
+
+
 
                     <!-- Profile Stats and Buttons -->
                     <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-center">
                         <div class="d-flex flex-column" style="position: relative; bottom: 20px; left: 30px; top:0px">
-                            <h3 class="mb-1 align-content-center">John Doe <i class="fa-solid fs-5 fa-circle-check text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i></h3>
-                            <p class="mb-2 text-muted">Software Engineer</p>
-                            <small class="text-muted ">United States</small>
+                            <h3 class="mb-1 align-content-center">@Model.Name @Model.Surname <i class="fa-solid fs-5 fa-circle-check text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i></h3>
+                            <p class="mb-2 text-muted">@Model.Title</p>
+                            <small class="text-muted ">@Model.Country</small>
                         </div>
                         <div class="d-flex justify-content-end text-center py-1 text-body align-items-center">
                             <div class="px-3">
-                                <p class="mb-1 h4">1,234</p>
+                                <p class="mb-1 h4">@Model.FollowersCount</p>
                                 <p class="small text-muted mb-0">Followers</p>
                             </div>
                             <div class="px-3">
-                                <p class="mb-1 h4">567</p>
+                                <p class="mb-1 h4">@Model.FollowingCount</p>
                                 <p class="small text-muted mb-0">Following</p>
                             </div>
                         </div>
@@ -239,24 +237,40 @@
                         <div class="ms-1">
                             <div class="d-flex ms-4 ps-2 align-content-center flex-column">
 
-                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Lives in:</p><p class="text-muted">123 Main St, New York, United States</p></div>
-                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Born on:</p><p class="text-muted">January 1, 1990</p></div>
-                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Member since:</p><p class="text-muted">January 1, 2024</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Lives in:</p><p class="text-muted">@Model.Address</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Born on:</p><p class="text-muted">@Model.BirthDate.ToString("MMMM d, yyyy")</p></div>
+                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Member since:</p><p class="text-muted">@Model.RegisteredDate.ToString("MMMM d, yyyy")</p></div>
                             </div>
                         </div>
                         <div class="me-3 mb-auto pe-2" style="height:100%">
                             <img src="/img/bimser.jpg" class="me-2" style="height:20px;width:20px" />
-                            Working at Bimser
+                            @Model.WorkingAt
                         </div>
                     </div>
                     <hr class="" style="margin-top:25px" />
                     <div class="container d-flex justify-content-around align-items-center">
-                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-github me-1"></a>
-                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-linkedin-in me-1" href="asdasd"></a>
-                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-medium me-1"></a>
-                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-x-twitter me-1"></a>
-                        <a class="fa-brands fs-4 blacktored text-decoration-none fa-youtube me-1"></a>
-                        <a class="fa-solid fs-4 blacktored text-decoration-none fa-earth-europe me-1"></a>
+                        @if(@Model.GithubAddress != null){<a class="fa-brands fs-4 blacktored text-decoration-none fa-github me-1" href="@Model.GithubAddress" target="_blank"></a>}
+                        @if (Model.LinkedinAddress != null)
+                        {
+                            <a class="fa-brands fs-4 blacktored text-decoration-none fa-linkedin-in me-1" href="@Model.LinkedinAddress" target="_blank"></a>
+                        }
+                        @if (Model.MediumAddress != null)
+                        {
+                            <a class="fa-brands fs-4 blacktored text-decoration-none fa-medium me-1" href="@Model.MediumAddress" target="_blank"></a>
+                        }
+                        @if (Model.XAddress != null)
+                        {
+                            <a class="fa-brands fs-4 blacktored text-decoration-none fa-x-twitter me-1" href="@Model.XAddress" target="_blank"></a>
+                        }
+                        @if (Model.YoutubeAddress != null)
+                        {
+                            <a class="fa-brands fs-4 blacktored text-decoration-none fa-youtube me-1" href="@Model.YoutubeAddress
+                            " target="_blank"></a>
+                        }
+                        @if (Model.PersonalWebAddress != null)
+                        {
+                            <a class="fa-solid fs-4 blacktored text-decoration-none fa-earth-europe me-1" href="https://www.google.com" target="_blank"></a>
+                        }
                     </div>
                     <hr class="" style="margin-top:15px" />
                     <!-- About Section -->
@@ -268,13 +282,7 @@
                                     <!-- Left Column -->
                                     <div class="col-md-12">
                                         <p>
-                                            To grow as a backend developer, I am actively improving myself in .NET Core technologies. I have a strong passion for building robust, scalable, and efficient web applications, and I believe that mastering the .NET ecosystem is key to achieving this goal. Currently, I am working extensively with ASP.NET Core MVC, which allows me to create dynamic and responsive web applications with a clean separation of concerns. I also leverage Entity Framework Core for database management, enabling me to work with data in an object-oriented manner while ensuring high performance and maintainability.
-                                            <br />
-                                            <br />
-                                            In addition, I utilize ASP.NET Core Identity Framework to implement secure authentication and authorization mechanisms, ensuring that the applications I build are both user-friendly and secure. For database operations, I work with Microsoft SQL Server (MSSQL), where I design and optimize relational databases to support complex queries and ensure data integrity.
-                                            <br />
-                                            <br />
-                                            Continuous learning is a core part of my development journey. I regularly research and explore new features, best practices, and advanced techniques in the .NET ecosystem. To solidify my understanding and contribute to the developer community, I document the topics I learn and research as articles on the Medium platform. These articles cover a wide range of subjects, from beginner-friendly tutorials to in-depth discussions on advanced topics, and they serve as a valuable resource for both myself and others in the community.
+                                            @Model.Bio
                                         </p>
                                     </div>
                                 </div>
@@ -282,26 +290,47 @@
                         </div>
                     </div>
                     <hr class="m-0" style="margin-top:10px" />
-
+                    @if(Model is ExtendedProfileViewModel extendedProfileViewModel)
+                    {
+                    
                     <div class="card-body p-2 text-black">
-                        <!-- Contact Information -->
+                        <!-- Security Information -->
                         <div class="mb-2">
                             <h5 class="mb-1 ms-5 mt-4 d-flex">Security Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
                             <div class="d-flex mt-2 justify-content-around">
 
                                 <div class="p-1">
-                                    <p class="mb-0 "><strong>Two-Factor Authentication:</strong>  <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                        <p class="mb-0 "><strong>Two-Factor Authentication:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.TwoFactorEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
                                 </div>
                                 <div class="p-1">
-                                    <p class="mb-0 "><strong>Email Confirmed:</strong>  <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                        <p class="mb-0 "><strong>Email Confirmed:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.EmailConfirmed ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
                                 </div>
                                 <div class="p-1">
-                                    <p class="mb-0 "><strong>Lockout:</strong>  <i class="fa-solid fs-6 fa-circle-check text-success"></i></p>
+                                        <p class="mb-0 "><strong>Lockout:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.LockoutEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="" style="margin-top:10px" /> 
+                    <div class="card-body py-0 mt-0 text-black">
+                        <!-- Contact Information -->
+                        <div class="mb-2 ms-4">
+                            <h5 class="mb-1 mt-4 ms-2 d-flex">Contact Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
+                            <div class="d-flex justify-content-around">
+
+                                <div class="py-1 me-5 d-flex align-content-center">
+                                    <strong class="pe-2 ms-2">Email Address:</strong>
+                                    <p>@extendedProfileViewModel.EmailAddress</p>
+                                </div>
+                                <div class="py-1 me-5 d-flex align-content-center">
+                                    <strong class="pe-2">Phone Number:</strong>
+                                    <p>@extendedProfileViewModel.PhoneNumber</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <hr class="" style="margin-top:10px" />
+                    }
 
                     <div class="card-body p-4 text-black">
                         <!-- Featured Posts Section -->
@@ -373,15 +402,15 @@
                             <div class="p-0">
                                 <div class="row text-center d-flex">
                                     <div class="col-md-4">
-                                        <p class="mb-1 h6">123</p>
+                                        <p class="mb-1 h6">@Model.PostCount</p>
                                         <p class="small text-muted mb-0">Posts</p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="mb-1 h6">456</p>
+                                        <p class="mb-1 h6">@Model.CommentCount</p>
                                         <p class="small text-muted mb-0">Comments</p>
                                     </div>
                                     <div class="col-md-4 mb-3 mb-md-0">
-                                        <p class="mb-1 h6">8172</p>
+                                        <p class="mb-1 h6">@Model.LikeCount</p>
                                         <p class="small text-muted mb-0">Total Likes</p>
                                     </div>
                                 </div>
@@ -416,3 +445,66 @@
         </div>
     </div>
 </section>
+
+
+<!-- JavaScript Kodu -->
+@section Scripts {
+    <script>
+        // Genel URL doğrulama fonksiyonu
+        function validateUrl(inputId, errorId) {
+            const inputElement = document.getElementById(inputId);
+            const errorElement = document.getElementById(errorId);
+
+            inputElement.addEventListener('input', function () {
+                const inputValue = this.value;
+
+                // Eğer input boşsa veya null ise hata gösterme
+                if (!inputValue || inputValue.trim().length === 0) {
+                    errorElement.style.display = 'none';
+                    this.classList.remove('is-invalid');
+                    return; // Fonksiyondan çık
+                }
+
+                // Eğer input doluysa ve "https://" ile başlamıyorsa hata göster
+                if (!inputValue.startsWith('https://')) {
+                    errorElement.style.display = 'block';
+                    this.classList.add('is-invalid');
+                } else {
+                    errorElement.style.display = 'none';
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+
+        // Her bir input alanı için fonksiyonu çağırın
+        validateUrl('githubInput', 'githubError');
+        validateUrl('linkedinInput', 'linkedinError');
+        validateUrl('mediumInput', 'mediumError');
+        validateUrl('xInput', 'xError');
+        validateUrl('youtubeInput', 'youtubeError');
+        validateUrl('personalWebInput', 'personalWebError');
+
+        // Genel URL doğrulama fonksiyonu
+        function validateNameSurname(inputId, errorId) {
+            const inputElement = document.getElementById(inputId);
+            const errorElement = document.getElementById(errorId);
+
+            inputElement.addEventListener('input', function () {
+                const inputValue = this.value;
+
+                // Eğer input boşsa veya null ise hata gösterme
+                if (!inputValue || inputValue.trim().length === 0) {
+                    errorElement.style.display = 'block';
+                    this.classList.add('is-invalid');
+                    return; // Fonksiyondan çık
+                } else {
+                    errorElement.style.display = 'none';
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+
+        validateNameSurname('nameInput','nameError');
+        validateNameSurname('surnameInput','surnameError');
+    </script>
+}

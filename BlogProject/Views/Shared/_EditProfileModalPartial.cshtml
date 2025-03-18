@@ -1,4 +1,5 @@
-﻿<style>
+﻿@model ExtendedProfileViewModel
+<style>
     .custom-input {
         /* #007bff */
         border: 1px solid;
@@ -41,13 +42,14 @@
         transition: opacity 0.3s ease; /* Geçiş efekti */
         font-size: 24px; /* İkon boyutu */
         color: white; /* İkon rengi */
-        /* background-color: rgba(0, 0, 0, 0.5); /* Arkaplan rengi */ */
-        padding: 10px; /* İkon etrafına boşluk */
+        /* background-color: rgba(0, 0, 0, 0.5); /* Arkaplan rengi */ */ padding: 10px; /* İkon etrafına boşluk */
         border-radius: 50%; /* İkonu yuvarlak yapar */
     }
 
     .image-container-profile:hover .overlay-icon-profile {
-        opacity: 1;} /* Üzerine gelindiğinde göster */
+        opacity: 1;
+    }
+    /* Üzerine gelindiğinde göster */
     .image-container-header {
         position: relative;
         display: inline-block;
@@ -55,7 +57,7 @@
 
     .overlay-icon-header {
         position: absolute;
-        top:99%; /* İkonu dikeyde ortala */
+        top: 99%; /* İkonu dikeyde ortala */
         left: 97%; /* İkonu yatayda ortala */
         transform: translate(-50%, -50%); /* Tam ortalamak için */
         opacity: 0; /* Başlangıçta gizli */
@@ -72,20 +74,26 @@
     /* Üzerine gelindiğinde göster */
 </style>
 
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+
 <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProfileModalLabel">Profili Düzenle</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container py-5 h-100">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col col-lg-9 col-xl-0">
-                            <div class="card shadow-lg">
+
+        <div class="modal-header" hidden>
+            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center">
+                    <div class="col col-lg-9 col-xl-0">
+                        <div class="card shadow-lg modal-content">
+                            <form asp-controller="User" asp-action="EditProfile" method="post">
                                 <!-- Profile Header -->
                                 <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
                                     <!-- Cover Image -->
@@ -101,7 +109,7 @@
                                         </div>
                                     </div>
 
-                                    
+
 
                                     <!-- Profile Picture and Basic Info -->
                                     <div class="ms-5 mt-5 d-flex flex-column image-container-profile" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
@@ -110,42 +118,51 @@
                                              class="img-fluid img-thumbnail mt-4 mb-2 "
                                              style="width: 175px; height: 175px; " />
                                         <div class="dropdown-center position-absolute overlay-icon-profile" style="right:5px; top:2px">
-                                            
+
                                             <i class="fa-solid fa-pen" id="uploadIconProfile" type="button" style="cursor:pointer">
                                             </i>
                                             <input type="file" accept=".jpg,.png,.jpeg" id="fileInputProfile" style="display: none;">
-                                            
+
                                         </div>
                                     </div>
                                 </div>
 
 
                                 <!-- Profile Stats and Buttons -->
-                                <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-center">
+                                <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-start">
                                     <div class="d-flex ms-3 flex-column" style="position: relative; bottom: 20px; top:0px">
+
                                         <div class="d-flex input-group-sm  align-items-center mb-1">
-                                            <label class="me-1 col-md-4 custom-label">Name:</label>
-                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Görkem Kaya" aria-label="MemberSince"><i class="fa-solid fs-5 fa-circle-check ms-2 text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i>
+
+                                            <label class="me-1 col-md-5 align-items-center my-0 custom-label" asp-for="Name">Name:</label>
+                                            <input asp-for="Name" class="form-control col-md-7 custom-input" id="nameInput" value="@Model.Name"><i class="fa-solid fs-5 fa-circle-check ms-2 text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i>
 
                                         </div>
+                                        <div id="nameError" class="invalid-feedback mb-2" style="display: none;margin-inline-start:8rem;">The name field cannot be left blank..</div>
+                                        <div class="d-flex input-group-sm  align-items-center mb-1">
+                                            <label class="me-1 col-md-5 align-items-center my-0 custom-label" asp-for="Surname">Surname:</label>
+                                            <input asp-for="Surname" class="form-control col-md-7 custom-input" id="surnameInput" value="@Model.Surname">
+
+                                        </div>
+                                        <div id="surnameError" class="invalid-feedback" style="display: none;margin-inline-start:8rem;">The surname field cannot be left blank..</div>
                                         <div class="d-flex input-group-sm   align-items-center mb-1">
-                                            <label class="me-1 col-md-4 custom-label">Title:</label>
-                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Software Engineer" aria-label="MemberSince">
+                                            <label class="me-1 col-md-5 my-0 custom-label" asp-for="Title">Title:</label>
+                                            <input asp-for="Title" class="form-control col-md-7 custom-input" value="@Model.Title">
 
                                         </div>
                                         <div class="d-flex input-group-sm align-items-center mb-1">
-                                            <label class="me-1 col-md-4 custom-label">Country:</label>
-                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Turkey" aria-label="MemberSince">
+                                            <label class="me-1 col-md-5 my-0 pe-1 custom-label" asp-for="Country">Country:</label>
+                                            <input asp-for=Country class="form-control col-md-7 custom-input" value="@Model.Country">
 
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-end text-center py-2 text-body align-items-center">
                                         <div class="px-3">
-                                            <p class="mb-1 h4">1,234</p>
+                                            <p class="mb-1 h4">@Model.FollowersCount</p>
                                             <p class="small text-muted mb-0">Followers</p>
                                         </div>
                                         <div class="px-3">
-                                            <p class="mb-1 h4">567</p>
+                                            <p class="mb-1 h4">@Model.FollowingCount</p>
                                             <p class="small text-muted mb-0">Following</p>
                                         </div>
                                     </div>
@@ -154,18 +171,18 @@
 
                                     <div class="d-flex ms-4 flex-column" style="position: relative; bottom: 20px; top:0px">
                                         <div class="d-flex input-group-sm  align-items-center mb-1">
-                                            <label class="me-1 col-md-4 custom-label">Lives in:</label>
-                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Cumhuriyet Mahallesi, 121.Sokak, No:8, Biga/Çanakkale" aria-label="MemberSince">
+                                            <label class="me-1 col-md-5 my-0 custom-label" asp-for="LivesIn">Lives in:</label>
+                                            <input asp-for="LivesIn" class="form-control col-md-7 custom-input" value="@Model.Address">
 
                                         </div>
-                                        <div class="d-flex input-group-sm  align-items-center mb-1">
-                                            <label class="me-1 col-md-4 custom-label">Born on:</label>
-                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="Çanakkale" aria-label="MemberSince">
+                                        <div class="d-flex input-group-sm align-items-center mb-1">
+                                            <label class="me-1 col-md-5 my-0 custom-label" asp-for="BirthDate">Born on:</label>
+                                            <input type="datetime" asp-for="BirthDate" class="form-control col-md-7 custom-input" value="@Model.BirthDate.ToString("MMMM d, yyyy")">
 
                                         </div>
-                                        <div class="d-flex input-group-sm   align-items-center mb-1">
-                                            <label class="me-1 col-md-4 custom-label">Member Since:</label>
-                                            <input type="text" class="form-control col-md-8 custom-input" placeholder="April 3, 2025" aria-label="MemberSince">
+                                        <div class="d-flex align-content-center mb-1">
+                                            <label class="me-1 col-md-5 my-0 custom-label">Member Since:</label>
+                                            <p class=" fs-7 col-md-7 mb-0 align-content-center ps-2 fw-semibold " style="color:#495057;">@Model.RegisteredDate.ToString("MMMM d, yyyy")</p>
 
                                         </div>
 
@@ -178,7 +195,7 @@
                                             <div class="d-flex">
 
                                                 <div class="input-group-sm">
-                                                    <input type="text" class="form-control custom-input" style="width:10em" placeholder="Working at Bimser" aria-label="WorkingAt">
+                                                    <input type="text" class="form-control custom-input" asp-for="@Model.WorkingAt" style="width:10em">
                                                 </div>
 
                                             </div>
@@ -194,38 +211,47 @@
                                     <a class="fa-brands fs-4 blacktored text-decoration-none fa-youtube me-1"></a>
                                 </div> *@
                                 <div class="card-body p-4 text-black">
+                                    <div asp-validation-summary="ModelOnly"></div>
                                     <h4 class="fw-bold ms-4 mb-4">Social Platforms</h4>
                                     <div class="px-4 d-flex mt-4">
                                         <div class="col-md-6 d-flex flex-column">
                                             <div class="input-group mb-3 align-items-center">
                                                 <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-github"></span>
-                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://github.com/gorkemkayas" aria-label="Username" aria-describedby="basic-addon1">
+                                                <input asp-for="@Model.GithubAddress" id="githubInput" class="form-control col-md-11 custom-input" placeholder="Enter your GitHub address!" value="@Model.GithubAddress">
+                                                <div id="githubError" class="invalid-feedback" style="display: none;margin-inline-start:3rem;">URL must start with 'https://'.</div>
+
                                             </div>
                                             <div class="input-group mb-3 align-items-center">
-                                                <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-linkedin-in"></span>
-                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://www.linkedin.com/in/gorkemkayas/" aria-label="Username" aria-describedby="basic-addon1">
+                                                <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-linkedin-in" id="Linkedin"></span>
+                                                <input asp-for="@Model.LinkedinAddress" id="linkedinInput" class="form-control col-md-11 custom-input" placeholder="Enter your Linkedin address!" value="@Model.LinkedinAddress">
+                                                <span asp-validation-for="LinkedinAddress" class="text-danger"></span>
+                                                <div id="linkedinError" class="invalid-feedback" style="display: none;margin-inline-start:3rem;">URL must start with 'https://'.</div>
                                             </div>
                                             <div class="input-group mb-3 align-items-center">
                                                 <span class="fa-brands fs-5 text-decoration-none col-md-1 me-3 fa-medium"></span>
-                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://medium.com/gorkemkayas" aria-label="Username" aria-describedby="basic-addon1">
+                                                <input asp-for="@Model.MediumAddress" id="mediumInput" class="form-control col-md-11 custom-input" placeholder="Enter your Medium address!" value="@Model.MediumAddress">
+                                                <div id="mediumError" class="invalid-feedback" style="display: none;margin-inline-start:3rem;">URL must start with 'https://'.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-6 d-flex flex-column">
 
                                             <div class="input-group mb-3 align-items-center">
                                                 <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-x-twitter"></span>
-                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://x.com/gorkemkayaz" aria-label="Username" aria-describedby="basic-addon1">
+                                                <input asp-for="@Model.XAddress" id="xInput" class="form-control col-md-11 custom-input" placeholder="Enter your X address!" value="@Model.XAddress">
+                                                <div id="xError" class="invalid-feedback" style="display: none;margin-inline-start:3rem;">URL must start with 'https://'.</div>
                                             </div>
                                             <div class="input-group mb-3 align-items-center">
                                                 <span class="fa-brands fs-4 text-decoration-none col-md-1 me-3 fa-youtube"></span>
-                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://youtube.com/gorkemkayaz" aria-label="Username" aria-describedby="basic-addon1">
+                                                <input asp-for="@Model.YoutubeAddress" id="youtubeInput" class="form-control col-md-11 custom-input" placeholder="Enter your Youtube address!" value="@Model.YoutubeAddress">
+                                                <div id="youtubeError" class="invalid-feedback" style="display: none;margin-inline-start:3rem;">URL must start with 'https://'.</div>
                                             </div>
                                             <div class="input-group mb-3 align-items-center">
                                                 <span class="fa-solid fs-4 text-decoration-none col-md-1 me-3 fa-earth-europe"></span>
-                                                <input type="text" class="form-control col-md-11 custom-input" placeholder="https://gorkemkayas.com" aria-label="Username" aria-describedby="basic-addon1">
+                                                <input asp-for="@Model.PersonalWebAddress" id="personalWebInput" class="form-control col-md-11 custom-input" placeholder="Enter your Personal Web address!" value="@Model.PersonalWebAddress">
+                                                <div id="personalWebError" class="invalid-feedback" style="display: none;margin-inline-start:3rem;">URL must start with 'https://'.</div>
                                             </div>
                                         </div>
-                                       
+
                                     </div>
 
                                 </div>
@@ -239,11 +265,7 @@
                                                 <!-- Left Column -->
                                                 <div class="col-md-12">
                                                     <div class="input-group">
-                                                        <textarea class="form-control text-area-custom" style="height:25rem" placeholder="" aria-label="With textarea">To grow as a backend developer, I am actively improving myself in .NET Core technologies. I have a strong passion for building robust, scalable, and efficient web applications, and I believe that mastering the .NET ecosystem is key to achieving this goal. Currently, I am working extensively with ASP.NET Core MVC, which allows me to create dynamic and responsive web applications with a clean separation of concerns. I also leverage Entity Framework Core for database management, enabling me to work with data in an object-oriented manner while ensuring high performance and maintainability.
-
-In addition, I utilize ASP.NET Core Identity Framework to implement secure authentication and authorization mechanisms, ensuring that the applications I build are both user-friendly and secure. For database operations, I work with Microsoft SQL Server (MSSQL), where I design and optimize relational databases to support complex queries and ensure data integrity.
-
-Continuous learning is a core part of my development journey. I regularly research and explore new features, best practices, and advanced techniques in the .NET ecosystem. To solidify my understanding and contribute to the developer community, I document the topics I learn and research as articles on the Medium platform. These articles cover a wide range of subjects, from beginner-friendly tutorials to in-depth discussions on advanced topics, and they serve as a valuable resource for both myself and others in the community.</textarea>
+                                                        <textarea class="form-control text-area-custom" asp-for="@Model.Bio" style="height:25rem" placeholder="Please fill the about section.">@Model.Bio</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -253,23 +275,23 @@ Continuous learning is a core part of my development journey. I regularly resear
                                 <hr class="m-0" style="margin-top:10px" />
 
                                 <div class="card-body p-2 text-black">
-                                    <!-- Contact Information -->
+                                    <!-- Security Information -->
                                     <div class="mb-2">
                                         <div class="d-flex ms-5 align-items-center">
-                                        
+
                                             <h5 class="mb-1 mt-4 d-flex ">Security Information |<p class="text-muted align-items-center ms-1" style="font-weight:300">Hidden from users </p></h5>
 
                                         </div>
-                                        <div class="d-flex justify-content-around">
+                                        <div class="d-flex me-5 justify-content-around">
 
                                             <div class="py-4" style="padding-inline-start:0px">
-                                                <strong>Two-Factor Authentication:</strong><input class="form-check-input mt-0 ms-2" type="checkbox" value="" aria-label="Checkbox for following text input">
+                                                <strong>Two-Factor Authentication:</strong><i class=" ms-2 fa-solid @(Model.TwoFactorEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger") "></i>
                                             </div>
                                             <div class="py-4">
-                                                <strong>Email Confirmed:</strong><input class="form-check-input mt-0 ms-2" type="checkbox" value="" aria-label="Checkbox for following text input">
+                                                <strong>Email Confirmed:</strong><i class=" ms-2 fa-solid @(Model.EmailConfirmed ? "fa-circle-check text-success" : "fa-circle-xmark text-danger") "></i>
                                             </div>
                                             <div class="py-4 pe-3">
-                                                <strong>Lockout:</strong><input class="form-check-input mt-0 ms-2" type="checkbox" value="" aria-label="Checkbox for following text input">
+                                                <strong>Lockout:</strong><i class=" ms-2 fa-solid @(Model.LockoutEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger") "></i>
                                             </div>
                                         </div>
                                     </div>
@@ -282,11 +304,11 @@ Continuous learning is a core part of my development journey. I regularly resear
                                         <div class="d-flex ms-5 justify-content-between">
 
                                             <div class="py-1 d-flex align-items-center col-md-6">
-                                                <strong class="col-md-5 ps-1" >Email Address:</strong>
-                                                <input type="email" class="form-control px-0 custom-input col-md-7" placeholder="gorkemkayas@hotmail.com" aria-label="Username" aria-describedby="basic-addon1">
+                                                <strong class="col-md-4 ps-1" asp-for="@Model.EmailAddress">Email Address:</strong>
+                                                <input asp-for="@Model.EmailAddress" class="form-control ps-2 custom-input col-md-7" value="@Model.EmailAddress">
                                             </div>
                                             <div class="py-1 d-flex align-items-center col-md-6">
-                                                <strong>Phone Number:</strong><input type="tel" class="form-control col-md-6 ps-1 custom-input" placeholder="0543 872 61 77" aria-label="Username" aria-describedby="basic-addon1">
+                                                <strong asp-for="@Model.PhoneNumber">Phone Number:</strong><input type="tel" class="form-control col-md-6 ps-4 custom-input" asp-for="@Model.PhoneNumber" value="@Model.PhoneNumber">
                                             </div>
                                         </div>
                                     </div>
@@ -385,15 +407,15 @@ Continuous learning is a core part of my development journey. I regularly resear
                                         <div class="p-0">
                                             <div class="row text-center d-flex">
                                                 <div class="col-md-4">
-                                                    <p class="mb-1 h6">123</p>
+                                                    <p class="mb-1 h6">@Model.PostCount</p>
                                                     <p class="small text-muted mb-0">Posts</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <p class="mb-1 h6">456</p>
+                                                    <p class="mb-1 h6">@Model.CommentCount</p>
                                                     <p class="small text-muted mb-0">Comments</p>
                                                 </div>
                                                 <div class="col-md-4 mb-3 mb-md-0">
-                                                    <p class="mb-1 h6">8172</p>
+                                                    <p class="mb-1 h6">@Model.LikeCount</p>
                                                     <p class="small text-muted mb-0">Total Likes</p>
                                                 </div>
                                             </div>
@@ -402,7 +424,7 @@ Continuous learning is a core part of my development journey. I regularly resear
                                 </div>
                                 <hr class="" />
 
-                                <div class="card-body box mb-2 px-4 text-black">
+                                <div class="card-body box mb-2 px-4 py-2 text-black">
                                     <!-- Comments Section -->
                                     <div class="mb-2">
                                         <h4 class="fw-bold ms-4 mb-5">Recent Comments</h4>
@@ -422,16 +444,28 @@ Continuous learning is a core part of my development journey. I regularly resear
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <hr class="mb-0" style="margin-top:0px" />
+                                <div class="card-body box mb-2 px-4 py-1 mt-2 text-black d-flex justify-content-center">
+                                    <button class="btn btn-success shadow rounded-pill btn-sm" style="width:40%" type="submit">Save Changes</button>
 
+                                </div>
+                            </form>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
- 
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jQuery Validation -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+
 <script>
         document.addEventListener('DOMContentLoaded', function () {
         const uploadIcon = document.getElementById('uploadIconProfile');

@@ -214,5 +214,11 @@ namespace BlogProject.Controllers
 
             return View(visitorProfileInfo);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request)
+        {
+            return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
+        }
     }
 }
