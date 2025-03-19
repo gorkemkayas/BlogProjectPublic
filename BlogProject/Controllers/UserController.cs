@@ -223,6 +223,28 @@ namespace BlogProject.Controllers
                 return View();
             }
 
+            var result = await _userService.UpdateProfileAsync((await userManager.GetUserAsync(User!))!, request);
+
+            if (!result.Item1)
+            {
+                ModelState.AddModelErrorList(result.Item2!.ToList());
+
+                TempData["Failed"] = "An error occurred while updating the profile.";
+                return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
+            }
+
+            if (result.Item3)
+            {   
+                await _userService.LogoutAsync();
+                await _userService.LogInAsync((await userManager.FindByIdAsync(request.Id))!);
+
+                TempData["Succeed"] = "Profile updated successfully.";
+
+                return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
+            }
+
+            TempData["Succeed"] = "Profile updated successfully.";
+
             return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
         }
     }

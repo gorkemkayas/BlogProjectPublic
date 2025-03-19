@@ -3,7 +3,62 @@
     Layout = "_ProfileLayout";
 }
 
+<style>
+    .custom-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        z-index: 1050;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #ff4e50, #f9d423);
+        color: white;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #56ab2f, #a8e063);
+        color: white;
+    }
+
+    .custom-alert i {
+        font-size: 22px;
+    }
+
+    .show-alert {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+</style>
+
 @model VisitorProfileViewModel
+
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+
 @* <div class="ad-left-full">
     <video class="ad-video" autoplay loop muted playsinline>
         <source src="~/img/AdLeft.webm" type="video/mp4">
@@ -16,48 +71,6 @@
         Your browser does not support the video tag.
     </video>
 </div> *@
-
-
-<style>
-    .custom-alert {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    font-size: 18px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    z-index: 1050;
-    }
-
-    .alert-danger {
-    background: linear-gradient(135deg, #ff4e50, #f9d423);
-    color: white;
-    }
-
-    .alert-success {
-    background: linear-gradient(135deg, #56ab2f, #a8e063);
-    color: white;
-    }
-
-    .custom-alert i {
-    font-size: 22px;
-    }
-
-    .show-alert {
-    opacity: 1;
-    transform: translateY(0);
-    }
-
-</style>
-
 
 @* <!-- Sol Reklam Alanı -->
 <div class="ad-left">
@@ -188,17 +201,17 @@
                         <!-- Cover Image -->
                         <div class="w-100 h-100 position-absolute">
                             <img src="~/img/defaultCoverPicture.jpg"
-                            alt="Cover Image"
-                            class="w-100 h-100"
-                            style="object-fit: cover;" />
+                                 alt="Cover Image"
+                                 class="w-100 h-100"
+                                 style="object-fit: cover;" />
                         </div>
 
                         <!-- Profile Picture and Basic Info -->
                         <div class="ms-5 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
                             <img src="/img/ben4transparan.png"
-                            alt="Profile Picture"
-                            class="img-fluid img-thumbnail mt-4 mb-2 "
-                            style="width: 175px; height: 175px; " />
+                                 alt="Profile Picture"
+                                 class="img-fluid img-thumbnail mt-4 mb-2 "
+                                 style="width: 175px; height: 175px; " />
                         </div>
                     </div>
                     @if (ViewBag.IsOwner != null && ViewBag.IsOwner == true)
@@ -249,7 +262,10 @@
                     </div>
                     <hr class="" style="margin-top:25px" />
                     <div class="container d-flex justify-content-around align-items-center">
-                        @if(@Model.GithubAddress != null){<a class="fa-brands fs-4 blacktored text-decoration-none fa-github me-1" href="@Model.GithubAddress" target="_blank"></a>}
+                        @if (@Model.GithubAddress != null)
+                        {
+                            <a class="fa-brands fs-4 blacktored text-decoration-none fa-github me-1" href="@Model.GithubAddress" target="_blank"></a>
+                        }
                         @if (Model.LinkedinAddress != null)
                         {
                             <a class="fa-brands fs-4 blacktored text-decoration-none fa-linkedin-in me-1" href="@Model.LinkedinAddress" target="_blank"></a>
@@ -265,11 +281,11 @@
                         @if (Model.YoutubeAddress != null)
                         {
                             <a class="fa-brands fs-4 blacktored text-decoration-none fa-youtube me-1" href="@Model.YoutubeAddress
-                            " target="_blank"></a>
+                                    " target="_blank"></a>
                         }
                         @if (Model.PersonalWebAddress != null)
                         {
-                            <a class="fa-solid fs-4 blacktored text-decoration-none fa-earth-europe me-1" href="https://www.google.com" target="_blank"></a>
+                            <a class="fa-solid fs-4 blacktored text-decoration-none fa-earth-europe me-1" href="@Model.PersonalWebAddress" target="_blank"></a>
                         }
                     </div>
                     <hr class="" style="margin-top:15px" />
@@ -290,46 +306,46 @@
                         </div>
                     </div>
                     <hr class="m-0" style="margin-top:10px" />
-                    @if(Model is ExtendedProfileViewModel extendedProfileViewModel)
+                    @if (Model is ExtendedProfileViewModel extendedProfileViewModel)
                     {
-                    
-                    <div class="card-body p-2 text-black">
-                        <!-- Security Information -->
-                        <div class="mb-2">
-                            <h5 class="mb-1 ms-5 mt-4 d-flex">Security Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
-                            <div class="d-flex mt-2 justify-content-around">
 
-                                <div class="p-1">
+                        <div class="card-body p-2 text-black">
+                            <!-- Security Information -->
+                            <div class="mb-2">
+                                <h5 class="mb-1 ms-5 mt-4 d-flex">Security Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
+                                <div class="d-flex mt-2 justify-content-around">
+
+                                    <div class="p-1">
                                         <p class="mb-0 "><strong>Two-Factor Authentication:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.TwoFactorEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
-                                </div>
-                                <div class="p-1">
+                                    </div>
+                                    <div class="p-1">
                                         <p class="mb-0 "><strong>Email Confirmed:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.EmailConfirmed ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
-                                </div>
-                                <div class="p-1">
+                                    </div>
+                                    <div class="p-1">
                                         <p class="mb-0 "><strong>Lockout:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.LockoutEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <hr class="" style="margin-top:10px" /> 
-                    <div class="card-body py-0 mt-0 text-black">
-                        <!-- Contact Information -->
-                        <div class="mb-2 ms-4">
-                            <h5 class="mb-1 mt-4 ms-2 d-flex">Contact Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
-                            <div class="d-flex justify-content-around">
+                        <hr class="" style="margin-top:10px" />
+                        <div class="card-body py-0 mt-0 text-black">
+                            <!-- Contact Information -->
+                            <div class="mb-2 ms-4">
+                                <h5 class="mb-1 mt-4 ms-2 d-flex">Contact Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
+                                <div class="d-flex justify-content-around">
 
-                                <div class="py-1 me-5 d-flex align-content-center">
-                                    <strong class="pe-2 ms-2">Email Address:</strong>
-                                    <p>@extendedProfileViewModel.EmailAddress</p>
-                                </div>
-                                <div class="py-1 me-5 d-flex align-content-center">
-                                    <strong class="pe-2">Phone Number:</strong>
-                                    <p>@extendedProfileViewModel.PhoneNumber</p>
+                                    <div class="py-1 me-5 d-flex align-content-center">
+                                        <strong class="pe-2 ms-2">Email Address:</strong>
+                                        <p>@extendedProfileViewModel.EmailAddress</p>
+                                    </div>
+                                    <div class="py-1 me-5 d-flex align-content-center">
+                                        <strong class="pe-2">Phone Number:</strong>
+                                        <p>@extendedProfileViewModel.PhoneNumber</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <hr class="" style="margin-top:10px" />
+                        <hr class="" style="margin-top:10px" />
                     }
 
                     <div class="card-body p-4 text-black">
@@ -480,6 +496,7 @@
             });
         }
 
+
         // Her bir input alanı için fonksiyonu çağırın
         validateUrl('githubInput', 'githubError','saveChangesButton');
         validateUrl('linkedinInput', 'linkedinError','saveChangesButton');
@@ -513,5 +530,38 @@
 
         validateNameSurname('nameInput','nameError','saveChangesButton');
         validateNameSurname('surnameInput','surnameError','saveChangesButton');
+
+        function validateEmail(inputId, errorId, buttonId) {
+            const inputElement = document.getElementById(inputId);
+            const errorElement = document.getElementById(errorId);
+            const saveChangesElement = document.getElementById(buttonId);
+
+            inputElement.addEventListener('input', function () {
+                const inputValue = this.value;
+
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/; // JavaScript regex syntax'ı
+
+                if (!inputValue || inputValue.trim().length === 0) {
+                    errorElement.style.display = 'block';
+                    this.classList.add('is-invalid');
+                    saveChangesElement.style.display = 'none';
+                } else if (!emailRegex.test(inputValue)) {
+                    errorElement.style.display = 'block';
+                    this.classList.add('is-invalid');
+                    saveChangesElement.style.display = 'none';
+                } else {
+                    errorElement.style.display = 'none';
+                    saveChangesElement.style.display = 'block';
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+
+        // Sayfa yüklendiğinde validasyonu başlat
+        document.addEventListener('DOMContentLoaded', function () {
+            validateEmail('emailInput', 'emailError', 'saveChangesButton');
+        });
+
+
     </script>
 }

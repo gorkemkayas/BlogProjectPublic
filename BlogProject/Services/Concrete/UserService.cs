@@ -1,8 +1,10 @@
-﻿using BlogProject.Extensions;
+﻿using AutoMapper;
+using BlogProject.Extensions;
 using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
 using BlogProject.Services.CustomMethods.Abstract;
 using BlogProject.Services.CustomMethods.Concrete;
+using BlogProject.Services.DTOs.MappingProfile;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Identity;
@@ -27,8 +29,9 @@ namespace BlogProject.Services.Concrete
         private readonly IUsernameGenerator _usernameGenerator;
         private readonly IUserTokenGenerator _userTokenGenerator;
         private readonly IUrlGenerator _urlGenerator;
+        private readonly IMapper _mapper;
 
-        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext, ICommentService commentService)
+        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext, ICommentService commentService, IMapper mapper)
         {
             _userManager = userManager;
             _usernameGenerator = usernameGenerator;
@@ -38,6 +41,7 @@ namespace BlogProject.Services.Concrete
             _emailService = emailService;
             _blogdbContext = blogdbContext;
             _commentService = commentService;
+            _mapper = mapper;
         }
 
         public async Task<int> GetCommentCountByUserAsync(AppUser user)
@@ -57,44 +61,53 @@ namespace BlogProject.Services.Concrete
             return likeCount;
         }
 
+        public async Task<int> GetPostCountByUserAsync(AppUser user)
+        {
+            var postCount = await _blogdbContext.Posts.CountAsync(x => x.AuthorId == user.Id);
+            return postCount;
+        }
+
         public async Task<ExtendedProfileViewModel> GetExtendedProfileInformationAsync(AppUser currentUser)
         {
-            var extendedProfileInfo = new ExtendedProfileViewModel()
+
+            var extendedProfile = _mapper.Map<ExtendedProfileViewModel>(currentUser);
+            extendedProfile.CommentCount = await GetCommentCountByUserAsync(currentUser);
+            extendedProfile.LikeCount = await GetUserTotalLikeCount(currentUser);
+            extendedProfile.PostCount = await GetPostCountByUserAsync(currentUser);
+
+            
+
+            return extendedProfile;
+
+        }
+
+
+        public async Task<(bool,List<IdentityError>?,bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo)
+        {
+            var errors = new List<IdentityError>();
+
+            if (oldUserInfo == null)
             {
-                Id = currentUser!.Id.ToString(),
-                Name = currentUser.Name,
-                Surname = currentUser.Surname,
-                Bio = currentUser.Bio,
-                BirthDate = currentUser.BirthDate,
-                Country = currentUser.Country,
-                EmailAddress = currentUser.Email!,
-                EmailConfirmed = currentUser.EmailConfirmed,
-                PhoneNumber = currentUser.PhoneNumber,
-                Title = currentUser.Title,
-                RegisteredDate = currentUser.RegisteredDate,
-                ProfilePicture = currentUser.ProfilePicture,
-                CoverImagePicture = currentUser.CoverImagePicture,
-                FollowersCount = currentUser.FollowersCount,
-                FollowingCount = currentUser.FollowingCount,
-                TwoFactorEnabled = currentUser.TwoFactorEnabled,
-                LockoutEnabled = currentUser.LockoutEnabled,
-                WorkingAt = currentUser.WorkingAt,
-                CommentCount = await GetCommentCountByUserAsync(currentUser!),
-                PostCount = await GetCommentCountByUserAsync(currentUser!),
-                LikeCount = await GetUserTotalLikeCount(currentUser),
-                Address = currentUser.Address,
-                XAddress = currentUser.XAddress,
-                LinkedinAddress = currentUser.LinkedinAddress,
-                GithubAddress = currentUser.GithubAddress,
-                MediumAddress = currentUser.MediumAddress,
-                YoutubeAddress = currentUser.YoutubeAddress,
-                PersonalWebAddress = currentUser.PersonalWebAddress
+                errors.Add(new() { Code = "UserNotFound", Description="The user not found in the system." });
+                return (false, errors,false);
+            }
 
+            if( oldUserInfo.Id.ToString() != newUserInfo.Id)
+            {
+                errors.Add(new() { Code = "UsersNotMatched", Description = "The users not matched." });
+                return (false, errors, false);
+            }
+            var updatedUser =  _mapper.Map(newUserInfo , oldUserInfo);
 
-            };
+            await _userManager.UpdateAsync(updatedUser);
 
-            return extendedProfileInfo;
+            if(oldUserInfo.Email != newUserInfo.EmailAddress)
+            {
+                await _userManager.UpdateSecurityStampAsync(oldUserInfo);
+                return (true, null, true);
+            }
 
+            return (true,null,false);
         }
         public VisitorProfileViewModel GetVisitorProfileInformation(AppUser visitedUser)
         {
@@ -185,6 +198,10 @@ namespace BlogProject.Services.Concrete
         {
             await _signInManager.SignOutAsync();
 
+        }
+        public async Task LogInAsync(AppUser user)
+        {
+            await _signInManager.SignInAsync(user,false);
         }
 
         public async Task<(bool,IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user)

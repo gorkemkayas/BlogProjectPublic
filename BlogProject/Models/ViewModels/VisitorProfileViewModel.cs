@@ -6,6 +6,8 @@ namespace BlogProject.Models.ViewModels
 {
     public class VisitorProfileViewModel : BaseProfileViewModel
     {
+        public string UserName { get; set; }
+
         [Required]
         public string Name { get; set; } = null!;
         [Required]
@@ -50,6 +52,7 @@ namespace BlogProject.Models.ViewModels
         public string? UniversityGraduationYear { get; set; }
 
         // sonu
+        [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
 
         public DateTime RegisteredDate { get; set; }

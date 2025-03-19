@@ -10,14 +10,19 @@ namespace BlogProject.Services.Abstract
     {
         Task<(bool, IEnumerable<IdentityError>?)> SignUp(SignUpViewModel request);
         Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request);
+
+        Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo);
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordLinkAsync(ForgetPasswordViewModel request);
 
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token);
         Task<(bool, IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user);
+
+        Task LogInAsync(AppUser user);
         Task LogoutAsync();
 
         Task<int> GetCommentCountByUserAsync(AppUser user);
         Task<int> GetUserTotalLikeCount(AppUser user);
+        Task<int> GetPostCountByUserAsync(AppUser user);
         Task<ExtendedProfileViewModel> GetExtendedProfileInformationAsync(AppUser currentUser);
         VisitorProfileViewModel GetVisitorProfileInformation(AppUser visitedUser);
 

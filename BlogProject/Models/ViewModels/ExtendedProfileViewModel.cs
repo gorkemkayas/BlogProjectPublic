@@ -12,5 +12,8 @@ namespace BlogProject.Models.ViewModels
         public bool EmailConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public bool LockoutEnabled { get; set; }
+
+        public string? SecurityStamp {  get; set; }
+        public string? ConcurrencyStamp { get; set; }
     }
 }
