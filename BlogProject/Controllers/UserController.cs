@@ -218,6 +218,11 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request)
         {
+            if(!ModelState.IsValid)
+            {
+                return View();
+            }
+
             return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
         }
     }

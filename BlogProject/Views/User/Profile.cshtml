@@ -451,9 +451,10 @@
 @section Scripts {
     <script>
         // Genel URL doğrulama fonksiyonu
-        function validateUrl(inputId, errorId) {
+        function validateUrl(inputId, errorId,buttonId) {
             const inputElement = document.getElementById(inputId);
             const errorElement = document.getElementById(errorId);
+            const saveChangesElement = document.getElementById(buttonId);
 
             inputElement.addEventListener('input', function () {
                 const inputValue = this.value;
@@ -462,6 +463,7 @@
                 if (!inputValue || inputValue.trim().length === 0) {
                     errorElement.style.display = 'none';
                     this.classList.remove('is-invalid');
+                    saveChangesElement.style.display = 'block';
                     return; // Fonksiyondan çık
                 }
 
@@ -469,25 +471,28 @@
                 if (!inputValue.startsWith('https://')) {
                     errorElement.style.display = 'block';
                     this.classList.add('is-invalid');
+                    saveChangesElement.style.display = 'none';
                 } else {
                     errorElement.style.display = 'none';
                     this.classList.remove('is-invalid');
+                    saveChangesElement.style.display = 'block';
                 }
             });
         }
 
         // Her bir input alanı için fonksiyonu çağırın
-        validateUrl('githubInput', 'githubError');
-        validateUrl('linkedinInput', 'linkedinError');
-        validateUrl('mediumInput', 'mediumError');
-        validateUrl('xInput', 'xError');
-        validateUrl('youtubeInput', 'youtubeError');
-        validateUrl('personalWebInput', 'personalWebError');
+        validateUrl('githubInput', 'githubError','saveChangesButton');
+        validateUrl('linkedinInput', 'linkedinError','saveChangesButton');
+        validateUrl('mediumInput', 'mediumError','saveChangesButton');
+        validateUrl('xInput', 'xError','saveChangesButton');
+        validateUrl('youtubeInput', 'youtubeError','saveChangesButton');
+        validateUrl('personalWebInput', 'personalWebError','saveChangesButton');
 
-        // Genel URL doğrulama fonksiyonu
-        function validateNameSurname(inputId, errorId) {
+        // Name, Surname Validasyonu
+        function validateNameSurname(inputId, errorId,buttonId) {
             const inputElement = document.getElementById(inputId);
             const errorElement = document.getElementById(errorId);
+            const saveChangesElement = document.getElementById(buttonId);
 
             inputElement.addEventListener('input', function () {
                 const inputValue = this.value;
@@ -496,15 +501,17 @@
                 if (!inputValue || inputValue.trim().length === 0) {
                     errorElement.style.display = 'block';
                     this.classList.add('is-invalid');
+                    saveChangesElement.style.display = 'none';
                     return; // Fonksiyondan çık
                 } else {
                     errorElement.style.display = 'none';
+                    saveChangesElement.style.display = 'block';
                     this.classList.remove('is-invalid');
                 }
             });
         }
 
-        validateNameSurname('nameInput','nameError');
-        validateNameSurname('surnameInput','surnameError');
+        validateNameSurname('nameInput','nameError','saveChangesButton');
+        validateNameSurname('surnameInput','surnameError','saveChangesButton');
     </script>
 }

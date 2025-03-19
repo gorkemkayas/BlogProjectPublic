@@ -14,8 +14,6 @@ namespace BlogProject.Models.ViewModels
         public string? Bio { get; set; }
         public string? WorkingAt { get; set; }
         //public IFormFile? WorkingAtLogo { get; set; }
-
-        public string? LivesIn { get; set; }
         public string? Country { get; set; }
 
         // yeni eklediklerim
