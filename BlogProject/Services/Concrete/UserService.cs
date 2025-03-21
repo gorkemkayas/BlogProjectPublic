@@ -75,93 +75,121 @@ namespace BlogProject.Services.Concrete
             extendedProfile.LikeCount = await GetUserTotalLikeCount(currentUser);
             extendedProfile.PostCount = await GetPostCountByUserAsync(currentUser);
 
-            
+
 
             return extendedProfile;
 
         }
 
 
-        public async Task<(bool,List<IdentityError>?,bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile)
+        public async Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile)
         {
             var errors = new List<IdentityError>();
 
             if (oldUserInfo == null)
             {
-                errors.Add(new() { Code = "UserNotFound", Description="The user not found in the system." });
-                return (false, errors,false);
+                errors.Add(new() { Code = "UserNotFound", Description = "The user not found in the system." });
+                return (false, errors, false);
             }
 
-            if( oldUserInfo.Id.ToString() != newUserInfo.Id)
+            if (oldUserInfo.Id.ToString() != newUserInfo.Id)
             {
                 errors.Add(new() { Code = "UsersNotMatched", Description = "The users not matched." });
                 return (false, errors, false);
             }
 
-            if (fileInputProfile != null  && fileInputProfile.FileName != oldUserInfo.ProfilePicture)
-            {
-                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
+            var step1 = await ConfigureProfilePictureOfNewUserInfoAsync(newUserInfo, oldUserInfo, fileInputProfile);
+            var step2 = await ConfigureCoverPictureOfNewUserInfoAsync(step1, oldUserInfo, coverInputProfile);
 
-                if(!Directory.Exists(uploadPath))
-                {
-                    Directory.CreateDirectory(uploadPath);
-                }
-
-                string filePath = Path.Combine(uploadPath, fileInputProfile.FileName);
-
-                using(var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await fileInputProfile.CopyToAsync(stream);
-                }
-                newUserInfo.ProfilePicture = fileInputProfile.FileName;
-            }
-
-            if (coverInputProfile != null && coverInputProfile.FileName != oldUserInfo.CoverImagePicture)
-            {
-                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
-
-                if (!Directory.Exists(uploadPath))
-                {
-                    Directory.CreateDirectory(uploadPath);
-                }
-
-                string filePath = Path.Combine(uploadPath, coverInputProfile.FileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await coverInputProfile.CopyToAsync(stream);
-                }
-                newUserInfo.CoverImagePicture = coverInputProfile.FileName;
-            }
-
-
-            if (fileInputProfile is null)
-            {
-                newUserInfo.ProfilePicture = oldUserInfo.ProfilePicture;
-            }
-            if(coverInputProfile is null)
-            {
-                newUserInfo.CoverImagePicture = oldUserInfo.CoverImagePicture;
-            }
-            
             var updatedUser = _mapper.Map(newUserInfo, oldUserInfo);
-            
-
             await _userManager.UpdateAsync(updatedUser);
 
-            if(oldUserInfo.Email != newUserInfo.EmailAddress)
+            if (oldUserInfo.Email != newUserInfo.EmailAddress)
             {
                 await _userManager.UpdateSecurityStampAsync(oldUserInfo);
                 return (true, null, true);
             }
 
-            return (true,null,false);
+            return (true, null, false);
+        }
+        public async Task<ExtendedProfileViewModel> ConfigureProfilePictureOfNewUserInfoAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? fileInputProfile)
+        {
+            if (fileInputProfile is null)
+            {
+                newUserInfo.ProfilePicture = oldUserInfo.ProfilePicture;
+
+                return newUserInfo;
+            }
+
+
+            string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+            var fileName = fileInputProfile.FileName.Replace(" ", "_");
+            string filePath = Path.Combine(uploadPath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileInputProfile.CopyToAsync(stream);
+            }
+            newUserInfo.ProfilePicture = fileName;
+
+            if (oldUserInfo.ProfilePicture != null)
+            {
+                var oldPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), uploadPath, oldUserInfo.ProfilePicture);
+
+                if (File.Exists(oldPhotoPath))
+                {
+                    File.Delete(oldPhotoPath);
+                }
+
+            }
+
+            return newUserInfo;
+
+        }
+
+        public async Task<ExtendedProfileViewModel> ConfigureCoverPictureOfNewUserInfoAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? coverInputProfile)
+        {
+
+            if (coverInputProfile is null)
+            {
+                newUserInfo.CoverImagePicture = oldUserInfo.CoverImagePicture;
+                return newUserInfo;
+            }
+
+            string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+            var fileName = coverInputProfile.FileName.Replace(" ", "_");
+            string filePath = Path.Combine(uploadPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await coverInputProfile.CopyToAsync(stream);
+            }
+            newUserInfo.CoverImagePicture = fileName;
+
+            if (oldUserInfo.CoverImagePicture != null)
+            {
+                var oldPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), uploadPath, oldUserInfo.CoverImagePicture);
+
+                if (File.Exists(oldPhotoPath))
+                {
+                    File.Delete(oldPhotoPath);
+                }
+
+            }
+            return newUserInfo;
         }
         public VisitorProfileViewModel GetVisitorProfileInformation(AppUser visitedUser)
         {
             var visitorProfileInfo = new VisitorProfileViewModel()
             {
-
+                UserName = visitedUser.UserName!,
                 Name = visitedUser.Name,
                 Surname = visitedUser.Surname,
                 Bio = visitedUser.Bio,
@@ -209,27 +237,27 @@ namespace BlogProject.Services.Concrete
 
             return (false, identityResult.Errors);
         }
-        
+
         public async Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request)
         {
             var errors = new List<IdentityError>();
 
             var hasUser = await _userManager.FindByEmailAsync(request.Email);
 
-            if (hasUser == null) 
+            if (hasUser == null)
             {
                 errors.Add(new IdentityError() { Code = "SignInError", Description = "The email or password is incorrect." });
                 return (false, errors);
             }
 
-            var signInResult = await _signInManager.PasswordSignInAsync(hasUser,request.Password, request.RememberMe, true);
+            var signInResult = await _signInManager.PasswordSignInAsync(hasUser, request.Password, request.RememberMe, true);
 
-            if(signInResult.Succeeded)
+            if (signInResult.Succeeded)
             {
                 return (true, null);
             }
 
-            if(signInResult.IsLockedOut)
+            if (signInResult.IsLockedOut)
             {
                 errors.Add(new IdentityError() { Code = "SignInError", Description = $"Your account is locked, will be accesible at {hasUser.LockoutEnd}" });
                 return (false, errors);
@@ -249,29 +277,29 @@ namespace BlogProject.Services.Concrete
         }
         public async Task LogInAsync(AppUser user)
         {
-            await _signInManager.SignInAsync(user,false);
+            await _signInManager.SignInAsync(user, false);
         }
 
-        public async Task<(bool,IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user)
+        public async Task<(bool, IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user)
         {
             var errors = new List<IdentityError>();
 
             var currentUser = await _userManager.GetUserAsync(user);
 
             var isSame = await _userManager.CheckPasswordAsync(currentUser, request.OldPassword);
-            
-            if(!isSame)
+
+            if (!isSame)
             {
                 errors.Add(new IdentityError() { Code = "ChangePasswordError", Description = "The old password is incorrect." });
                 return (false, errors);
             }
 
-            var result = await _userManager.ChangePasswordAsync(currentUser,request.OldPassword, request.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(currentUser, request.OldPassword, request.NewPassword);
 
             if (!result.Succeeded)
             {
                 errors.AddRange(result.Errors);
-                return (false,errors);
+                return (false, errors);
             }
 
             await _userManager.UpdateSecurityStampAsync(currentUser);
@@ -306,7 +334,7 @@ namespace BlogProject.Services.Concrete
             return (true, null);
         }
 
-        public async Task<(bool,IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token)
+        public async Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token)
         {
             var errors = new List<IdentityError>();
 

@@ -17,6 +17,10 @@ namespace BlogProject.Services.Abstract
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token);
         Task<(bool, IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user);
 
+
+        Task<ExtendedProfileViewModel> ConfigureProfilePictureOfNewUserInfoAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? fileInputProfile);
+        Task<ExtendedProfileViewModel> ConfigureCoverPictureOfNewUserInfoAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? coverInputProfile);
+
         Task LogInAsync(AppUser user);
         Task LogoutAsync();
 

@@ -154,12 +154,12 @@
                                         <div id="surnameError" class="invalid-feedback" style="display: none;margin-inline-start:8rem;">The surname field cannot be left blank..</div>
                                         <div class="d-flex input-group-sm   align-items-center mb-1">
                                             <label class="me-1 col-md-5 my-0 custom-label" asp-for="Title">Title:</label>
-                                            <input asp-for="Title" class="form-control col-md-7 custom-input" value="@Model.Title">
+                                            <input asp-for="Title" class="form-control col-md-7 custom-input" placeholder="Please state your title." value="@Model.Title">
 
                                         </div>
                                         <div class="d-flex input-group-sm align-items-center mb-1">
                                             <label class="me-1 col-md-5 my-0 pe-1 custom-label" asp-for="Country">Country:</label>
-                                            <input asp-for=Country class="form-control col-md-7 custom-input" value="@Model.Country">
+                                            <input asp-for=Country class="form-control col-md-7 custom-input" placeholder="Please specify your country." value="@Model.Country">
 
                                         </div>
                                     </div>
@@ -179,7 +179,7 @@
                                     <div class="d-flex ms-4 flex-column" style="position: relative; bottom: 20px; top:0px">
                                         <div class="d-flex input-group-sm  align-items-center mb-1">
                                             <label class="me-1 col-md-5 my-0 custom-label" asp-for="Address">Lives in:</label>
-                                            <input asp-for="Address" class="form-control col-md-7 custom-input" value="@Model.Address">
+                                            <input asp-for="Address" class="form-control col-md-7 custom-input" placeholder="Please indicate where you live" value="@Model.Address">
 
                                         </div>
                                         <div class="d-flex input-group-sm align-items-center mb-1">
@@ -197,12 +197,11 @@
 
                                     <div class="me-3 mb-auto d-flex align-content-center" style="height:100%">
                                         <div class="d-flex align-items-center">
-
                                             <img src="/img/bimser.jpg" class="me-2" style="height:25px;width:25px" />
                                             <div class="d-flex">
 
                                                 <div class="input-group-sm">
-                                                    <input type="text" class="form-control custom-input" asp-for="@Model.WorkingAt" style="width:10em">
+                                                    <input type="text" class="form-control custom-input" asp-for="@Model.WorkingAt" style="width:10em" placeholder="Enter your working area.">
                                                 </div>
 
                                             </div>
@@ -319,7 +318,7 @@
                                                 <div id="emailError" class="invalid-feedback" style="display: none;margin-inline-start:9rem;">The value you entered does not match the email format.</div>
                                             </div>
                                             <div class="py-1 d-flex align-items-center col-md-5">
-                                                <strong asp-for="@Model.PhoneNumber">Phone Number:</strong><input type="tel" class="form-control col-md-6 ps-4 ms-3 custom-input" asp-for="@Model.PhoneNumber" value="@Model.PhoneNumber">
+                                                <strong asp-for="@Model.PhoneNumber">Phone Number:</strong><input type="tel" class="form-control col-md-6 ps-4 ms-3 custom-input" asp-for="@Model.PhoneNumber" placeholder="No Information" value="@Model.PhoneNumber">
                                             </div>
                                         </div>
                                     </div>

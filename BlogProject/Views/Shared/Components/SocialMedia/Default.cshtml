@@ -1,0 +1,40 @@
+﻿@if (string.IsNullOrEmpty(Model.Github) &&
+  string.IsNullOrEmpty(Model.Linkedin) &&
+  string.IsNullOrEmpty(Model.Medium) &&
+  string.IsNullOrEmpty(Model.X) &&
+  string.IsNullOrEmpty(Model.Youtube) &&
+  string.IsNullOrEmpty(Model.PersonalWeb))
+{
+    <p class="mb-0">No social media information is available.</p>
+}
+else
+{
+    
+
+
+    @if (!string.IsNullOrEmpty(Model.Github))
+    {
+        <a class="fa-brands fs-4 blacktored text-decoration-none fa-github me-1" href="@Model.Github" target="_blank"></a>
+    }
+    @if (!string.IsNullOrEmpty(Model.Linkedin))
+    {
+        <a class="fa-brands fs-4 blacktored text-decoration-none fa-linkedin-in me-1" href="@Model.Linkedin" target="_blank"></a>
+    }
+    @if (!string.IsNullOrEmpty(Model.Medium))
+    {
+        <a class="fa-brands fs-4 blacktored text-decoration-none fa-medium me-1" href="@Model.Medium" target="_blank"></a>
+    }
+    @if (!string.IsNullOrEmpty(Model.X))
+    {
+        <a class="fa-brands fs-4 blacktored text-decoration-none fa-x-twitter me-1" href="@Model.X" target="_blank"></a>
+    }
+    @if (!string.IsNullOrEmpty(Model.Youtube))
+    {
+        <a class="fa-brands fs-4 blacktored text-decoration-none fa-youtube me-1" href="@Model.Youtube" target="_blank"></a>
+    }
+    @if (!string.IsNullOrEmpty(Model.PersonalWeb))
+    {
+        <a class="fa-solid fs-4 blacktored text-decoration-none fa-earth-europe me-1" href="@Model.PersonalWeb" target="_blank"></a>
+    }
+
+}
