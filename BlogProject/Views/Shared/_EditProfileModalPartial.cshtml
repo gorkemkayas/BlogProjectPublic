@@ -93,7 +93,7 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col col-lg-9 col-xl-0">
                         <div class="card shadow-lg modal-content">
-                            <form asp-controller="User" asp-action="EditProfile" method="post">
+                            <form asp-controller="User" asp-action="EditProfile" method="post" enctype="multipart/form-data">
                                 <input type="hidden" asp-for="@Model.Id" value="@Model.Id" />
                                 <input type="hidden" asp-for="@Model.UserName" value="@Model.UserName" />
                                 <input type="hidden" asp-for="@Model.SecurityStamp" value="@Model.SecurityStamp" />
@@ -103,14 +103,15 @@
                                 <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
                                     <!-- Cover Image -->
                                     <div class="w-100 h-100 position-absolute image-container-header">
-                                        <img src="~/img/defaultCoverPicture.jpg"
+                                        <img src=@(string.IsNullOrEmpty(Model.CoverImagePicture) ? "/img/defaultCoverPicture.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.CoverImagePicture}")
                                              alt="Cover Image"
+                                             id="coverImage"
                                              class="w-100 h-100"
                                              style="object-fit: cover;" />
                                         <div class="position-absolute overlay-icon-header" style="right:5px; top:20px">
                                             <i class="fa-solid fa-pen" id="uploadIconCover" type="button" style="cursor:pointer">
                                             </i>
-                                            <input type="file" accept=".jpg,.png,.jpeg" id="fileInputCover" style="display: none;">
+                                            <input type="file" accept=".jpg,.png,.jpeg" name="coverInputProfile" id="fileInputCover" style="display: none;">
                                         </div>
                                     </div>
 
@@ -118,15 +119,16 @@
 
                                     <!-- Profile Picture and Basic Info -->
                                     <div class="ms-5 mt-5 d-flex flex-column image-container-profile" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
-                                        <img src="/img/ben4transparan.png"
+                                        <img src=@(string.IsNullOrEmpty(Model.ProfilePicture) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.ProfilePicture}")
                                              alt="Profile Picture"
+                                             id="profileImage"
                                              class="img-fluid img-thumbnail mt-4 mb-2 "
                                              style="width: 175px; height: 175px; " />
                                         <div class="dropdown-center position-absolute overlay-icon-profile" style="right:5px; top:2px">
 
-                                            <i class="fa-solid fa-pen" id="uploadIconProfile" type="button" style="cursor:pointer">
+                                            <i class="fa-solid fa-pen" id="uploadIconProfile" type="button" style="cursor:pointer;">
                                             </i>
-                                            <input type="file" accept=".jpg,.png,.jpeg" id="fileInputProfile" style="display: none;">
+                                            <input type="file" accept=".jpg,.png,.jpeg" name="fileInputProfile" id="fileInputProfile" style="display: none;">
 
                                         </div>
                                     </div>
@@ -512,5 +514,40 @@
                 // Dosya yükleme işlemleri burada yapılabilir
             }
         });
+    });
+
+
+    // Profil fotoğrafını anında yansıtmak için
+    document.getElementById("fileInputProfile").addEventListener("change", function (event) {
+        var file = event.target.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById("profileImage").src = e.target.result; // Önizleme (Anlık değişim)
+            };
+
+            reader.readAsDataURL(file);
+
+            
+        }
+    });
+
+    // Kapak fotoğrafını anında yansıtmak için
+    document.getElementById("fileInputCover").addEventListener("change", function (event) {
+        var file = event.target.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById("coverImage").src = e.target.result; // Önizleme (Anlık değişim)
+            };
+
+            reader.readAsDataURL(file);
+
+
+        }
     });
 </script>

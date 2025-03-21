@@ -82,7 +82,7 @@ namespace BlogProject.Services.Concrete
         }
 
 
-        public async Task<(bool,List<IdentityError>?,bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo)
+        public async Task<(bool,List<IdentityError>?,bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile)
         {
             var errors = new List<IdentityError>();
 
@@ -97,7 +97,55 @@ namespace BlogProject.Services.Concrete
                 errors.Add(new() { Code = "UsersNotMatched", Description = "The users not matched." });
                 return (false, errors, false);
             }
-            var updatedUser =  _mapper.Map(newUserInfo , oldUserInfo);
+
+            if (fileInputProfile != null  && fileInputProfile.FileName != oldUserInfo.ProfilePicture)
+            {
+                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
+
+                if(!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                string filePath = Path.Combine(uploadPath, fileInputProfile.FileName);
+
+                using(var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await fileInputProfile.CopyToAsync(stream);
+                }
+                newUserInfo.ProfilePicture = fileInputProfile.FileName;
+            }
+
+            if (coverInputProfile != null && coverInputProfile.FileName != oldUserInfo.CoverImagePicture)
+            {
+                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
+
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                string filePath = Path.Combine(uploadPath, coverInputProfile.FileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await coverInputProfile.CopyToAsync(stream);
+                }
+                newUserInfo.CoverImagePicture = coverInputProfile.FileName;
+            }
+
+
+            if (fileInputProfile is null)
+            {
+                newUserInfo.ProfilePicture = oldUserInfo.ProfilePicture;
+            }
+            if(coverInputProfile is null)
+            {
+                newUserInfo.CoverImagePicture = oldUserInfo.CoverImagePicture;
+            }
+            
+            var updatedUser = _mapper.Map(newUserInfo, oldUserInfo);
+            
 
             await _userManager.UpdateAsync(updatedUser);
 

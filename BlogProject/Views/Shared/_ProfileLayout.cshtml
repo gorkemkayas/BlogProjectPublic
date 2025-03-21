@@ -97,7 +97,7 @@
                     <div class="d-flex ms-auto align-items-center mt-1">
                         @if (User.Identity!.IsAuthenticated)
                         {
-                            <img class="rounded-pill" src="/img/ben3.jpg" width="30" height="30">
+                            @await Component.InvokeAsync("NavProfilePhoto")
                             <li class="nav-item dropdown list-unstyled ms-2">
                                 <a class="nav-link dropdown-toggle ps-1 login-item position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     @User.Identity.Name

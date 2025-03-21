@@ -5,40 +5,40 @@
 
 <style>
     .custom-alert {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        font-size: 18px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        opacity: 0;
-        transform: translateY(-20px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
-        z-index: 1050;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 1050;
     }
 
     .alert-danger {
-        background: linear-gradient(135deg, #ff4e50, #f9d423);
-        color: white;
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    color: white;
     }
 
     .alert-success {
-        background: linear-gradient(135deg, #56ab2f, #a8e063);
-        color: white;
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    color: white;
     }
 
     .custom-alert i {
-        font-size: 22px;
+    font-size: 22px;
     }
 
     .show-alert {
-        opacity: 1;
-        transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
     }
 
 </style>
@@ -200,16 +200,16 @@ else if (TempData["Failed"] != null)
                     <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
                         <!-- Cover Image -->
                         <div class="w-100 h-100 position-absolute">
-                            <img src="~/img/defaultCoverPicture.jpg"
-                                 alt="Cover Image"
-                                 class="w-100 h-100"
-                                 style="object-fit: cover;" />
+                            <img src=@(string.IsNullOrEmpty(Model.CoverImagePicture) ? "/img/defaultCoverPicture.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.CoverImagePicture}")
+                            alt="Cover Image"
+                            class="w-100 h-100"
+                            style="object-fit: cover;" />
                         </div>
 
                         <!-- Profile Picture and Basic Info -->
                         <div class="ms-5 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
-                            <img src="/img/ben4transparan.png"
-                                 alt="Profile Picture"
+                            <img src=@(string.IsNullOrEmpty(Model.ProfilePicture) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.ProfilePicture}")
+                                alt="Profile Picture"
                                  class="img-fluid img-thumbnail mt-4 mb-2 "
                                  style="width: 175px; height: 175px; " />
                         </div>

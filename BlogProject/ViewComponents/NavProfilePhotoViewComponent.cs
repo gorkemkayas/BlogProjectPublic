@@ -1,0 +1,23 @@
+﻿using BlogProject.src.Infra.Entitites;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BlogProject.ViewComponents
+{
+    public class NavProfilePhotoViewComponent : ViewComponent
+    {
+        private readonly UserManager<AppUser> _userManager;
+
+        public NavProfilePhotoViewComponent(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            var user = (await _userManager.GetUserAsync(HttpContext.User))!;
+            var profilePhoto = $"/img/userPhotos/{user.UserName}//{user.ProfilePicture}" ?? "/img/defaultProfilePhoto.jpg";
+            return View("Default",profilePhoto);
+        }
+    }
+}
