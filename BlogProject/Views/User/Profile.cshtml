@@ -3,7 +3,6 @@
     Layout = "_ProfileLayout";
 }
 
-
 @model VisitorProfileViewModel
 
 @if (TempData["Succeed"] != null)
@@ -119,14 +118,15 @@ else if (TempData["Failed"] != null)
                         <div class="me-3 mb-auto pe-2" style="height:100%">
                             @if (string.IsNullOrEmpty(Model.WorkingAt))
                             {
-                                <div class="d-flex">
-                                    <b class="me-1">Working Area :</b><p class="text-muted"> No Information</p>
+                                <div class="d-flex align-content-center">
+                                    <img src="/img/defaultWorkingLogo.jpg" class="me-2" style="height:20px;width:20px" /><p class="text-muted"> No Information</p>
                                 </div>
                             }
                             else
                             {
-                                <div class="d-flex">
-                                    <img src="/img/bimser.jpg" class="me-2" style="height:20px;width:20px" />
+                                <div class="d-flex align-items-center">
+
+                                    <img src=@(string.IsNullOrEmpty(Model.WorkingAtLogo) ? "/img/defaultWorkingLogo.jpg" : $"/img/userPhotos/{@Model.UserName}/{@Model.WorkingAtLogo}") class="me-2" style="height:20px;width:20px" />
                                     @Model.WorkingAt
                                 </div>
                             }
@@ -147,7 +147,8 @@ else if (TempData["Failed"] != null)
                                     <div class="row mt-4">
                                         <!-- Left Column -->
                                         <div class="col-md-12">
-                                            <p style="white-space: pre-wrap;">@Model.Bio</p>
+                                            <p style="white-space: pre-wrap;">@Model.Bio
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

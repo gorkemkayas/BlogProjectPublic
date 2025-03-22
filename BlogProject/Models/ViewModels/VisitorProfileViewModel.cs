@@ -58,5 +58,7 @@ namespace BlogProject.Models.ViewModels
         public DateTime RegisteredDate { get; set; }
         public string? ProfilePicture { get; set; }
         public string? CoverImagePicture { get; set; }
+
+        public string? WorkingAtLogo { get; set; }
     }
 }

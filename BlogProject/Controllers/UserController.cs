@@ -216,14 +216,14 @@ namespace BlogProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request, IFormFile? fileInputProfile, IFormFile? coverInputProfile)
+        public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
         {
             if(!ModelState.IsValid)
             {
                 return View();
             }
 
-            var result = await _userService.UpdateProfileAsync((await userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile);
+            var result = await _userService.UpdateProfileAsync((await userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile, IconInputWorkingAt);
 
             if (!result.Item1)
             {

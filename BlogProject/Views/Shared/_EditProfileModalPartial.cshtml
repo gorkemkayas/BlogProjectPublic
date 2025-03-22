@@ -1,5 +1,7 @@
 ﻿@model ExtendedProfileViewModel
+
 <style>
+
     .custom-input {
         /* #007bff */
         border: 1px solid;
@@ -68,10 +70,34 @@
         border-radius: 50%; /* İkonu yuvarlak yapar */
     }
 
-    .image-container-header:hover .overlay-icon-header {
+.image-container-header:hover .overlay-icon-header {
         opacity: 1;
-    }
+    } 
+    
     /* Üzerine gelindiğinde göster */
+    .image-container-headerr {
+        position: relative;
+        display: inline-block;
+    }
+
+    .overlay-icon-headerr {
+        position: absolute;
+        top: 5%; /* İkonu dikeyde ortala */
+        left: 6%; /* İkonu yatayda ortala */
+        transform: translate(-50%, -50%); /* Tam ortalamak için */
+        opacity: 0; /* Başlangıçta gizli */
+        transition: opacity 0.3s ease; /* Geçiş efekti */
+        font-size: 16px; /* İkon boyutu */
+        /* color: white; /* İkon rengi */ */
+        /* background-color: rgba(0, 0, 0, 0.5); /* Arkaplan rengi */ */
+        padding: 5px; /* İkon etrafına boşluk */
+        border-radius: 50%; /* İkonu yuvarlak yapar */
+        cursor: pointer; /* İmleci pointer yap */
+    }
+
+    .image-container-headerr:hover .overlay-icon-headerr {
+        opacity: 1; /* Üzerine gelindiğinde görünür yap */
+    }
 </style>
 
 @section Scripts {
@@ -196,14 +222,22 @@
                                     </div>
 
                                     <div class="me-3 mb-auto d-flex align-content-center" style="height:100%">
-                                        <div class="d-flex align-items-center">
-                                            <img src="/img/bimser.jpg" class="me-2" style="height:25px;width:25px" />
+                                        <div class="d-flex align-items-center position-relative image-container-headerr">
+                                            <img src="@(string.IsNullOrEmpty(Model.WorkingAtLogo) ? "/img/defaultWorkingLogo.jpg" : $"/img/userPhotos/{@Model.UserName}/{@Model.WorkingAtLogo}")"
+                                                 class="me-2" id="workingAtLogo" name="workingAtLogo"
+                                                 style="height:25px;width:25px;" />
+
+                                            <i class="fa-solid fa-pen ms-4 text-dark position-absolute overlay-icon-headerr" id="uploadIconWorkingAt" name="uploadIconWorkingAt"
+                                               type="button" style="top:-10px; transition: opacity 0.3s ease;">
+                                            </i>
+
+                                            <input type="file" accept=".jpg,.png,.jpeg" name="IconInputWorkingAt" id="IconInputWorkingAt" style="display:none">
+
                                             <div class="d-flex">
-
                                                 <div class="input-group-sm">
-                                                    <input type="text" class="form-control custom-input" asp-for="@Model.WorkingAt" style="width:10em" placeholder="Enter your working area.">
+                                                    <input type="text" class="form-control custom-input" asp-for="@Model.WorkingAt"
+                                                           style="width:10em" placeholder="Enter your working area.">
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -515,6 +549,25 @@
         });
     });
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const uploadIcon = document.getElementById('uploadIconWorkingAt');
+        const fileInput = document.getElementById('IconInputWorkingAt');
+
+        // İkona tıklandığında dosya seçme alanını tetikle
+        uploadIcon.addEventListener('click', function () {
+            fileInput.click(); // Dosya seçme penceresini aç
+        });
+
+        // Dosya seçildiğinde yapılacak işlemler
+        fileInput.addEventListener('change', function (event) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                console.log('Seçilen dosya:', selectedFile.name);
+                // Dosya yükleme işlemleri burada yapılabilir
+            }
+        });
+    });
+
 
     // Profil fotoğrafını anında yansıtmak için
     document.getElementById("fileInputProfile").addEventListener("change", function (event) {
@@ -549,4 +602,22 @@
 
         }
     });
+
+    // WorkingAt iconunu  anında yansıtmak için
+    document.getElementById("IconInputWorkingAt").addEventListener("change", function (event) {
+        var file = event.target.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById("workingAtLogo").src = e.target.result; // Önizleme (Anlık değişim)
+            };
+
+            reader.readAsDataURL(file);
+
+
+        }
+    });
 </script>
+

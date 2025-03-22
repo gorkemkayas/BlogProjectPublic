@@ -67,6 +67,29 @@ namespace BlogProject.Services.Concrete
             return postCount;
         }
 
+        public VisitorProfileViewModel GetVisitorProfileInformation(AppUser visitedUser)
+        {
+            var visitorProfileInfo = new VisitorProfileViewModel()
+            {
+                UserName = visitedUser.UserName!,
+                Name = visitedUser.Name,
+                Surname = visitedUser.Surname,
+                Bio = visitedUser.Bio,
+                BirthDate = visitedUser.BirthDate,
+                Country = visitedUser.Country,
+                Title = visitedUser.Title,
+                RegisteredDate = visitedUser.RegisteredDate,
+                ProfilePicture = visitedUser.ProfilePicture,
+                CoverImagePicture = visitedUser.CoverImagePicture,
+                WorkingAtLogo = visitedUser.WorkingAtLogo,
+                FollowersCount = visitedUser.FollowersCount,
+                FollowingCount = visitedUser.FollowingCount,
+                WorkingAt = visitedUser.WorkingAt,
+            };
+
+            return visitorProfileInfo;
+
+        }
         public async Task<ExtendedProfileViewModel> GetExtendedProfileInformationAsync(AppUser currentUser)
         {
 
@@ -82,7 +105,7 @@ namespace BlogProject.Services.Concrete
         }
 
 
-        public async Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile)
+        public async Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
         {
             var errors = new List<IdentityError>();
 
@@ -100,6 +123,7 @@ namespace BlogProject.Services.Concrete
 
             var step1 = await ConfigureProfilePictureOfNewUserInfoAsync(newUserInfo, oldUserInfo, fileInputProfile);
             var step2 = await ConfigureCoverPictureOfNewUserInfoAsync(step1, oldUserInfo, coverInputProfile);
+            var step3 = await ConfigureWorkingIconOfNewUserInfoAsync(step2, oldUserInfo, IconInputWorkingAt);
 
             var updatedUser = _mapper.Map(newUserInfo, oldUserInfo);
             await _userManager.UpdateAsync(updatedUser);
@@ -185,27 +209,39 @@ namespace BlogProject.Services.Concrete
             }
             return newUserInfo;
         }
-        public VisitorProfileViewModel GetVisitorProfileInformation(AppUser visitedUser)
+        public async Task<ExtendedProfileViewModel> ConfigureWorkingIconOfNewUserInfoAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? iconInputWorkingAt)
         {
-            var visitorProfileInfo = new VisitorProfileViewModel()
+
+            if (iconInputWorkingAt is null)
             {
-                UserName = visitedUser.UserName!,
-                Name = visitedUser.Name,
-                Surname = visitedUser.Surname,
-                Bio = visitedUser.Bio,
-                BirthDate = visitedUser.BirthDate,
-                Country = visitedUser.Country,
-                Title = visitedUser.Title,
-                RegisteredDate = visitedUser.RegisteredDate,
-                ProfilePicture = visitedUser.ProfilePicture,
-                CoverImagePicture = visitedUser.CoverImagePicture,
-                FollowersCount = visitedUser.FollowersCount,
-                FollowingCount = visitedUser.FollowingCount,
-                WorkingAt = visitedUser.WorkingAt,
-            };
+                newUserInfo.WorkingAtLogo = oldUserInfo.WorkingAtLogo;
+                return newUserInfo;
+            }
 
-            return visitorProfileInfo;
+            string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+            var fileName = iconInputWorkingAt.FileName.Replace(" ", "_");
+            string filePath = Path.Combine(uploadPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await iconInputWorkingAt.CopyToAsync(stream);
+            }
+            newUserInfo.WorkingAtLogo = fileName;
 
+            if (oldUserInfo.WorkingAtLogo != null)
+            {
+                var oldPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), uploadPath, oldUserInfo.WorkingAtLogo);
+
+                if (File.Exists(oldPhotoPath))
+                {
+                    File.Delete(oldPhotoPath);
+                }
+
+            }
+            return newUserInfo;
         }
 
         public async Task<List<AppUser>> MostContributors(int countUser)
