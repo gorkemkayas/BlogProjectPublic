@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using BlogProject.Models.ViewModels;
 using BlogProject.src.Infra.Entitites.Base;
 using Microsoft.AspNetCore.Identity;
 
@@ -90,5 +91,21 @@ namespace BlogProject.src.Infra.Entitites
 
         public virtual ICollection<MessageEntity>? SentMessages { get; set; }
         public virtual ICollection<MessageEntity>? ReceivedMessages { get; set; }
+
+
+        public string GetPropertyValue(PhotoType type)
+        {
+            switch (type)
+            {
+                case PhotoType.ProfilePicture:
+                    return ProfilePicture;
+                case PhotoType.CoverImagePicture:
+                    return CoverImagePicture;
+                case PhotoType.WorkingAtLogo:
+                    return WorkingAtLogo;
+                default:
+                    return "";
+            }
+        }
     }
 }

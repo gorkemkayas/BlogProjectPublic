@@ -125,11 +125,16 @@ namespace BlogProject.Services.Concrete
 
             if (oldUserInfo.Email != newUserInfo.EmailAddress) criticalUpdate = true;
 
-            var step1 = await ConfigureProfilePictureOfNewUserInfoAsync(newUserInfo, oldUserInfo, fileInputProfile);
-            var step2 = await ConfigureCoverPictureOfNewUserInfoAsync(step1, oldUserInfo, coverInputProfile);
-            var step3 = await ConfigureWorkingIconOfNewUserInfoAsync(step2, oldUserInfo, IconInputWorkingAt);
+            var step1 = await ConfigurePictureAsync(newUserInfo, oldUserInfo, fileInputProfile, PhotoType.ProfilePicture);
+            var step2 = await ConfigurePictureAsync(step1, oldUserInfo, coverInputProfile, PhotoType.CoverImagePicture);
+            var step3 = await ConfigurePictureAsync(step2, oldUserInfo, IconInputWorkingAt, PhotoType.WorkingAtLogo);
 
-            var updatedUser = _mapper.Map(newUserInfo, oldUserInfo);
+
+            //var step1 = await ConfigureProfilePictureOfNewUserInfoAsync(newUserInfo, oldUserInfo, fileInputProfile);
+            //var step2 = await ConfigureCoverPictureOfNewUserInfoAsync(step1, oldUserInfo, coverInputProfile);
+            //var step3 = await ConfigureWorkingIconOfNewUserInfoAsync(step2, oldUserInfo, IconInputWorkingAt);
+
+            var updatedUser = _mapper.Map(step3, oldUserInfo);
             await _userManager.UpdateAsync(updatedUser);
 
             if (criticalUpdate)
@@ -140,51 +145,12 @@ namespace BlogProject.Services.Concrete
 
             return (true, null, false);
         }
-        public async Task<ExtendedProfileViewModel> ConfigureProfilePictureOfNewUserInfoAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? fileInputProfile)
+        public async Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile,PhotoType type)
         {
-            if (fileInputProfile is null)
+            
+            if (formFile is null)
             {
-                newUserInfo.ProfilePicture = oldUserInfo.ProfilePicture;
-
-                return newUserInfo;
-            }
-
-
-            string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
-            var fileName = fileInputProfile.FileName.Replace(" ", "_");
-            string filePath = Path.Combine(uploadPath, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await fileInputProfile.CopyToAsync(stream);
-            }
-            newUserInfo.ProfilePicture = fileName;
-
-            if (oldUserInfo.ProfilePicture != null)
-            {
-                var oldPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), uploadPath, oldUserInfo.ProfilePicture);
-
-                if (File.Exists(oldPhotoPath))
-                {
-                    File.Delete(oldPhotoPath);
-                }
-
-            }
-
-            return newUserInfo;
-
-        }
-
-        public async Task<ExtendedProfileViewModel> ConfigureCoverPictureOfNewUserInfoAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? coverInputProfile)
-        {
-
-            if (coverInputProfile is null)
-            {
-                newUserInfo.CoverImagePicture = oldUserInfo.CoverImagePicture;
+                newUserInfo.SetProperty(type, oldUserInfo.GetPropertyValue(type));
                 return newUserInfo;
             }
 
@@ -193,51 +159,17 @@ namespace BlogProject.Services.Concrete
             {
                 Directory.CreateDirectory(uploadPath);
             }
-            var fileName = coverInputProfile.FileName.Replace(" ", "_");
+            var fileName = formFile.FileName.Replace(" ", "_");
             string filePath = Path.Combine(uploadPath, fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await coverInputProfile.CopyToAsync(stream);
+                await formFile.CopyToAsync(stream);
             }
-            newUserInfo.CoverImagePicture = fileName;
+            newUserInfo.SetProperty(type, fileName);
 
-            if (oldUserInfo.CoverImagePicture != null)
+            if (oldUserInfo.GetPropertyValue(type) != null)
             {
-                var oldPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), uploadPath, oldUserInfo.CoverImagePicture);
-
-                if (File.Exists(oldPhotoPath))
-                {
-                    File.Delete(oldPhotoPath);
-                }
-
-            }
-            return newUserInfo;
-        }
-        public async Task<ExtendedProfileViewModel> ConfigureWorkingIconOfNewUserInfoAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? iconInputWorkingAt)
-        {
-
-            if (iconInputWorkingAt is null)
-            {
-                newUserInfo.WorkingAtLogo = oldUserInfo.WorkingAtLogo;
-                return newUserInfo;
-            }
-
-            string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "userPhotos", $"{oldUserInfo.UserName}");
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
-            var fileName = iconInputWorkingAt.FileName.Replace(" ", "_");
-            string filePath = Path.Combine(uploadPath, fileName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await iconInputWorkingAt.CopyToAsync(stream);
-            }
-            newUserInfo.WorkingAtLogo = fileName;
-
-            if (oldUserInfo.WorkingAtLogo != null)
-            {
-                var oldPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), uploadPath, oldUserInfo.WorkingAtLogo);
+                var oldPhotoPath = Path.Combine(Directory.GetCurrentDirectory(), uploadPath, oldUserInfo.GetPropertyValue(type));
 
                 if (File.Exists(oldPhotoPath))
                 {
