@@ -109,6 +109,8 @@ namespace BlogProject.Services.Concrete
         {
             var errors = new List<IdentityError>();
 
+            bool criticalUpdate = false;
+
             if (oldUserInfo == null)
             {
                 errors.Add(new() { Code = "UserNotFound", Description = "The user not found in the system." });
@@ -121,6 +123,8 @@ namespace BlogProject.Services.Concrete
                 return (false, errors, false);
             }
 
+            if (oldUserInfo.Email != newUserInfo.EmailAddress) criticalUpdate = true;
+
             var step1 = await ConfigureProfilePictureOfNewUserInfoAsync(newUserInfo, oldUserInfo, fileInputProfile);
             var step2 = await ConfigureCoverPictureOfNewUserInfoAsync(step1, oldUserInfo, coverInputProfile);
             var step3 = await ConfigureWorkingIconOfNewUserInfoAsync(step2, oldUserInfo, IconInputWorkingAt);
@@ -128,7 +132,7 @@ namespace BlogProject.Services.Concrete
             var updatedUser = _mapper.Map(newUserInfo, oldUserInfo);
             await _userManager.UpdateAsync(updatedUser);
 
-            if (oldUserInfo.Email != newUserInfo.EmailAddress)
+            if (criticalUpdate)
             {
                 await _userManager.UpdateSecurityStampAsync(oldUserInfo);
                 return (true, null, true);
