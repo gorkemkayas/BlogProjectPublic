@@ -1,0 +1,70 @@
+﻿@using BlogProject.Areas.Admin.Models
+@using System.Security.Claims
+
+@{
+    Layout = "_AdminLayout";
+}
+
+@model RoleAddViewModel
+
+@if(TempData["Failed"] != null)
+{
+<div id="errorAlert" class="custom-alert alert-danger">
+    <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+</div>
+}
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        console.log("Validation scriptleri yüklendi.");
+    </script>
+    <script>
+        validateForms('nameInput', 'nameError','addButton');
+    </script>
+    <script>
+        showAlertError('errorAlert');
+        console.log('errorAlert calisti');
+    </script>
+
+}
+
+<form asp-area="Admin" asp-controller="Roles" asp-action="RoleAdd" method="post">
+    <input type="hidden" asp-for="CreatedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+    <section class="py-3 py-md-5 py-xl-8" style="margin-top:10%">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-5">
+                        <h2 class="display-5 fw-bold text-center">Add Role</h2>
+                        <p class="text-center m-0">Add new role for perfect management!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10 col-xl-8">
+                    <div class="row gy-5 justify-content-center">
+                        <div class="col-12 col-lg-6">
+                            <div class="row gy-3 overflow-hidden">
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control custom-input" asp-for="Name" id="nameInput">
+                                        <label class="form-label custom-label" asp-for="Name">Role Name</label>
+                                        <span class="text-danger mt-2" asp-validation-for="Name"></span>
+                                        <div id="nameError" class="invalid-feedback mb-2" style="display:none;">The name field cannot be left blank..</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button class="btn btn-lg btn-dark rounded-0 fs-6" id="addButton" type="submit">Add New Role!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+

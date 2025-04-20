@@ -1,0 +1,108 @@
+﻿@using BlogProject.Utilities
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_AdminLayout";
+}
+<style>
+    .pagination .page-link {
+    border: none;
+    color: #555;
+    transition: all 0.3s ease;
+    }
+
+    .pagination .page-link:hover {
+    background-color: #f0f0f0;
+    }
+
+    .pagination .active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+    }
+</style>
+
+
+@model ItemPagination<RoleViewModel>
+
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+
+@section Scripts {
+<script>
+    showAlertSuccess('successAlert');
+    console.log("alert scripti calıstı.");
+</script>
+}
+<div class="d-flex mb-1 justify-content-center align-items-center">
+    <h1 class="mb-0">Roles</h1> <i class="fa-solid fs-1 ms-2 fa-user-tie"></i>
+</div>
+<hr />
+<table class="table table-striped">
+    <tr>
+        <th class="text-start" scope="col">#</th>
+        <th class="text-start" scope="col">Role Id</th>
+        <th class="text-start" scope="col">Role Name</th>
+        <th class="text-start" scope="col">Created By</th>
+        <th class="text-start" scope="col">Actions</th>
+    </tr>
+    @{
+        int i = (Model.CurrentPage - 1) * Model.PageSize;
+    }
+    @foreach(var role in Model.Items)
+    {
+        i++;
+        <tr>
+            <th scope="row">@i</th>
+            <td class="align-content-center text-start">@role.Id</td>
+            <td class="align-content-center text-start">@role.Name</td>
+            <td class="align-content-center ">@await Component.InvokeAsync("UserPicName", @role.CreatedBy)</td>
+            <td class="align-content-center  d-flex justify-content-start"><div class="d-flex justify-content-center"><a class="btn btn-sm btn-dark">Edit</a><a class="btn btn-sm btn-danger ms-1">Delete</a></div></td>
+        </tr>
+    }
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="text-start"><a class="btn btn-sm btn-outline-success">Add New Role</a></td>
+    </tr>
+
+
+</table>
+<nav class="d-flex justify-content-center my-4" aria-label="Sayfalama">
+    <ul class="pagination pagination-sm shadow-sm  overflow-hidden">
+        <li class="page-item">
+            <a class="page-link px-4 text-secondary @(Model.CurrentPage == 1 ? "disabled" : "")  " href="#" tabindex="-1">⟵ Previous</a>
+        </li>
+        @for(var pageCounter = 1; pageCounter <= Model.TotalPages; pageCounter++)
+        {
+            if(pageCounter != Model.CurrentPage)
+            {
+                <li class="page-item"><a class="page-link px-4" asp-controller="Roles" asp-action="RoleList" asp-route-page="@pageCounter">@pageCounter</a></li>
+                
+            }
+            else
+            {
+                <li class="page-item active">
+                    <a class="page-link px-4 text-white bg-dark border-primary" href="#">@pageCounter</a>
+                </li>
+            }
+        }
+        <li class="page-item">
+            <a class="page-link px-4 text-secondary @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")" href="#">Next ⟶</a>
+        </li>
+    </ul>
+</nav>

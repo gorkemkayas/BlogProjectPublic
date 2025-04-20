@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="src\Infra\Repositories\" />
     <Folder Include="wwwroot\img\userPictures\" />
   </ItemGroup>

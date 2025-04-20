@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,16 +28,39 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
 
-
-        body {
-            font-family: "Pirata One", serif;
-            font-weight: 400;
-            font-style: normal;
-            /*font-family: "Oswald", serif;
-            font-optical-sizing: auto;
-            font-weight: <200>;
-            font-style: normal;*/
+        .custom-input {
+            /* #007bff */
+            border: 1px solid;
+            border-color: white;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
+
+            .custom-input:focus {
+                /* #0056b3 */
+                border-color: greenyellow;
+                box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            }
+
+
+        .custom-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .text-area-custom:focus {
+            border-color: greenyellow;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        .image-container-profile {
+            position: relative;
+            display: inline-block;
+        }
+
 
         #sidebar {
             width: 250px;
@@ -134,8 +157,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item user-info">
-                        <img src="~/img/ben3.jpg" alt="Profile">
-                        <a class="nav-link">gorkemkayas</a>
+                        @await Component.InvokeAsync("NavProfilePhoto")
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-route-returnUrl="/Home/Index" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
@@ -148,16 +170,51 @@
         <h4>Admin Panel<span class="text-danger">.</span></h4>
 
         <nav class="nav flex-column">
-            <a class="nav-link" href="#">Dashboard</a>
-            <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Users">Users</a>
-            <a class="nav-link" href="#">Settings</a>
+            <a class="nav-link text-start"  href="#">Dashboard</a>
+            <!-- Users Link -->
+            <a class="nav-link text-start align-items-center" href="#" data-bs-toggle="collapse" data-bs-target="#usersSubmenu" aria-expanded="false">
+                Users <i class="fa-solid fa-angle-down fs-6"></i>
+            </a>
+
+            <!-- Roles Submenu -->
+            <div class="collapse" id="usersSubmenu">
+                <nav class="nav flex-column ms-3">
+                    <a class="nav-link text-start" asp-area="Admin" asp-controller="Role" asp-action="Add">List Users</a>
+                    <a class="nav-link text-start" asp-area="Admin" asp-controller="Role" asp-action="Edit">Edit User</a>
+                    <a class="nav-link text-start" asp-area="Admin" asp-controller="Role" asp-action="Delete">Delete User</a>
+                </nav>
+            </div>
+
+            <!-- Roles Link -->
+            <a class="nav-link text-start" href="#" data-bs-toggle="collapse" data-bs-target="#rolesSubmenu" aria-expanded="false">
+                Roles <i class="fa-solid fa-angle-down fs-6"></i>
+            </a>
+
+            <!-- Roles Submenu -->
+            <div class="collapse" id="rolesSubmenu">
+                <nav class="nav flex-column ms-3">
+                    <a class="nav-link text-start" asp-area="Admin" asp-controller="Roles" asp-action="RoleAdd">Add Role</a>
+                    <a class="nav-link text-start" asp-area="Admin" asp-controller="Roles" asp-action="Edit">Edit Role</a>
+                    <a class="nav-link text-start" asp-area="Admin" asp-controller="Roles" asp-action="Delete">Delete Role</a>
+                    <a class="nav-link text-start" asp-area="Admin" asp-controller="Roles" asp-action="RoleList">Role List</a>
+                </nav>
+            </div>
+
+            <a class="nav-link text-start" href="#">Settings</a>
         </nav>
     </div>
-    <div class="container mt-4 text-center " style="padding-left:250px;padding-top:100px">
+
+    <div class="container mt-4 text-center" style="padding-left:250px;padding-top:100px">
         @RenderBody()
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://unpkg.com/bs-brain@2.0.4/components/charts/chart-9/assets/controller/chart-9.js"></script>
+    <script src="~/js/formValidations.js"></script>
+    <script src="~/js/showAlertError.js"></script>
+    <script src="~/js/showAlertSuccess.js"></script>
+
+    @await RenderSectionAsync("Scripts",required: false)
 </body>
 </html>
