@@ -1,4 +1,5 @@
-﻿@using BlogProject.Utilities
+﻿@using BlogProject.Areas.Admin.Models
+@using BlogProject.Utilities
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -56,6 +57,7 @@ else if (TempData["Failed"] != null)
         <th class="text-start" scope="col">Role Id</th>
         <th class="text-start" scope="col">Role Name</th>
         <th class="text-start" scope="col">Created By</th>
+        <th class="text-start" scope="col">Edited By</th>
         <th class="text-start" scope="col">Actions</th>
     </tr>
     @{
@@ -69,10 +71,14 @@ else if (TempData["Failed"] != null)
             <td class="align-content-center text-start">@role.Id</td>
             <td class="align-content-center text-start">@role.Name</td>
             <td class="align-content-center ">@await Component.InvokeAsync("UserPicName", @role.CreatedBy)</td>
-            <td class="align-content-center  d-flex justify-content-start"><div class="d-flex justify-content-center"><a class="btn btn-sm btn-dark">Edit</a><a class="btn btn-sm btn-danger ms-1">Delete</a></div></td>
+            <td class="align-content-center text-start text-muted ">@(role.EditedBy == null ? "Not modified" : await Component.InvokeAsync("UserPicName", @role.EditedBy))</td>
+            <td class="align-content-center  d-flex justify-content-start"><div class="d-flex justify-content-center">
+                <a class="btn btn-sm btn-dark" asp-controller="Roles" asp-action="RoleEdit" asp-route-id="@role.Id">Edit</a>
+                <a class="btn btn-sm btn-danger ms-1">Delete</a></div></td>
         </tr>
     }
     <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>

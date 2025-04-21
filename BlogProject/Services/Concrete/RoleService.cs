@@ -1,6 +1,6 @@
 ﻿using Azure.Core;
 using BlogProject.Areas.Admin.Controllers;
-using BlogProject.Models.ViewModels;
+using BlogProject.Areas.Admin.Models;
 using BlogProject.Services.Abstract;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.Utilities;
@@ -50,12 +50,41 @@ namespace BlogProject.Services.Concrete
                                     .Take(pageSize)
                                     .Select(role => new RoleViewModel { 
                                         Id = role.Id, 
-                                        CreatedBy = role.CreatedBy!, 
+                                        CreatedBy = role.CreatedBy!,
+                                        EditedBy = role.EditedBy,
                                         Name = role.Name! })
                                     .ToListAsync()
             };
 
             return pagedRoles;
+        }
+
+        public async Task<AppRole> GetRoleByIdAsync(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+
+            if(role == null) throw new Exception("Role not found");
+
+            return role;
+        }
+
+        public async Task<ServiceResult<AppRole>> UpdateRoleAsync(RoleEditViewModel request)
+        {
+
+            var role = await GetRoleByIdAsync(request.Id);
+            if (role == null) return new ServiceResult<AppRole> { IsSuccess = false, Errors = new List<IdentityError> { new IdentityError {Code = "CodeNotFound", Description = "Role not found" } } };
+
+            role.Name = request.Name;
+            role.EditedBy = request.WillEditedBy;
+
+            var result = await _roleManager.UpdateAsync(role);
+
+            if(!result.Succeeded)
+            {
+                return new ServiceResult<AppRole> { IsSuccess = false, Errors = result.Errors.ToList() };
+            }
+
+            return new ServiceResult<AppRole> { IsSuccess = true};
         }
     }
 }

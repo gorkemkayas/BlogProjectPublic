@@ -6,6 +6,7 @@ using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace BlogProject.Areas.Admin.Controllers
 {
@@ -46,6 +47,35 @@ namespace BlogProject.Areas.Admin.Controllers
                 return View();
             }
             TempData["Succeed"] = "The role was created successfully.";
+            return RedirectToAction(nameof(RolesController.RoleList));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RoleEdit(string id)
+        {
+            var role = await _roleService.GetRoleByIdAsync(id);
+
+            return role == null ? NotFound() : View(new RoleEditViewModel()
+            {
+                Id = role.Id.ToString(),
+                Name = role.Name!
+            });
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> RoleEdit(RoleEditViewModel request)
+        {
+            var result = await _roleService.UpdateRoleAsync(request);
+
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelErrorList(result.Errors!);
+                TempData["Failed"] = "The role could not be updated.";
+                return View();
+            }
+
+            TempData["Succeed"] = "The role was updated successfully.";
             return RedirectToAction(nameof(RolesController.RoleList));
         }
 
