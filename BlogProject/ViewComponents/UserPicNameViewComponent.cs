@@ -14,9 +14,15 @@ namespace BlogProject.ViewComponents
             _userManager = userManager;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string createdById)
+        public async Task<IViewComponentResult> InvokeAsync(string userId)
         {
-            var user = await _userManager.FindByIdAsync(createdById);
+            if(userId == null)
+            {   
+                return View("Default");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+
+
             var userPhotoLink = $"/img/userPhotos/{user!.UserName}//{user.ProfilePicture}";
             if (user.ProfilePicture == null)
             {
