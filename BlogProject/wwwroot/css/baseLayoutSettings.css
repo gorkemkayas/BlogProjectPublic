@@ -125,12 +125,12 @@ header {
 
 .notification-badge {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 12px;
-    height: 12px;
-    background: var(--gradient-secondary);
-    border: 2px solid white;
+    top: 0px;
+    right: -1px;
+    width: 8px;
+    height: 8px;
+    background: var(--gradient-primary);
+    background border: 4px solid white;
 }
 
 .dropdown-menu {
@@ -224,14 +224,23 @@ footer {
 /* Side Ads */
 .ad-container {
     position: fixed;
-    top: 0;
-    height: 100vh;
-    width: 120px;
+    width: 180px;
+    height: 100px;
+    top: 10%;
+    transform: translateY(-50%);
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    overflow: hidden;
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 50;
+    align-items: center;
 }
+    .ad-container video {
+        width: 100%;
+        height: 100%;
+        object-fit:cover;
+    }
 
 .ad-left {
     left: 0;

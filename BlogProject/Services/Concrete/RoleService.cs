@@ -104,7 +104,7 @@ namespace BlogProject.Services.Concrete
             {
                 PageSize = pageSize,
                 CurrentPage = page,
-                TotalCount = _roleManager.Roles.Count(),
+                TotalCount = (includeDeleted is true) ? _roleManager.Roles.Count() : _roleManager.Roles.Where(p => p.IsDeleted == false).Count(),
                 Items = await itemsQuery
                                     .Skip((page - 1)*pageSize)
                                     .Take(pageSize)
