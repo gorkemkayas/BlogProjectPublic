@@ -1,5 +1,7 @@
-﻿using BlogProject.Models.ViewModels;
+﻿using BlogProject.Areas.Admin.Models;
+using BlogProject.Models.ViewModels;
 using BlogProject.src.Infra.Entitites;
+using BlogProject.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -19,8 +21,11 @@ namespace BlogProject.Services.Abstract
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordAsync(ResetPasswordViewModel request, string? userId, string? token);
         Task<(bool, IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user);
 
+        Task<ItemPagination<UserViewModel>> GetPagedUsersAsync(int page, int pageSize, bool includeDeleted = false);
         Task LogInAsync(AppUser user);
         Task LogoutAsync();
+
+        Task SuspendUser(SuspendUserViewModel request);
 
         Task<int> GetCommentCountByUserAsync(AppUser user);
         Task<int> GetUserTotalLikeCount(AppUser user);

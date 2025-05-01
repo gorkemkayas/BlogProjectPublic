@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BlogProject.Areas.Admin.Models;
 using BlogProject.Extensions;
 using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
@@ -7,6 +8,7 @@ using BlogProject.Services.CustomMethods.Concrete;
 using BlogProject.Services.DTOs.MappingProfile;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
+using BlogProject.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -16,6 +18,7 @@ using Microsoft.Identity.Client;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Security.Policy;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BlogProject.Services.Concrete
 {
@@ -53,6 +56,44 @@ namespace BlogProject.Services.Concrete
         {
             var users = await _userManager.Users.ToListAsync();
             return users;
+        }
+
+        public async Task<ItemPagination<UserViewModel>> GetPagedUsersAsync(int page, int pageSize, bool includeDeleted = false)
+        {
+            var itemsQuery = _userManager.Users;
+            if (!includeDeleted)
+            {
+                itemsQuery = itemsQuery.Where(p => p.IsDeleted == false);
+            }
+
+            var pagedUsers = new ItemPagination<UserViewModel>()
+            {
+                PageSize = pageSize,
+                CurrentPage = page,
+                TotalCount = (includeDeleted is true) ? _userManager.Users.Count() : _userManager.Users.Where(p => p.IsDeleted == false).Count(),
+                Items = await itemsQuery
+                                    .Skip((page - 1) * pageSize)
+                                    .Take(pageSize)
+                                    .Select(user => new UserViewModel
+                                    {
+                                        Id = user.Id.ToString(),
+                                        Name = user.Name,
+                                        Surname = user.Surname,
+                                        Username = user.UserName!,
+                                        Email = user.Email!,
+                                        IsDeleted = user.IsDeleted,
+                                        PhoneNumber = user.PhoneNumber,
+                                        RegisteredDate = user.RegisteredDate,
+                                        EmailConfirmed = user.EmailConfirmed,
+                                        PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                                        TwoFactorEnabled = user.TwoFactorEnabled,
+                                        LastLoginDate = user.LastLoginDate,
+                                        SuspendedTo = user.SuspendedTo,
+                                        IsSuspended = user.IsSuspended
+
+                                    }).ToListAsync()
+            };
+            return pagedUsers;
         }
 
         public async Task<int> GetUserTotalLikeCount(AppUser user)
@@ -221,11 +262,19 @@ namespace BlogProject.Services.Concrete
                 errors.Add(new IdentityError() { Code = "SignInError", Description = "The email or password is incorrect." });
                 return (false, errors);
             }
+            if(hasUser.SuspendedTo != null && hasUser.SuspendedTo > DateTime.Now)
+            {
+                errors.Add(new IdentityError() { Code = "SuspendedAccount", Description = $"Your account is suspended, will be accesible at {hasUser.SuspendedTo}" });
+                return (false, errors);
+            }
 
             var signInResult = await _signInManager.PasswordSignInAsync(hasUser, request.Password, request.RememberMe, true);
 
             if (signInResult.Succeeded)
             {
+                hasUser.SuspendedTo = null!;
+                hasUser.LastLoginDate = DateTime.Now;
+                await _userManager.UpdateAsync(hasUser);
                 return (true, null);
             }
 
@@ -242,6 +291,24 @@ namespace BlogProject.Services.Concrete
 
         }
 
+        public async Task SuspendUser(SuspendUserViewModel request)
+        {
+
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null) throw new Exception("User not found");
+
+            //user.IsSuspended = true;
+            if(request.SuspensionMinutes == 0)
+            {
+                user.SuspendedTo = null;
+            }
+            else
+            {
+                user.SuspendedTo = DateTime.Now.AddMinutes(request.SuspensionMinutes);
+            }
+            await _userManager.UpdateSecurityStampAsync(user);
+            await _userManager.UpdateAsync(user);
+        }
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
@@ -250,6 +317,9 @@ namespace BlogProject.Services.Concrete
         public async Task LogInAsync(AppUser user)
         {
             await _signInManager.SignInAsync(user, false);
+
+            user.LastLoginDate = DateTime.Now;
+            await _userManager.UpdateAsync(user);
         }
 
         public async Task<(bool, IEnumerable<IdentityError>?)> ChangePasswordAsync(PasswordChangeViewModel request, ClaimsPrincipal user)

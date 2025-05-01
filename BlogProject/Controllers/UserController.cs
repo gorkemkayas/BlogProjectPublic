@@ -1,4 +1,5 @@
-﻿using BlogProject.Extensions;
+﻿using BlogProject.Areas.Admin.Models;
+using BlogProject.Extensions;
 using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
 using BlogProject.src.Infra.Entitites;
@@ -43,11 +44,19 @@ namespace BlogProject.Controllers
 
             if (!result.Item1)
             {
+                if(result.Item2!.Any(err => err.Code == "SuspendedAccount"))
+                {
+                    var description = result.Item2!.Where(error => error.Code == "SuspendedAccount").FirstOrDefault()!.Description;
+                    TempData["SuspensionMessage"] = description;
+                    ModelState.AddModelError(string.Empty, description );
+                    return View();
+                }
                 ModelState.AddModelErrorList(result.Item2!.ToList());
                 return View();
             }
 
             returnUrl = returnUrl ?? Url.Action("Index", "Home");
+            TempData["Succeed"] = "You have logged in successfully.";
 
             return Redirect(returnUrl!);
         }
@@ -88,6 +97,7 @@ namespace BlogProject.Controllers
 
         public async Task Logout()
         {
+            TempData["Succeed"] = "You have logged out successfully.";
             await _userService.LogoutAsync();
         }
 
@@ -247,5 +257,6 @@ namespace BlogProject.Controllers
 
             return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
         }
+
     }
 }

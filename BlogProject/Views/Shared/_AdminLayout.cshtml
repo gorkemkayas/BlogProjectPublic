@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/adminLayoutSettings.css" asp-append-version="true" />
 
+    <script src="~/js/showAlertError.js"></script>
+    <script src="~/js/showAlertSuccess.js"></script>
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
@@ -68,7 +72,7 @@
             </a>
             <div class="collapse show" id="usersSubmenu">
                 <nav class="nav flex-column">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Add">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Users" asp-action="UserList">
                         <i class="fas fa-list"></i> List Users
                     </a>
                     <a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Edit">

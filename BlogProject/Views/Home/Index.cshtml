@@ -45,6 +45,27 @@
     }
 
 </style>
+
+@section Scripts{
+    <script>
+        showAlertSuccess('successAlert');
+        showAlertError('errorAlert');
+    </script>
+}
+
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
 <div class="position-relative overflow-hidden rounded">
     <!-- Video Arka Plan -->
     <video autoplay muted loop class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">

@@ -2,12 +2,14 @@
     var alertBox = document.getElementById(alertId);
     if (alertBox) {
         alertBox.classList.add("show-alert");
+
         setTimeout(() => {
             alertBox.classList.remove("show-alert");
 
-            // Yönlendirme işlemi
-            /*window.location.href = '/user/signin';*/
-
-        }, 3000); // 3 saniye sonra kaybolur
+            // Opsiyonel olarak DOM'dan tamamen silmek istersen:
+            setTimeout(() => {
+                alertBox.remove();
+            }, 500); // animasyon süresiyle eşle
+        }, 3000);
     }
 }

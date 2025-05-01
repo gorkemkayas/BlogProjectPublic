@@ -10,6 +10,47 @@
 
 @model SignInViewModel
 
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+
+@if (TempData["SuspensionMessage"] != null)
+{
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            const modal = new bootstrap.Modal(document.getElementById('suspendedModal'));
+            modal.show();
+        });
+    </script>
+
+    <!-- Modal HTML -->
+    <div class="modal fade" id="suspendedModal" tabindex="-1" aria-labelledby="suspendedModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header text-white rounded-top-4" style="background: linear-gradient(135deg, #ff416c, #ff4b2b);">
+                    <h5 class="modal-title" id="suspendedModalLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Account Suspended
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-muted">
+                    <p>@TempData["SuspensionMessage"]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <!-- Login 12 - Bootstrap Brain Component -->
 <section class="py-3 py-md-5 py-xl-8" style="margin-top:10%">
     <div class="container">

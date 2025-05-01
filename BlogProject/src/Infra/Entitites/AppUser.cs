@@ -49,6 +49,12 @@ namespace BlogProject.src.Infra.Entitites
 
         public DateTime RegisteredDate { get; set; }
 
+        public DateTime? LastLoginDate { get; set; }
+        public DateTime? SuspendedTo { get; set; }
+
+        [NotMapped]
+        public bool IsSuspended => SuspendedTo.HasValue && SuspendedTo.Value > DateTime.UtcNow;
+
         public bool IsDeleted { get; set; } = false;
 
         public string? ProfilePicture { get; set; }

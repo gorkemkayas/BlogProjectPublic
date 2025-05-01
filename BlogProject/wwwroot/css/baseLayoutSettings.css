@@ -1,5 +1,6 @@
 ﻿:root {
     --primary-color: #6c63ff;
+    --special-red-color: #ff0051;
     --secondary-color: #ff6584;
     --dark-color: #1a1a2e;
     --light-color: #f8f9fa;
@@ -24,12 +25,10 @@ header {
 
 /* Logo/Brand */
 .navbar-brand {
-    font-family: 'Pirata One', cursive;
+    /*font-family: 'Pirata One', cursive;*/
+    font-family: "Yellowtail", cursive;
     font-size: 2.8rem;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color:black;
     font-weight: 500;
     transition: all 0.3s ease;
 }
@@ -91,7 +90,7 @@ header {
         left: 0;
         width: 0;
         height: 2px;
-        background: var(--gradient-primary);
+        background: var(--special-red-color);
         transition: width 0.3s ease;
     }
 
@@ -211,7 +210,7 @@ footer {
 }
 
 .footer-brand {
-    font-family: 'Pirata One', cursive;
+    font-family: "Yellowtail", cursive;
     font-size: 1.5rem;
     color: var(--dark-color);
     letter-spacing: 1px;

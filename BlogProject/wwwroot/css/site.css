@@ -400,7 +400,15 @@ body {
     transform: translateY(-20px);
     transition: opacity 0.5s ease, transform 0.5s ease;
     z-index: 1050;
+    pointer-events: none; /* Ekle bunu */
 }
+
+    .custom-alert.show-alert {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto; /* Görünürken tıklanabilsin */
+    }
+
 
 .alert-danger {
     background: linear-gradient(135deg, #ff4e50, #f9d423);

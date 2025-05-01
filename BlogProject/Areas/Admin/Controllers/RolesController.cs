@@ -88,6 +88,8 @@ namespace BlogProject.Areas.Admin.Controllers
         {
             var pagedRoles = await _roleService.GetPagedRolesAsync(page,pageSize, includeDeleted);
             pagedRoles.IncludeDeleted = includeDeleted;
+            pagedRoles.ControllerName = "Roles";
+            pagedRoles.ActionName = "RoleList";
             return View(pagedRoles);
         }
 

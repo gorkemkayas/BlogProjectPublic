@@ -1,6 +1,6 @@
 ﻿@using BlogProject.Areas.Admin.Models
 @using BlogProject.Utilities
-@model ItemPagination<RoleViewModel>
+@model IPaginationInfo
 
 @* <nav class="d-flex justify-content-center my-4" aria-label="Sayfalama">
     <ul class="pagination pagination-sm shadow-sm  overflow-hidden">
@@ -32,8 +32,8 @@
         <!-- Previous Button -->
         <li class="page-item">
             <a class="page-link px-3 py-2 d-flex align-items-center @(Model.CurrentPage == 1 ? "disabled opacity-50" : "")" 
-               asp-controller="Roles" 
-               asp-action="RoleList" 
+               asp-controller="@Model.ControllerName" 
+               asp-action="@Model.ActionName" 
                asp-route-page="@(Model.CurrentPage - 1)"
                asp-route-includeDeleted="@Model.IncludeDeleted"
                tabindex="-1">
@@ -51,8 +51,8 @@
             {
                 <li class="page-item">
                     <a class="page-link px-3 py-2" 
-                       asp-controller="Roles" 
-                       asp-action="RoleList" 
+                       asp-controller="@Model.ControllerName" 
+                       asp-action="@Model.ActionName" 
                        asp-route-page="1"
                        asp-route-includeDeleted="@Model.IncludeDeleted">1</a>
                 </li>
@@ -68,8 +68,8 @@
             {
                 <li class="page-item  @(pageCounter == Model.CurrentPage ? "active" : "")">
                     <a class="page-link px-3 py-2 @(pageCounter == Model.CurrentPage ? "fw-semibold" : "")" 
-                       asp-controller="Roles" 
-                       asp-action="RoleList" 
+                       asp-controller="@Model.ControllerName" 
+                       asp-action="@Model.ActionName" 
                        asp-route-page="@pageCounter"
                        asp-route-includeDeleted="@Model.IncludeDeleted">
                         @pageCounter
@@ -87,8 +87,8 @@
                 }
                 <li class="page-item">
                     <a class="page-link px-3 py-2" 
-                       asp-controller="Roles" 
-                       asp-action="RoleList" 
+                       asp-controller="@Model.ControllerName" 
+                       asp-action="@Model.ActionName" 
                        asp-route-page="@Model.TotalPages"
                        asp-route-includeDeleted="@Model.IncludeDeleted">
                         @Model.TotalPages
@@ -100,8 +100,8 @@
         <!-- Next Button -->
         <li class="page-item">
             <a class="page-link px-3 py-2 d-flex align-items-center @(Model.CurrentPage == Model.TotalPages ? "disabled opacity-50" : "")" 
-               asp-controller="Roles" 
-               asp-action="RoleList" 
+               asp-controller="@Model.ControllerName" 
+               asp-action="@Model.ActionName" 
                asp-route-page="@(Model.CurrentPage + 1)"
                asp-route-includeDeleted="@Model.IncludeDeleted">
                 <span class="d-none d-sm-inline">Next</span>
