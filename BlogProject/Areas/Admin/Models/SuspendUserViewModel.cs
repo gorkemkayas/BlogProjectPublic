@@ -8,5 +8,11 @@ namespace BlogProject.Areas.Admin.Models
 
         [Required]
         public int SuspensionMinutes { get; set; }
+
+        [Required]
+        public string ReasonCategory { get; set; }
+
+        [Required]
+        public string ReasonDetail { get; set; }
     }
 }

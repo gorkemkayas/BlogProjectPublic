@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
+using NuGet.Common;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Security.Policy;
@@ -33,7 +34,6 @@ namespace BlogProject.Services.Concrete
         private readonly IUserTokenGenerator _userTokenGenerator;
         private readonly IUrlGenerator _urlGenerator;
         private readonly IMapper _mapper;
-
         public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext, ICommentService commentService, IMapper mapper)
         {
             _userManager = userManager;
@@ -191,9 +191,9 @@ namespace BlogProject.Services.Concrete
 
             return (true, null, false);
         }
-        public async Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile,PhotoType type)
+        public async Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type)
         {
-            
+
             if (formFile is null)
             {
                 newUserInfo.SetProperty(type, oldUserInfo.GetPropertyValue(type));
@@ -301,9 +301,11 @@ namespace BlogProject.Services.Concrete
                 errors.Add(new IdentityError() { Code = "SignInError", Description = "The email or password is incorrect." });
                 return (false, errors);
             }
-            if(hasUser.SuspendedTo != null && hasUser.SuspendedTo > DateTime.Now)
+            if (hasUser.SuspendedTo != null && hasUser.SuspendedTo > DateTime.Now)
             {
                 errors.Add(new IdentityError() { Code = "SuspendedAccount", Description = $"Your account is suspended, will be accesible at {hasUser.SuspendedTo}" });
+                errors.Add(new IdentityError() { Code = "SuspendedAccountCategory", Description = $"{hasUser.SuspensionReasonCategory}" });
+                errors.Add(new IdentityError() { Code = "SuspendedAccountReason", Description = $"{hasUser.SuspensionReasonDetail}" });
                 return (false, errors);
             }
             if (!hasUser.EmailConfirmed)
@@ -317,6 +319,9 @@ namespace BlogProject.Services.Concrete
             if (signInResult.Succeeded)
             {
                 hasUser.SuspendedTo = null!;
+                hasUser.SuspensionReasonCategory = null!;
+                hasUser.SuspensionReasonDetail = null!;
+
                 hasUser.LastLoginDate = DateTime.Now;
                 await _userManager.UpdateAsync(hasUser);
                 return (true, null);
@@ -342,7 +347,7 @@ namespace BlogProject.Services.Concrete
             if (user == null) throw new Exception("User not found");
 
             //user.IsSuspended = true;
-            if(request.SuspensionMinutes == 0)
+            if (request.SuspensionMinutes == 0)
             {
                 user.SuspendedTo = null;
             }
@@ -350,6 +355,13 @@ namespace BlogProject.Services.Concrete
             {
                 user.SuspendedTo = DateTime.Now.AddMinutes(request.SuspensionMinutes);
             }
+
+            user.SuspensionReasonCategory = request.ReasonCategory;
+            user.SuspensionReasonDetail = request.ReasonDetail;
+
+
+            var signInUrl = _urlGenerator.GenerateCustomUrl("User", "SignIn");
+            await _emailService.SendSuspensionNotificationEmailAsync(user.Email, signInUrl, request.ReasonCategory == "Remove");
             await _userManager.UpdateSecurityStampAsync(user);
             await _userManager.UpdateAsync(user);
         }

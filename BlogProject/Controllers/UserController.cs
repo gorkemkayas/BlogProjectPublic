@@ -51,6 +51,9 @@ namespace BlogProject.Controllers
                 {
                     var description = result.Item2!.Where(error => error.Code == "SuspendedAccount").FirstOrDefault()!.Description;
                     TempData["SuspensionMessage"] = description;
+                    TempData["SuspensionCategory"] = result.Item2!.Where(error => error.Code == "SuspendedAccountCategory").FirstOrDefault()!.Description;
+                    TempData["SuspensionDetail"] = result.Item2!.Where(error => error.Code == "SuspendedAccountReason").FirstOrDefault()!.Description;
+                    TempData["SuspendedUserId"] = await _userManager.FindByEmailAsync(request.Email);
                     ModelState.AddModelError(string.Empty, description );
                     return View();
                 }
@@ -59,6 +62,7 @@ namespace BlogProject.Controllers
                     TempData["Error"] = "Please confirm your email address!";
                     TempData["EmailNotConfirmed"] = true;
                     TempData["UserEmail"] = request.Email;
+
                     return View();
                 }
                 ModelState.AddModelErrorList(result.Item2!.ToList());

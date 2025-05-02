@@ -33,22 +33,140 @@ else if (TempData["Failed"] != null)
         });
     </script>
 
-    <!-- Modal HTML -->
-    <div class="modal fade" id="suspendedModal" tabindex="-1" aria-labelledby="suspendedModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow-lg border-0 rounded-4">
-                <div class="modal-header text-white rounded-top-4" style="background: linear-gradient(135deg, #ff416c, #ff4b2b);">
-                    <h5 class="modal-title" id="suspendedModalLabel">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Account Suspended
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Horizontal Premium Suspension Modal -->
+    <div class="modal fade" id="suspendedModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 overflow-hidden" style="border-radius: 12px; max-height: 480px;">
+
+                <div class="d-flex flex-row">
+                    <!-- Gradient Sidebar -->
+                    <div class="d-flex flex-column justify-content-between p-5 text-white"
+                         style="width: 280px; background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);">
+                        <div>
+                            <div class="mb-4">
+                                <i class="bi bi-shield-lock fs-1"></i>
+                            </div>
+                            <h3 class="fw-semibold mb-3">Account Restricted</h3>
+                            <p class="small opacity-80">Security measures have been applied to your account</p>
+                        </div>
+                        <div class="mt-auto">
+                            <button class="btn btn-outline-light btn-sm rounded-pill px-3">
+                                <i class="bi bi-question-circle me-2"></i>Need Help?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="flex-grow-1 p-4" style="background: #f9fafc;">
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        <div class="pt-3 pe-3" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Suspension Notice -->
+                            @if (TempData["SuspensionMessage"] != null)
+                            {
+                                <div class="alert bg-white border-start border-3 border-primary px-4 py-3 mb-4 shadow-sm">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-info-circle-fill text-primary me-3"></i>
+                                        <div>
+                                            <h6 class="fw-semibold mb-1">Security Notice</h6>
+                                            <p class="small mb-0 text-muted">@TempData["SuspensionMessage"]</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- Violation Details -->
+                            <div class="row g-3">
+                                @if (TempData["SuspensionCategory"] != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="bg-white p-3 rounded-2 shadow-sm h-100">
+                                            <h6 class="fw-semibold text-uppercase small text-muted mb-3">
+                                                <i class="bi bi-tag me-2"></i>Violation Type
+                                            </h6>
+                                            <p class=" small mb-3 ms-2">@TempData["SuspensionCategory"]</p>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (TempData["SuspensionDetail"] != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="bg-white p-3 rounded-2 shadow-sm h-100">
+                                            <h6 class="fw-semibold text-uppercase small text-muted mb-3">
+                                                <i class="bi bi-list-ul me-2"></i>Details
+                                            </h6>
+                                            <p class="small mb-0">@TempData["SuspensionDetail"]</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="mt-4 pt-3 border-top">
+                                <button class="btn btn-link text-muted me-3" data-bs-dismiss="modal">
+                                    Dismiss
+                                </button>
+                               @using Newtonsoft.Json
+<button id="contactSupportBtn" class="btn btn-primary px-4 rounded-pill"
+        style="background: linear-gradient(90deg, #4361ee 0%, #3a0ca3 100%);">
+  <i class="bi bi-envelope me-2"></i>Contact Support
+</button>
+
+<script>
+// Get the button element
+const contactBtn = document.getElementById('contactSupportBtn');
+
+contactBtn.addEventListener('click', function() {
+  // Safely get user ID from server-side TempData with null check
+  const userId = "@Html.Raw(TempData["SuspendedUserId"]?.ToString())" || "UNKNOWN-" + Math.floor(Math.random() * 10000);
+  
+  // Format current date in local format
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  
+  // Construct email body template
+  const emailBody = `
+User ID: ${userId}
+Date: ${currentDate}
+
+Please explain your appeal below:
+
+• Reason for appealing this suspension
+• Any supporting evidence
+• Contact information for follow-up
+  `;
+  
+  // Encode URI components to handle special characters
+  const mailtoLink = `mailto:gorkemkayas@hotmail.com?subject=Account%20Suspension%20Appeal&body=${encodeURIComponent(emailBody)}`;
+  
+  // Open default email client
+  window.location.href = mailtoLink;
+});
+</script>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body text-muted">
-                    <p>@TempData["SuspensionMessage"]</p>
-                </div>
+
             </div>
         </div>
     </div>
+
+    <style>
+        .modal-content {
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.15);
+        }
+
+        .alert {
+            border-left-width: 4px !important;
+        }
+    </style>
+
+
 }
 
 <!-- Login 12 - Bootstrap Brain Component -->

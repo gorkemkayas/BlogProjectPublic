@@ -29,17 +29,65 @@ else if (TempData["Failed"] != null)
         showAlertSuccess('successAlert');
         showAlertError('errorAlert');
 
-            const suspendModal = document.getElementById('suspendModal');
+                const suspendModal = document.getElementById('suspendModal');
 
-            suspendModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
+        suspendModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const userId = button.getAttribute('data-user-id');
+            const username = button.getAttribute('data-username');
 
-                const userId = button.getAttribute('data-user-id');
-                const username = button.getAttribute('data-username');
+            suspendModal.querySelector('#modalUserId').value = userId;
+            suspendModal.querySelector('#suspendUsername').textContent = username;
 
-                suspendModal.querySelector('#modalUserId').value = userId;
-                suspendModal.querySelector('#suspendUsername').textContent = username;
+            // Reset select boxes
+            document.getElementById('ReasonCategory').selectedIndex = 0;
+            document.getElementById('ReasonDetail').innerHTML = '<option value="" disabled selected>Select a detailed reason</option>';
+        });
+
+        // Reason data
+        const reasonMap = {
+            Spam: [
+                "Repeated unsolicited messages",
+                "Promotional content",
+                "Mass friend requests"
+            ],
+            Harassment: [
+                "Offensive language",
+                "Threatening messages",
+                "Discriminatory behavior"
+            ],
+            Fake: [
+                "Impersonating someone",
+                "Fake profile photo or info",
+                "Bot-like activity"
+            ],
+            Violation: [
+                "Sharing illegal content",
+                "Circumventing moderation",
+                "Multiple account abuse"
+            ],
+            Remove: [
+                "Remove Current Suspension"
+            ]
+        };
+
+        // Dynamic population of detailed reasons
+        const categorySelect = document.getElementById("ReasonCategory");
+        const detailSelect = document.getElementById("ReasonDetail");
+
+        categorySelect.addEventListener("change", function () {
+            const selectedCategory = this.value;
+            const options = reasonMap[selectedCategory] || [];
+
+            detailSelect.innerHTML = '<option value="" disabled selected>Select a detailed reason</option>';
+
+            options.forEach(reason => {
+                const option = document.createElement("option");
+                option.value = reason;
+                option.textContent = reason;
+                detailSelect.appendChild(option);
             });
+        });
     </script>
 }
 <div class="mb-4">
@@ -264,43 +312,69 @@ else if (TempData["Failed"] != null)
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Suspend User Modal -->
 <div class="modal fade" id="suspendModal" tabindex="-1" aria-labelledby="suspendModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg border-0 rounded-4">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
 
-            <!-- Gradient Header -->
-            <div class="modal-header text-white rounded-top-4" style="background: linear-gradient(135deg, #ff416c, #ff4b2b);">
-                <h5 class="modal-title" id="suspendModalLabel">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Suspend User: <span id="suspendUsername"></span>
+            <!-- Modal Header with Gradient -->
+            <div class="modal-header text-white rounded-top-4 px-4 py-3" style="background: linear-gradient(135deg, #f12711, #f5af19);">
+                <h5 class="modal-title d-flex align-items-center gap-2" id="suspendModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+                    Suspend User: <span id="suspendUsername" class="fw-semibold"></span>
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form asp-action="SuspendUser" method="post">
-                <div class="modal-body">
+                <div class="modal-body px-4 py-4">
+
                     <input type="hidden" name="UserId" id="modalUserId" />
 
-                    <p class="mb-3 text-muted">
-                        Please select how long you want to suspend this user. The user won't be able to log in during this period.
-                    </p>
+                    <!-- Reason Category -->
+                    <div class="mb-3">
+                        <label for="ReasonCategory" class="form-label fw-semibold">Reason Category</label>
+                        <select class="form-select rounded-3 py-2" id="ReasonCategory" name="ReasonCategory" required>
+                            <option value="" disabled selected>Select a reason category</option>
+                            <option value="Spam">Spam or Advertising</option>
+                            <option value="Harassment">Hate Speech or Harassment</option>
+                            <option value="Fake">Fake Account</option>
+                            <option value="Violation">Violation of Terms</option>
+                            <option value="Remove">Remove Suspension</option>
+                        </select>
+                    </div>
 
-                    <label for="SuspensionMinutes" class="form-label fw-semibold">Suspension Duration</label>
-                    <select class="form-select form-select-lg rounded-3" name="SuspensionMinutes" required>
-                        <option value="0">Remove Suspension</option>
-                        <option value="15">15 Minutes</option>
-                        <option value="60">1 Hour</option>
-                        <option value="1440">1 Day</option>
-                        <option value="4320">3 Days</option>
-                        <option value="10080">1 Week</option>
-                        <option value="43200">1 Month</option>
-                        <option value="129600">3 Months</option>
-                        <option value="259200">6 Months</option>
-                        <option value="525600">1 Year</option>
-                    </select>
+                    <!-- Reason Detail -->
+                    <div class="mb-3">
+                        <label for="ReasonDetail" class="form-label fw-semibold">Detailed Reason</label>
+                        <select class="form-select rounded-3 py-2" id="ReasonDetail" name="ReasonDetail" required>
+                            <option value="" disabled selected>Select a detailed reason</option>
+                        </select>
+                    </div>
+
+                    <!-- Suspension Duration -->
+                    <div class="mb-3">
+                        <label for="SuspensionMinutes" class="form-label fw-semibold">Suspension Duration</label>
+                        <select class="form-select rounded-3 py-2" name="SuspensionMinutes" required>
+                            <option value="0">Remove Suspension</option>
+                            <option value="15">15 Minutes</option>
+                            <option value="60">1 Hour</option>
+                            <option value="1440">1 Day</option>
+                            <option value="4320">3 Days</option>
+                            <option value="10080">1 Week</option>
+                            <option value="43200">1 Month</option>
+                            <option value="129600">3 Months</option>
+                            <option value="259200">6 Months</option>
+                            <option value="525600">1 Year</option>
+                        </select>
+                        <div class="form-text text-muted mt-1">
+                            The user won't be able to log in during the suspension period.
+                        </div>
+                    </div>
                 </div>
 
-                <div class="modal-footer border-top-0">
+                <!-- Modal Footer -->
+                <div class="modal-footer px-4 py-3 border-top-0">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger rounded-pill px-4">Suspend</button>
                 </div>
@@ -308,6 +382,7 @@ else if (TempData["Failed"] != null)
         </div>
     </div>
 </div>
+
 
 
 @await Html.PartialAsync("_Pagination", Model)

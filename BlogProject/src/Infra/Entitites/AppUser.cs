@@ -52,6 +52,9 @@ namespace BlogProject.src.Infra.Entitites
         public DateTime? LastLoginDate { get; set; }
         public DateTime? SuspendedTo { get; set; }
 
+        public string? SuspensionReasonCategory { get; set; }
+        public string? SuspensionReasonDetail { get; set; }
+
         [NotMapped]
         public bool IsSuspended => SuspendedTo.HasValue && SuspendedTo.Value > DateTime.UtcNow;
 

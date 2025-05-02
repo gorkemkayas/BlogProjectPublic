@@ -29,6 +29,20 @@ namespace BlogProject.Services.CustomMethods.Concrete
 
             return passwordResetLink!;
         }
+
+        public string GenerateCustomUrl(string? controller, string? action, string? area)
+        {
+            var customLink = _urlHelper.Action(
+                                action: action,
+                                controller: controller,
+                                values: new { area = area },
+                                protocol: _httpContextAccessor.HttpContext.Request.Scheme
+                            );
+
+            return customLink!;
+        }
+
+
     }
 }
 
