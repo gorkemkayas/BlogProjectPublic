@@ -2,6 +2,7 @@
 using BlogProject.Extensions;
 using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
+using BlogProject.Services.CustomMethods.Abstract;
 using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,14 +17,16 @@ namespace BlogProject.Controllers
         private readonly IUserService _userService;
         private readonly ICommentService _commentService;
         private readonly IEmailService _emailService;
-        private readonly UserManager<AppUser> userManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IUrlGenerator _urlGenerator;
 
-        public UserController(IUserService userService, IEmailService emailService, UserManager<AppUser> userManager, ICommentService commentService)
+        public UserController(IUserService userService, IEmailService emailService, UserManager<AppUser> userManager, ICommentService commentService, IUrlGenerator urlGenerator)
         {
             _userService = userService;
-            this.userManager = userManager;
+            _userManager = userManager;
             _commentService = commentService;
             _emailService = emailService;
+            _urlGenerator = urlGenerator;
         }
 
         public IActionResult Index()
@@ -51,6 +54,13 @@ namespace BlogProject.Controllers
                     ModelState.AddModelError(string.Empty, description );
                     return View();
                 }
+                if(result.Item2!.Any(err => err.Code == "EmailNotConfirmed"))
+                {
+                    TempData["Error"] = "Please confirm your email address!";
+                    TempData["EmailNotConfirmed"] = true;
+                    TempData["UserEmail"] = request.Email;
+                    return View();
+                }
                 ModelState.AddModelErrorList(result.Item2!.ToList());
                 return View();
             }
@@ -60,6 +70,57 @@ namespace BlogProject.Controllers
 
             return Redirect(returnUrl!);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResendEmailConfirmation([FromBody] ResendEmailRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var confirmationLink = _urlGenerator.GenerateEmailConfirmationUrl(user, token);
+
+            await _emailService.SendEmailConfirmationEmailAsync(user.Email!, confirmationLink);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult ConfirmEmail(string? userId, string? token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return View();
+            }
+            ViewBag.UserId = userId;
+            ViewBag.Token = token;
+            return View(new ConfirmEmailViewModel() { UserId = userId, Token = token });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailViewModel request)
+        {
+            var result = await _userService.ConfirmEmailAsync(request);
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelErrorList(result.Errors!);
+                return View(request);
+            }
+            TempData["Succeed"] = "Email confirmed successfully!";
+
+            return RedirectToAction(nameof(UserController.SignIn));
+
+            //confirm edildiyse confirmEmail sayfasında 'basarıyla dogrulandı' mesajı ver
+            //confirm edilmediyse 'dogrulama hatası' mesajı ver
+            // yönlendirme olmadan girildiyse hata sayfasına yönlendir
+        }
+
 
         [HttpGet]
         public IActionResult SignUp()
@@ -77,22 +138,28 @@ namespace BlogProject.Controllers
 
             var result = await _userService.SignUp(request);
 
-            if (result.Item1)
+            if (result.IsSuccess)
             {
-                TempData["Succeed"] = "User created successfully. You are being redirected to the login page...";
+                TempData["Succeed"] = "User created successfully..";
 
             }
-            else if (!result.Item1)
+            else if (!result.IsSuccess)
             {
                 TempData["Failed"] = "User could not be created.";
 
-                foreach (var error in result.Item2!)
+                foreach (var error in result.Errors!)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
 
             }
-            return View();
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(result.Data!);
+            var confirmationLink = _urlGenerator.GenerateEmailConfirmationUrl(result.Data!, token);
+
+            await _emailService.SendEmailConfirmationEmailAsync(result.Data!.Email!, confirmationLink);
+
+            return RedirectToAction("ConfirmEmail", "User");
         }
 
         public async Task Logout()
@@ -144,7 +211,7 @@ namespace BlogProject.Controllers
             {
                 TempData["Succeed"] = "Password reset successfully.";
 
-                var user = await userManager.FindByIdAsync(userId!.ToString()!);
+                var user = await _userManager.FindByIdAsync(userId!.ToString()!);
                 var userEmail = user!.Email;
 
                 await _emailService.SendPasswordChangedNotificationAsync("You changed your password", userEmail!);
@@ -181,7 +248,7 @@ namespace BlogProject.Controllers
                 return View();
             }
 
-            var user = await userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             var userEmail = user!.Email;
 
             TempData["Succeed"] = "Password changed successfully.";
@@ -197,14 +264,14 @@ namespace BlogProject.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var visitedUser = await userManager.FindByNameAsync(userName);
+            var visitedUser = await _userManager.FindByNameAsync(userName);
             
             if(visitedUser == null)
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            var currentUser = await userManager.GetUserAsync(User);
+            var currentUser = await _userManager.GetUserAsync(User);
 
             var postCount = await _commentService.GetCommentCountByUserAsync(visitedUser!);
             var commentCount = await _userService.GetCommentCountByUserAsync(visitedUser!);
@@ -233,7 +300,7 @@ namespace BlogProject.Controllers
                 return View();
             }
 
-            var result = await _userService.UpdateProfileAsync((await userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile, IconInputWorkingAt);
+            var result = await _userService.UpdateProfileAsync((await _userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile, IconInputWorkingAt);
 
             if (!result.Item1)
             {
@@ -246,7 +313,7 @@ namespace BlogProject.Controllers
             if (result.Item3)
             {   
                 await _userService.LogoutAsync();
-                await _userService.LogInAsync((await userManager.FindByIdAsync(request.Id))!);
+                await _userService.LogInAsync((await _userManager.FindByIdAsync(request.Id))!);
 
                 TempData["Succeed"] = "Profile updated successfully.";
 

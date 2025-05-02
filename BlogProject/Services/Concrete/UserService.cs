@@ -47,6 +47,11 @@ namespace BlogProject.Services.Concrete
             _mapper = mapper;
         }
 
+        public bool CheckEmailConfirmed(AppUser user)
+        {
+            return user.EmailConfirmed;
+        }
+
         public async Task<int> GetCommentCountByUserAsync(AppUser user)
         {
             var commentCount = await _blogdbContext.Comments.CountAsync(x => x.AuthorId == user.Id);
@@ -232,7 +237,7 @@ namespace BlogProject.Services.Concrete
             return users;
         }
 
-        public async Task<(bool, IEnumerable<IdentityError>?)> SignUp(SignUpViewModel request)
+        public async Task<ServiceResult<AppUser>> SignUp(SignUpViewModel request)
         {
             var identityResult = await _userManager.CreateAsync(new()
             {
@@ -245,10 +250,44 @@ namespace BlogProject.Services.Concrete
 
             if (identityResult.Succeeded)
             {
-                return (true, null);
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = true,
+                    Data = await _userManager.FindByEmailAsync(request.Email)
+                };
             }
 
-            return (false, identityResult.Errors);
+            return new ServiceResult<AppUser>()
+            {
+                IsSuccess = false,
+                Errors = identityResult.Errors.ToList()
+            };
+        }
+        public async Task<ServiceResult<AppUser>> ConfirmEmailAsync(ConfirmEmailViewModel request)
+        {
+            if (string.IsNullOrEmpty(request.UserId) || string.IsNullOrEmpty(request.Token))
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError> { new IdentityError() { Code = "ModelEmpty", Description = "Request cannot be null" } }
+                };
+            }
+            var user = await _userManager.FindByIdAsync(request.UserId);
+
+            var result = await _userManager.ConfirmEmailAsync(user!, request.Token);
+            if (!result.Succeeded)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = result.Errors.ToList()
+                };
+            }
+            return new ServiceResult<AppUser>()
+            {
+                IsSuccess = true
+            };
         }
 
         public async Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request)
@@ -265,6 +304,11 @@ namespace BlogProject.Services.Concrete
             if(hasUser.SuspendedTo != null && hasUser.SuspendedTo > DateTime.Now)
             {
                 errors.Add(new IdentityError() { Code = "SuspendedAccount", Description = $"Your account is suspended, will be accesible at {hasUser.SuspendedTo}" });
+                return (false, errors);
+            }
+            if (!hasUser.EmailConfirmed)
+            {
+                errors.Add(new IdentityError() { Code = "EmailNotConfirmed", Description = "Your email is not confirmed." });
                 return (false, errors);
             }
 

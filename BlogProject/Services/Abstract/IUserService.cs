@@ -11,9 +11,11 @@ namespace BlogProject.Services.Abstract
     public interface IUserService
     {
 
+        bool CheckEmailConfirmed(AppUser user);
         Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type);
-        Task<(bool, IEnumerable<IdentityError>?)> SignUp(SignUpViewModel request);
+        Task<ServiceResult<AppUser>> SignUp(SignUpViewModel request);
         Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request);
+        Task<ServiceResult<AppUser>> ConfirmEmailAsync(ConfirmEmailViewModel request);
 
         Task<(bool, List<IdentityError>?, bool isCritical)> UpdateProfileAsync(AppUser oldUserInfo, ExtendedProfileViewModel newUserInfo, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt);
         Task<(bool, IEnumerable<IdentityError>?)> ResetPasswordLinkAsync(ForgetPasswordViewModel request);

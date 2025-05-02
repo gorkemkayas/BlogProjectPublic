@@ -79,9 +79,24 @@ else if (TempData["Failed"] != null)
             </tr>
         </thead>
         <tbody>
-            @{
-                int i = (Model.CurrentPage - 1) * Model.PageSize;
+            @if (Model.Items.Count() == 0)
+            {
+                <tr class="text-muted small">
+                <td class="text-muted small">No Information</td>
+                    <td class="text-muted small">No Information</td>
+                    <td class="text-muted small">No Information</td>
+                    <td class="text-muted small">No Information</td>
+                    <td class="text-muted small">No Information</td>
+                    <td class="text-muted small text-center">No Information</td>
+                </tr>
             }
+            else
+            {
+                
+            
+            
+                int i = (Model.CurrentPage - 1) * Model.PageSize;
+            
             @foreach (var role in Model.Items)
             {
                 i++;
@@ -151,6 +166,7 @@ else if (TempData["Failed"] != null)
                         </div>
                     </td>
                 </tr>
+            }
             }
         </tbody>
     </table>

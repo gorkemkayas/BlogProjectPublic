@@ -17,6 +17,12 @@ namespace BlogProject.Services.CustomMethods.Concrete
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
             _httpContextAccessor = httpContextAccessor;
         }
+        public string GenerateEmailConfirmationUrl(AppUser user, string token)
+        {
+            var emailConfirmationLink = _urlHelper.Action("ConfirmEmail", "User", new { userId = user.Id, token = token }, _httpContextAccessor.HttpContext.Request.Scheme);
+
+            return emailConfirmationLink!;
+        }
         public string GenerateResetPasswordUrl(AppUser user, string _passwordResetToken)
         {
             var passwordResetLink = _urlHelper.Action("ResetPassword","User",new { userId = user.Id, token = _passwordResetToken}, _httpContextAccessor.HttpContext.Request.Scheme);
