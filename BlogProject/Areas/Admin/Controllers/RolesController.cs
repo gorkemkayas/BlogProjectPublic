@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using static BlogProject.Utilities.RoleService;
 
@@ -18,12 +20,14 @@ namespace BlogProject.Areas.Admin.Controllers
     public class RolesController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<AppRole> _roleManager;
 
         private readonly IRoleService _roleService;
-        public RolesController(UserManager<AppUser> userManager, IRoleService roleService)
+        public RolesController(UserManager<AppUser> userManager, IRoleService roleService, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _roleService = roleService;
+            _roleManager = roleManager;
         }
 
 
@@ -42,8 +46,8 @@ namespace BlogProject.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> RoleAdd(RoleAddViewModel request)
         {
-            var result = await _roleService.AddRoleAsync(new AppRole() { Name = request.Name, CreatedBy = request.CreatedBy});
-            if(!result.IsSuccess)
+            var result = await _roleService.AddRoleAsync(new AppRole() { Name = request.Name, CreatedBy = request.CreatedBy });
+            if (!result.IsSuccess)
             {
                 ModelState.AddModelErrorList(result.Errors!);
                 TempData["Failed"] = "The role could not be created.";
@@ -86,7 +90,7 @@ namespace BlogProject.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> RoleList(int page = 1, int pageSize = 4, bool includeDeleted = false)
         {
-            var pagedRoles = await _roleService.GetPagedRolesAsync(page,pageSize, includeDeleted);
+            var pagedRoles = await _roleService.GetPagedRolesAsync(page, pageSize, includeDeleted);
             pagedRoles.IncludeDeleted = includeDeleted;
             pagedRoles.ControllerName = "Roles";
             pagedRoles.ActionName = "RoleList";
@@ -100,9 +104,9 @@ namespace BlogProject.Areas.Admin.Controllers
             var deleterUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _roleService.DeleteRoleByTypeAsync(id, DeleteType.Soft, deleterUserId!);
 
-            if(!result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                if(result.Errors!.Any(result => result.Code == "RoleUsedOnUsers"))
+                if (result.Errors!.Any(result => result.Code == "RoleUsedOnUsers"))
                 {
                     TempData["Failed"] = "There are users in this role. You cannot delete it.";
                     return Json(new { status = false, redirectUrl = Url.Action(nameof(RoleList)) });
@@ -116,5 +120,109 @@ namespace BlogProject.Areas.Admin.Controllers
             TempData["Succeed"] = "The role was deleted successfully.";
             return Json(new { status = true, redirectUrl = Url.Action(nameof(RoleList)) });
         }
+
+        public async Task<IActionResult> RoleAssign(string userName)
+        {
+            var currentUser = await _userManager.FindByNameAsync(userName);
+            var userModel = new UserViewModel()
+            {
+                Id = currentUser!.Id.ToString(),
+                Name = currentUser.Name,
+                Surname = currentUser.Surname,
+                Username = currentUser.UserName!,
+                ProfileImage = currentUser.ProfilePicture,
+                LastLoginDate = currentUser.LastLoginDate,
+                IsSuspended = currentUser.IsSuspended,
+                Birthdate = currentUser.BirthDate,
+                Email = currentUser.Email!
+            };
+
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            var userRoles = new List<UserRoleViewModel>();
+
+            foreach (var role in roles)
+            {
+                var roleExists = await _userManager.IsInRoleAsync((await _userManager.FindByIdAsync(userModel.Id))!, role.Name!);
+                userRoles.Add(new UserRoleViewModel()
+                {
+                    Id = role.Id.ToString(),
+                    Name = role.Name!,
+                    Exists = roleExists
+                });
+            }
+            userModel.Roles = userRoles;
+
+            return View(userModel);
+        }
+        
+        public async Task<IActionResult> RoleAssignToUser(string userName,string roleId)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (user == null || role == null)
+            {
+                TempData["Failed"] = "User or role not found.";
+                return NotFound();
+            }
+
+            var result = await _userManager.AddToRoleAsync(user,role.Name!);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelErrorList(result.Errors.ToList());
+                TempData["Failed"] = "The role could not be assigned to the user.";
+
+                return View("RoleAssign", new UserViewModel()
+                {
+                    Id = user.Id.ToString(),
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    Username = user.UserName!,
+                    ProfileImage = user.ProfilePicture,
+                    LastLoginDate = user.LastLoginDate,
+                    IsSuspended = user.IsSuspended,
+                    Birthdate = user.BirthDate,
+                    Email = user.Email!
+                });
+            }
+            TempData["Succeed"] = "The role was assigned to the user successfully.";
+
+            return RedirectToAction("RoleAssign", new { userName = user.UserName });
+        }
+
+        public async Task<IActionResult> RoleRemoveFromUser(string userName, string roleId)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (user == null || role == null)
+            {
+                TempData["Failed"] = "User or role not found.";
+                return NotFound();
+            }
+
+            var result = await _userManager.RemoveFromRoleAsync(user,role.Name!);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelErrorList(result.Errors.ToList());
+                TempData["Failed"] = "The role could not be assigned to the user.";
+
+                return View("RoleAssign", new UserViewModel()
+                {
+                    Id = user.Id.ToString(),
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    Username = user.UserName!,
+                    ProfileImage = user.ProfilePicture,
+                    LastLoginDate = user.LastLoginDate,
+                    IsSuspended = user.IsSuspended,
+                    Birthdate = user.BirthDate,
+                    Email = user.Email!
+                });
+            }
+            TempData["Succeed"] = "The role was removed from the user successfully.";
+
+            return RedirectToAction("RoleAssign", new { userName = user.UserName });
+        }
+
     }
 }

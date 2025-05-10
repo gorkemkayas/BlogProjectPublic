@@ -8,6 +8,10 @@
         public string Username { get; set; }
         public string Email { get; set; }
 
+        public string? ProfileImage { get; set; }
+
+        public List<UserRoleViewModel> Roles { get; set; } = new List<UserRoleViewModel>();
+
         public bool IsDeleted { get; set; } = false;
         public bool EmailConfirmed { get; set; } = false;
         public bool PhoneNumberConfirmed { get; set; } = false;
@@ -17,7 +21,8 @@
 
         public DateTime? RegisteredDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
-        
+        public DateTime? Birthdate { get; set; }
+
         public DateTime? SuspendedTo { get; set; }
 
         public bool IsSuspended { get; set; }
