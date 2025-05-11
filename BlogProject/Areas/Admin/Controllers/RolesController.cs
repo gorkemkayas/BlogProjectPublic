@@ -190,7 +190,8 @@ namespace BlogProject.Areas.Admin.Controllers
             return RedirectToAction("RoleAssign", new { userName = user.UserName });
         }
 
-        public async Task<IActionResult> RoleRemoveFromUser(string userName, string roleId)
+        [HttpPost]
+        public async Task<IActionResult> RoleRemoveFromUser(string userName, string roleId, bool fromRoleUsers = false)
         {
             var user = await _userManager.FindByNameAsync(userName);
             var role = await _roleManager.FindByIdAsync(roleId);
@@ -220,8 +221,18 @@ namespace BlogProject.Areas.Admin.Controllers
                 });
             }
             TempData["Succeed"] = "The role was removed from the user successfully.";
-
+            if(fromRoleUsers)
+            {
+                return RedirectToAction("RoleUsers", new { roleName = role.Name });
+            }
             return RedirectToAction("RoleAssign", new { userName = user.UserName });
+        }
+
+        public async Task<IActionResult> RoleUsers(string roleName)
+        {
+            var roleWithUsers = await _roleService.GetRolesWithUsers(roleName);
+
+            return View(roleWithUsers);
         }
 
     }

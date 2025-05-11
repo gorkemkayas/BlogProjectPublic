@@ -146,9 +146,9 @@ else if (TempData["Failed"] != null)
                                 data-role-id="@role.Id" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
                                     <i class="bi bi-archive me-2"></i>Archive
                                 </button>
-                                <button class="btn btn-sm btn-outline-dark d-flex align-items-center px-3 rounded-pill hover-shadow-sm">
+                                <a class="btn btn-sm btn-outline-dark d-flex align-items-center px-3 rounded-pill hover-shadow-sm" asp-controller="Roles" asp-action="RoleUsers" asp-route-roleName="@role.Name">
                                     <i class="bi bi-eye me-2"></i>View
-                                </button>
+                                </a>
                             }
                             else
                             {

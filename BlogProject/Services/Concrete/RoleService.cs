@@ -138,6 +138,7 @@ namespace BlogProject.Services.Concrete
 
             role.Name = request.Name;
             role.EditedBy = request.WillEditedBy;
+            role.ModifiedDate = DateTime.Now;
 
             var result = await _roleManager.UpdateAsync(role);
 
@@ -147,6 +148,41 @@ namespace BlogProject.Services.Concrete
             }
 
             return new ServiceResult<AppRole> { IsSuccess = true};
+        }
+
+        public async Task<RoleUsersViewModel> GetRolesWithUsers(string roleName)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName);
+            if (role is null) throw new Exception("Role not found");
+
+            var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name!);
+
+            var creator = await _userManager.FindByIdAsync(role.CreatedBy!);
+            var roleUsers = new RoleUsersViewModel
+            {
+                Id = role.Id.ToString(),
+                Name = role.Name!,
+                CreatedBy = role.CreatedBy!,
+                CreatorName = creator!.Name + " " + creator.Surname,
+                CreatorUserName = creator.UserName!,
+                ModifiedBy = role.EditedBy,
+                CreatedDate = role.CreatedDate,
+                ModifiedDate = role.ModifiedDate,
+                Users = usersInRole.Select(user => new UserViewModel
+                {
+                    Id = user.Id.ToString(),
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    Username = user.UserName!,
+                    ProfileImage = user.ProfilePicture,
+                    LastLoginDate = user.LastLoginDate,
+                    IsSuspended = user.IsSuspended,
+                    Birthdate = user.BirthDate,
+                    Email = user.Email!
+                }).ToList()
+            };
+
+            return roleUsers; 
         }
     }
 }
