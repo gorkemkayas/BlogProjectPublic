@@ -30,6 +30,78 @@
     .dropdown-toggle::after{
     display:contents;
     }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+    }
+
+        .nav-links a {
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+            .nav-links a:hover {
+                color: var(--black);
+            }
+    /* Footer */
+    .footer {
+        background-color: var(--black);
+        color: var(--white);
+        padding: 4rem 0 2rem;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .footer-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--medium-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+
+            .footer-links a:hover {
+                color: var(--white);
+            }
+
+    .copyright {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid var(--dark-gray);
+        color: var(--medium-gray);
+        font-size: 0.85rem;
+    }
 </style>
 <body>
     @*  <!-- Left Ad Container -->
@@ -48,7 +120,7 @@
         </video>
     </div> *@
 
-    <header class=" py-3 pt-0">
+    <header class=" py-0 pt-0">
         <div class="container">
             <!-- Top Navigation Bar -->
             <nav class="navbar navbar-expand-sm navbar-light bg-white mb-2 position-relative">
@@ -163,10 +235,45 @@
         </div>
     </main>
 
-    <footer class="py-4">
-        <div class="container text-center">
-            <span class="footer-brand">gorkemkayas<span class="dot">.</span></span>
-            <p class="text-muted small mt-2 mb-0">© @DateTime.Now.Year All rights reserved</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="footer-title">Minimal</h3>
+                    <p style="color: var(--medium-gray); font-size: 0.9rem; line-height: 1.6;">A blog about simplicity in design, technology, and life.</p>
+                </div>
+                <div>
+                    <h3 class="footer-title">Explore</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">All Articles</a></li>
+                        <li><a href="#">Popular</a></li>
+                        <li><a href="#">Categories</a></li>
+                        <li><a href="#">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Technology</a></li>
+                        <li><a href="#">Design</a></li>
+                        <li><a href="#">Business</a></li>
+                        <li><a href="#">Lifestyle</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Minimal Blog. All rights reserved.
+            </div>
         </div>
     </footer>
 

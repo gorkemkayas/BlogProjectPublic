@@ -1,3 +1,791 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    Layout = "_Layout";
 }
+<head>
+    <title>Gönderi Başlığı | Minimal Blog</title>
+    <style>
+        .comments {
+            max-width: 900px;
+            margin: 0 auto;
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #333;
+        }
+
+        .comments-header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+
+        .comments-title {
+            font-weight: 500;
+            font-size: 1.25rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .comment-count {
+            background: #f0f0f0;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .comment-input {
+            flex-grow: 1;
+        }
+
+            .comment-input textarea {
+                width: 100%;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 1rem;
+                font-family: inherit;
+                resize: none;
+                transition: all 0.2s ease;
+                min-height: 80px;
+            }
+
+                .comment-input textarea:focus {
+                    outline: none;
+                    border-color: #a777e3;
+                    box-shadow: 0 0 0 2px rgba(167, 119, 227, 0.1);
+                }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn {
+            background: #6e8efb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+            .submit-btn:hover {
+                background: #5a7df5;
+            }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .comment {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .comment-body {
+            flex-grow: 1;
+        }
+
+        .comment-header {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .comment-author {
+            font-weight: 500;
+        }
+
+        .comment-date {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .comment-content {
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+            .comment-content p {
+                margin: 0;
+            }
+
+        .comment-footer {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .reply-btn, .like-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.5rem;
+            transition: color 0.2s ease;
+        }
+
+            .reply-btn:hover, .like-btn:hover {
+                color: #6e8efb;
+            }
+
+        .comment-reply {
+            margin-top: 1.5rem;
+            margin-left: 2rem;
+            padding-left: 1rem;
+            border-left: 2px solid #eee;
+            display: flex;
+            gap: 1rem;
+        }
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #333333;
+            --accent: #555555;
+        }
+
+        /* Gönderi Detay Stilleri */
+        .post-detail {
+            padding: 4rem 0;
+        }
+
+        .post-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .post-category {
+            display: inline-block;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--black);
+            margin: 0 0 1rem;
+            line-height: 1.3;
+        }
+
+        .post-meta {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .post-content {
+            color: var(--dark-gray);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+            .post-content p {
+                margin-bottom: 1.5rem;
+            }
+
+            .post-content a {
+                color: var(--black);
+                text-decoration: underline;
+            }
+
+            .post-content h2,
+            .post-content h3 {
+                color: var(--black);
+                margin: 2.5rem 0 1.5rem;
+            }
+
+            .post-content h2 {
+                font-size: 1.8rem;
+            }
+
+            .post-content h3 {
+                font-size: 1.5rem;
+            }
+
+            .post-content blockquote {
+                border-left: 3px solid var(--black);
+                padding-left: 1.5rem;
+                margin: 2rem 0;
+                color: var(--accent);
+                font-style: italic;
+            }
+
+            .post-content img {
+                max-width: 100%;
+                height: auto;
+                margin: 2rem 0;
+                border-radius: 4px;
+            }
+
+        /* Paylaşım Butonları */
+        .post-share {
+            display: flex;
+            gap: 1rem;
+            margin: 3rem 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 1.2rem;
+            background: var(--white);
+            color: var(--black);
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+            .share-btn:hover {
+                background: var(--light-gray);
+            }
+
+        /* Benzer Gönderiler */
+        .related-posts {
+            margin: 5rem 0;
+        }
+
+        .related-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .related-post {
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+            .related-post:hover {
+                transform: translateY(-5px);
+            }
+
+        .related-post-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .related-post-body {
+            padding: 1.5rem;
+        }
+
+        .related-post-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--black);
+            margin: 0 0 0.5rem;
+        }
+
+        .related-post-link {
+            color: var(--black);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+
+            .related-post-link::after {
+                content: "→";
+                margin-left: 0.5rem;
+                transition: transform 0.3s;
+            }
+
+            .related-post-link:hover::after {
+                transform: translateX(3px);
+            }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: color 0.3s;
+        }
+
+            .back-btn::before {
+                content: "←";
+                margin-right: 0.5rem;
+            }
+
+            .back-btn:hover {
+                color: var(--accent);
+            }
+
+        /* Yorum Bölümü */
+        .comments-section {
+            margin: 4rem 0;
+            padding-top: 3rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .comments-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 2rem;
+        }
+
+        .comment-form {
+            margin-bottom: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--black);
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+
+            .form-input:focus,
+            .form-textarea:focus {
+                outline: none;
+                border-color: var(--black);
+            }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .submit-btn:hover {
+                background-color: var(--dark-gray);
+            }
+
+        .comment-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .comment {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+            .comment:last-child {
+                border-bottom: none;
+            }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--black);
+            margin-right: 1rem;
+        }
+
+        .comment-date {
+            color: var(--accent);
+            font-size: 0.85rem;
+        }
+
+        .comment-content {
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        .no-comments {
+            color: var(--accent);
+            font-style: italic;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        @@media (max-width: 768px) {
+            .post-title {
+                font-size: 2rem;
+            }
+
+            .post-image {
+                height: 300px;
+            }
+        }
+
+        .author-card {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border: 1px solid #f0f0f0;
+            width: 85%;
+        }
+
+        .author-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 3px solid #f8f8f8;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+            .author-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .author-details {
+            flex-grow: 1;
+        }
+
+        .author-meta {
+            margin-bottom: 0.5rem;
+        }
+
+        .author-by {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-name {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .author-bio {
+            margin: 0 0 1rem 0;
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .author-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            color: #777;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f5f5f5;
+        }
+
+            .social-link:hover {
+                color: #6e8efb;
+                background: #eef2ff;
+            }
+
+            .social-link svg {
+                width: 16px;
+                height: 16px;
+            }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Gönderi Detay -->
+        <article class="post-detail">
+            <header class="post-header">
+                <span class="post-category">Technology</span>
+                <h1 class="post-title">The Future of Web Development</h1>
+                <div class="post-meta">Published on June 12, 2024 · 8 min read</div>
+            </header>
+
+            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Web Development" class="post-image">
+
+            <div class="post-content">
+                <p>Web development continues to evolve at a rapid pace, with new technologies and methodologies emerging constantly. This article explores the trends that are shaping the future of how we build for the web.</p>
+
+                <h2>The Rise of AI-Assisted Development</h2>
+                <p>Artificial intelligence is transforming how developers write code. Tools like GitHub Copilot suggest code snippets in real-time, potentially increasing productivity while raising questions about code originality and security.</p>
+
+                <blockquote>
+                    "The best developers of the future won't be those who can write the most code, but those who can most effectively leverage AI tools to solve problems." — Industry Expert
+                </blockquote>
+
+                <h2>WebAssembly (Wasm) Matures</h2>
+                <p>WebAssembly allows code written in languages like C++, Rust, and Go to run in the browser at near-native speed. As Wasm matures, we're seeing:</p>
+
+                <ul>
+                    <li>Performance-intensive applications (photo/video editors, games) moving to the web</li>
+                    <li>New possibilities for cross-platform development</li>
+                    <li>Improved execution of legacy codebases in modern browsers</li>
+                </ul>
+
+                <h2>Edge Computing Reshapes Architectures</h2>
+                <p>The traditional client-server model is giving way to edge computing, where processing happens closer to the user. This means:</p>
+
+                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Edge Computing">
+
+                <p>Reduced latency, improved privacy controls, and more resilient applications that can function with intermittent connectivity.</p>
+            </div>
+
+            <hr class="m-5 ms-0" style="width:85%" />
+
+            <!-- Author Info Section -->
+            <div class="author-card">
+                <div class="author-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" width="64" height="64">
+                </div>
+                <div class="author-details">
+                    <div class="author-meta">
+                        <span class="author-by">Article by</span>
+                        <h4 class="author-name">John Doe</h4>
+                    </div>
+                    <p class="author-bio">Senior Developer | Tech Writer | Open Source Contributor</p>
+                    <div class="author-social">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Comment Section -->
+        <div class="comments ms-1">
+            <div class="comments-header">
+                <h3 class="comments-title">Comments <span class="comment-count">3</span></h3>
+            </div>
+
+            <!-- Comment Form -->
+            <div class="comment-form">
+                <div class="form-avatar">
+                    <span>Y</span>
+                </div>
+                <form class="comment-input">
+                    <textarea placeholder="Write your comment..." rows="2"></textarea>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">Post</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Comment List -->
+            <div class="comment-list">
+                <!-- Main Comment -->
+                <div class="comment">
+                    <div class="comment-avatar">
+                        <span>JD</span>
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">John Doe</span>
+                            <span class="comment-date">June 15, 2024</span>
+                        </div>
+                        <div class="comment-content">
+                            <p>Great article! The point about edge computing is particularly insightful. I've been working on a project that could benefit from this approach.</p>
+                        </div>
+                        <div class="comment-footer">
+                            <button class="reply-btn">Reply</button>
+                            <button class="like-btn">Like (5)</button>
+                        </div>
+
+                        <!-- Reply -->
+                        <div class="comment-reply">
+                            <div class="comment-avatar">
+                                <span>AS</span>
+                            </div>
+                            <div class="comment-body">
+                                <div class="comment-header">
+                                    <span class="comment-author">Alice Smith</span>
+                                    <span class="comment-date">June 16, 2024</span>
+                                </div>
+                                <div class="comment-content">
+                                    <p>John I completely agree! We implemented edge computing in our IoT solution and saw a 40% reduction in latency.</p>
+                                </div>
+                                <div class="comment-footer">
+                                    <button class="reply-btn">Reply</button>
+                                    <button class="like-btn">Like (3)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Another Comment -->
+                <div class="comment">
+                    <div class="comment-avatar">
+                        <span>RJ</span>
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">Robert Johnson</span>
+                            <span class="comment-date">June 13, 2024</span>
+                        </div>
+                        <div class="comment-content">
+                            <p>WebAssembly has been a game-changer for our team. We ported our C++ image processing library to the web with minimal changes.</p>
+                        </div>
+                        <div class="comment-footer">
+                            <button class="reply-btn">Reply</button>
+                            <button class="like-btn">Like (7)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benzer Gönderiler -->
+        <section class="related-posts">
+            <h2 class="related-title">You Might Also Like</h2>
+            <div class="related-grid">
+                <article class="related-post">
+                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Design" class="related-post-img">
+                    <div class="related-post-body">
+                        <h3 class="related-post-title">Minimalism in UI Design</h3>
+                        <a href="#" class="related-post-link">Read article</a>
+                    </div>
+                </article>
+
+                <article class="related-post">
+                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Code" class="related-post-img">
+                    <div class="related-post-body">
+                        <h3 class="related-post-title">Clean Code Principles</h3>
+                        <a href="#" class="related-post-link">Read article</a>
+                    </div>
+                </article>
+
+                <article class="related-post">
+                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Meeting" class="related-post-img">
+                    <div class="related-post-body">
+                        <h3 class="related-post-title">Remote Work Culture</h3>
+                        <a href="#" class="related-post-link">Read article</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+</body>
