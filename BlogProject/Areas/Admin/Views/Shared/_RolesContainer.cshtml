@@ -1,0 +1,54 @@
+﻿@using BlogProject.Areas.Admin.Models
+@model UserViewModel
+
+<div class="roles-container">
+    <div class="roles-section">
+        <h2><i class="fas fa-user-tag"></i> Current Roles (@Model.Roles.Where(r => r.Exists).Count())</h2>
+        @if (Model.Roles.Where(r => r.Exists).Count() != 0)
+        {
+            <div class="role-list" id="current-roles">
+                @foreach (var role in Model.Roles.Where(a => a.Exists))
+                {
+                    <div class="role-item">
+                        <span class="role-name"><i class="fas fa-crown"></i> @role.Name <span class="badge badge-primary">Main Role</span></span>
+                        <form asp-controller="Roles" asp-action="RoleRemoveFromUser" asp-route-userName="@Model.Username" asp-route-roleId="@role.Id">
+                            <button type="submit" class="btn btn-remove"><i class="fas fa-trash-alt"></i> Remove</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div id="no-current-roles" class="no-roles">
+                <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                <p>The user does not have any assigned roles.</p>
+            </div>
+        }
+    </div>
+
+    <div class="roles-section">
+        <h2><i class="fas fa-plus-square"></i> Assignable Roles (@Model.Roles.Where(r => !r.Exists).Count())</h2>
+        @if (Model.Roles.Where(r => !r.Exists).Count() != 0)
+        {
+            <div class="role-list" id="available-roles">
+                @foreach (var role in Model.Roles.Where(a => !a.Exists))
+                {
+                    <div class="role-item">
+                        <span class="role-name"><i class="fas fa-pen-fancy"></i> @role.Name</span>
+                        <form asp-controller="Roles" asp-action="RoleAssignToUser" asp-route-userName="@Model.Username" asp-route-roleId="@role.Id">
+                            <button type="submit" class="btn btn-add assign-role"><i class="fas fa-plus"></i> Add</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div id="no-available-roles" class="no-roles">
+                <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                <p>There are no other roles that can be assigned to the user.</p>
+            </div>
+        }
+    </div>
+</div>

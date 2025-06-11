@@ -1,0 +1,632 @@
+﻿@using BlogProject.Areas.Admin.Models
+@using BlogProject.Utilities
+@{
+    Layout = "_AdminLayout";
+}
+@{
+    ViewData["Title"] = "Role User Management";
+    ViewData["Description"] = "View and manage users assigned to specific roles in detail";
+}
+
+@model RoleUsersViewModel
+
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3a0ca3;
+        --accent-color: #7209b7;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+        --success-color: #4cc9f0;
+        --danger-color: #f72585;
+        --warning-color: #f8961e;
+        --info-color: #4895ef;
+        --card-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.2);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+        background-color: #f5f7ff;
+        color: var(--dark-color);
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 40px auto;
+        padding: 30px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+        .header h1 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+            .header h1:after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+                border-radius: 2px;
+            }
+
+        .header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+    .role-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--card-shadow);
+        padding: 25px 30px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition);
+        border-left: 5px solid var(--primary-color);
+    }
+
+        .role-header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1));
+            border-bottom-left-radius: 100%;
+        }
+
+        .role-header:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.3);
+        }
+
+    .role-info {
+        flex: 1;
+    }
+
+        .role-info h2 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+            .role-info h2 i {
+                margin-right: 15px;
+                color: var(--accent-color);
+            }
+
+        .role-info p {
+            color: #495057;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+    .role-badge {
+        color: var(--primary-color);
+        font-weight: 600;
+        background: rgba(67, 97, 238, 0.1);
+        padding: 5px 15px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-left: 15px;
+        font-size: 0.9rem;
+    }
+
+    .role-stats {
+        display: flex;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 10px;
+        padding: 15px 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: var(--transition);
+        border-top: 3px solid var(--primary-color);
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+    .users-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--card-shadow);
+        padding: 30px;
+        margin-bottom: 40px;
+        transition: var(--transition);
+        border-top: 3px solid var(--accent-color);
+    }
+
+        .users-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .users-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+            .users-container h2 i {
+                margin-right: 15px;
+                color: var(--accent-color);
+            }
+
+    .user-search {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+        .user-search input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            padding-left: 50px;
+        }
+
+            .user-search input:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+            }
+
+        .user-search i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+        }
+
+    .user-list {
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+        .user-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .user-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .user-list::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+    .user-item {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        margin-bottom: 15px;
+        background: white;
+        border-radius: 10px;
+        transition: var(--transition);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-left: 3px solid var(--primary-color);
+    }
+
+        .user-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+    .user-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20px;
+        border: 3px solid white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+    }
+
+    .user-item:hover .user-avatar {
+        transform: scale(1.05);
+    }
+
+    .user-details {
+        flex: 1;
+    }
+
+        .user-details h3 {
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-details p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+    .user-status {
+        display: flex;
+        align-items: center;
+        margin-left: 20px;
+    }
+
+    .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .active {
+        background-color: var(--success-color);
+    }
+
+    .inactive {
+        background-color: #adb5bd;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+    .btn-remove {
+        background-color: var(--danger-color);
+        color: white;
+        box-shadow: 0 3px 10px rgba(247, 37, 133, 0.4);
+        margin-left: 20px;
+    }
+
+        .btn-remove:hover {
+            background-color: #e5177d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.5);
+        }
+
+    .no-users {
+        color: #adb5bd;
+        font-style: italic;
+        text-align: center;
+        padding: 30px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+
+    .badge-primary {
+        background-color: rgba(67, 97, 238, 0.1);
+        color: var(--primary-color);
+    }
+
+    .badge-danger {
+        background-color: rgba(247, 37, 133, 0.1);
+        color: var(--danger-color);
+    }
+
+    .badge-success {
+        background-color: rgba(76, 201, 240, 0.1);
+        color: var(--success-color);
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+        .pagination a {
+            color: var(--primary-color);
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+
+            .pagination a.active {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+            .pagination a:hover:not(.active) {
+                background-color: #e9ecef;
+            }
+
+    .role-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn-export {
+        background-color: var(--info-color);
+        color: white;
+        box-shadow: 0 3px 10px rgba(72, 149, 239, 0.4);
+    }
+
+        .btn-export:hover {
+            background-color: #3a7bc8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 149, 239, 0.5);
+        }
+
+    .btn-back {
+        background-color: var(--warning-color);
+        color: white;
+        box-shadow: 0 3px 10px rgba(248, 150, 30, 0.4);
+    }
+
+        .btn-back:hover {
+            background-color: #e07f0c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(248, 150, 30, 0.5);
+        }
+
+    @@media (max-width: 992px) {
+        .role-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .role-stats {
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .user-item {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .user-avatar {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+
+        .user-status {
+            margin-left: 0;
+            margin-top: 15px;
+        }
+
+        .btn-remove {
+            margin-left: 0;
+            margin-top: 15px;
+        }
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+
+<body>
+    <div class="container mt-0">
+        <div class="header">
+            <h1><i class="fas fa-users-cog"></i> Role User Management</h1>
+            <p>Premium panel to view and manage users assigned to specific roles</p>
+        </div>
+
+        <div class="role-header">
+            <div class="role-info">
+                <h2>
+                    <i class="fas fa-user-tag"></i> @Model.Name
+                    <span class="role-badge">@Model.Users.Count</span>
+                </h2>
+                <div class="d-flex">
+                    <p class=""> Creator :</p>
+                    <a class="text-gradient ms-2" asp-area="" asp-controller="User" asp-action="Profile" asp-route-userName="@Model.CreatorUserName"> @Model.CreatorName</a>
+                </div>
+            </div>
+            <div class="role-stats">
+                <div class="stat-card">
+                    <h3>Active Users</h3>
+                    <p>@Model.Users.Count(u => !u.IsSuspended)</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Suspended</h3>
+                    <p>@Model.Users.Count(u => u.IsSuspended)</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Last Updated</h3>
+                    <p class="small">@((Model.ModifiedDate != null ? @TimeDifference.TimeAgo(Model.ModifiedDate.Value) : "Unknown" ))</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="users-container">
+            <h2><i class="fas fa-users"></i> Assigned Users</h2>
+
+            <div class="user-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="userSearch" placeholder="Search users by name, email or username...">
+            </div>
+
+            @if (Model.Users.Any())
+            {
+                <div class="user-list">
+                    @foreach (var user in Model.Users)
+                    {
+                        <div class="user-item">
+                            <img src="@((user.ProfileImage != null ? $"/img/userPhotos/{user.Username}/{user.ProfileImage}" : "/img/defaultProfilePhoto.jpg"))" alt="User Avatar" class="user-avatar">
+                            <div class="user-details">
+                                <h3>
+                                    <a class="text-decoration-none" style="color: var(--secondary-color);" asp-area="" asp-controller="User" asp-action="Profile" asp-route-userName="@user.Username">@user.Name @user.Surname</a>
+                                    <span class="badge @(user.IsSuspended ? "badge-danger" : "badge-success")">@(user.IsSuspended ? "Suspended" : "Active")</span>
+                                    @if (user.Roles.Any(a => a.Name == "Yönetici"))
+                                    {
+                                        <span class="badge badge-primary">Admin</span>
+                                    }
+                                </h3>
+                                <p><i class="fas fa-envelope"></i> @user.Email</p>
+                                <p><i class="fas fa-user"></i> @user.Username</p>
+                            </div>
+                            <div class="user-status">
+                                <span class="status-indicator @(user.IsSuspended ? "inactive" : "active")"></span>
+                                <span>@(user.IsSuspended ? "Inactive" : "Active")</span>
+                            </div>
+                            <form asp-controller="Roles" asp-action="RoleRemoveFromUser" asp-route-roleId="@Model.Id" asp-route-userName="@user.Username" asp-route-fromRoleUsers="true" method="post">
+                                <button type="submit" class="btn btn-remove"><i class="fas fa-user-minus"></i> Remove</button>
+                            </form>
+                        </div>
+                    }
+                </div>
+
+@*                 <div class="pagination">
+                    @if (Model.CurrentPage > 1)
+                    {
+                        <a href="@Url.Action("RoleUsers", new { roleId = Model.RoleId, page = Model.CurrentPage - 1 })">&laquo;</a>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <a href="@Url.Action("RoleUsers", new { roleId = Model.RoleId, page = i })" @(i == Model.CurrentPage ? "class=active" : "")>@i</a>
+                    }
+
+                    @if (Model.CurrentPage < Model.TotalPages)
+                    {
+                        <a href="@Url.Action("RoleUsers", new { roleId = Model.RoleId, page = Model.CurrentPage + 1 })">&raquo;</a>
+                    }
+                </div> *@
+            }
+            else
+            {
+                <div class="no-users">
+                    <i class="fas fa-user-slash" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <h3>No Users Assigned</h3>
+                    <p>There are currently no users assigned to this role.</p>
+                </div>
+            }
+        </div>
+
+        <div class="role-actions">
+            <a asp-action="RoleList" class="btn btn-back"><i class="fas fa-arrow-left"></i> Back to Roles</a>
+            <button class="btn btn-export"><i class="fas fa-file-export"></i> Export to Excel</button>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        document.getElementById('userSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const userItems = document.querySelectorAll('.user-item');
+
+            userItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.custom-alert');
+            alerts.forEach(alert => {
+                alert.style.display = 'none';
+            });
+        }, 5000);
+    </script>
+</body>

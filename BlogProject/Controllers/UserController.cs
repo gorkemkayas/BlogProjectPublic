@@ -329,5 +329,11 @@ namespace BlogProject.Controllers
             return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
         }
 
+        public IActionResult AccessDenied()
+        {
+            TempData["AccessDeniedDescription"] = "You do not have permission to access this page or apply this action.";
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

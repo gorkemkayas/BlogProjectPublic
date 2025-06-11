@@ -16,7 +16,7 @@ using static BlogProject.Utilities.RoleService;
 namespace BlogProject.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
-    [Authorize]
+    [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
     public class RolesController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -38,6 +38,7 @@ namespace BlogProject.Areas.Admin.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Bölge Sorumlusu")]
         public IActionResult RoleAdd()
         {
             return View();
@@ -58,6 +59,7 @@ namespace BlogProject.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleEdit(string id)
         {
             var role = await _roleService.GetRoleByIdAsync(id);
@@ -70,6 +72,7 @@ namespace BlogProject.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager,Bölge Sorumlusu")]
 
         public async Task<IActionResult> RoleEdit(RoleEditViewModel request)
         {
@@ -88,6 +91,7 @@ namespace BlogProject.Areas.Admin.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Bölge Sorumlusu,Takım Lideri")]
         public async Task<IActionResult> RoleList(int page = 1, int pageSize = 4, bool includeDeleted = false)
         {
             var pagedRoles = await _roleService.GetPagedRolesAsync(page, pageSize, includeDeleted);
@@ -99,6 +103,7 @@ namespace BlogProject.Areas.Admin.Controllers
 
 
         [HttpPost("Roles/RoleDelete/{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> RoleDelete(string id)
         {
             var deleterUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -121,6 +126,7 @@ namespace BlogProject.Areas.Admin.Controllers
             return Json(new { status = true, redirectUrl = Url.Action(nameof(RoleList)) });
         }
 
+        [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleAssign(string userName)
         {
             var currentUser = await _userManager.FindByNameAsync(userName);
@@ -155,7 +161,8 @@ namespace BlogProject.Areas.Admin.Controllers
 
             return View(userModel);
         }
-        
+
+        [Authorize(Roles = "Manager,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleAssignToUser(string userName,string roleId)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -190,7 +197,9 @@ namespace BlogProject.Areas.Admin.Controllers
             return RedirectToAction("RoleAssign", new { userName = user.UserName });
         }
 
-        public async Task<IActionResult> RoleRemoveFromUser(string userName, string roleId)
+        [HttpPost]
+        [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
+        public async Task<IActionResult> RoleRemoveFromUser(string userName, string roleId, bool fromRoleUsers = false)
         {
             var user = await _userManager.FindByNameAsync(userName);
             var role = await _roleManager.FindByIdAsync(roleId);
@@ -220,8 +229,18 @@ namespace BlogProject.Areas.Admin.Controllers
                 });
             }
             TempData["Succeed"] = "The role was removed from the user successfully.";
-
+            if(fromRoleUsers)
+            {
+                return RedirectToAction("RoleUsers", new { roleName = role.Name });
+            }
             return RedirectToAction("RoleAssign", new { userName = user.UserName });
+        }
+
+        public async Task<IActionResult> RoleUsers(string roleName)
+        {
+            var roleWithUsers = await _roleService.GetRolesWithUsers(roleName);
+
+            return View(roleWithUsers);
         }
 
     }

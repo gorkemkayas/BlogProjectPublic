@@ -13,6 +13,8 @@
 @* orijinal kısmın bitişi *@
 
 <style>
+
+
     .object-fit-cover {
         object-fit: cover; /* Video/Görsel ekrana tam otursun */
     }
@@ -52,6 +54,13 @@
         showAlertError('errorAlert');
     </script>
 }
+@if (TempData["AccessDeniedDescription"] != null)
+{
+    <div div id="errorAlert" class="custom-alert alert-danger">
+        @TempData["AccessDeniedDescription"]
+    </div>
+}
+
 
 @if (TempData["Succeed"] != null)
 {
@@ -424,3 +433,18 @@ else if (TempData["Failed"] != null)
             </div>
         </div>
     </div>
+
+<script>
+        // Sayfa yüklendiğinde popup'ı göstermek için
+        window.onload = function() {
+            // Popup'ı göstermek için 'custom-modal' sınıfını kullan
+            var modal = document.getElementById('accessDeniedPopup');
+            modal.style.display = 'flex'; // Popup'ı göster
+        };
+
+        // Modal'ı kapatmak için
+        document.querySelector('.custom-btn-close').onclick = function() {
+            var modal = document.getElementById('accessDeniedPopup');
+            modal.style.display = 'none'; // Popup'ı kapat
+        };
+</script>

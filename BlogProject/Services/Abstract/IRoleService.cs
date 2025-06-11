@@ -16,5 +16,7 @@ namespace BlogProject.Services.Abstract
         Task<ServiceResult<AppRole>> UpdateRoleAsync(RoleEditViewModel request);
 
         Task<ServiceResult<AppRole>> DeleteRoleByTypeAsync(string id, DeleteType deleteType, string deleterUserId);
+
+        Task<RoleUsersViewModel> GetRolesWithUsers(string roleName);
     }
 }

@@ -28,11 +28,11 @@
 
 <style>
     .dropdown-toggle::after{
-        display:contents;
+    display:contents;
     }
 </style>
 <body>
-   @*  <!-- Left Ad Container -->
+    @*  <!-- Left Ad Container -->
     <div class="ad-container ad-left d-none d-xl-block">
         <video class="ad-video" autoplay loop muted playsinline>
             <source src="~/img/AdLeft.webm" type="video/mp4">
@@ -107,6 +107,16 @@
                                             <i class="fas fa-key me-2"></i> Change Password
                                         </a>
                                     </li>
+                                    @if (User.HasClaim(c => c.Value == "Manager" || c.Value == "Takım Lideri" || c.Value == "Bölge Sorumlusu"))
+                                    {
+                                        
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="UserList">
+                                            <i class="fas fa-user-tie me-2"></i>Admin Panel
+                                        </a>
+                                    </li>
+                                    }
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item text-danger" asp-route-returnUrl="/Home/Index" asp-controller="User" asp-action="Logout">

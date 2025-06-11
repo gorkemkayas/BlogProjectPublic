@@ -7,64 +7,277 @@
 
 @model RoleEditViewModel
 
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3a0ca3;
+        --accent-color: #7209b7;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+        --success-color: #4cc9f0;
+        --danger-color: #f72585;
+        --warning-color: #f8961e;
+        --info-color: #4895ef;
+        --card-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.2);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .custom-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        transform: translateX(150%);
+        transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .alert-danger {
+        background-color: #fff;
+        color: var(--danger-color);
+        border-left: 5px solid var(--danger-color);
+    }
+
+    .custom-alert i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+
+    .show-alert {
+        transform: translateX(0);
+    }
+
+    .role-edit-container {
+        max-width: 800px;
+        margin: 5% auto;
+        padding: 40px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--card-shadow);
+        position: relative;
+        overflow: hidden;
+        border-top: 5px solid var(--accent-color);
+    }
+
+        .role-edit-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, rgba(114, 9, 183, 0.1), rgba(67, 97, 238, 0.1));
+            border-bottom-left-radius: 100%;
+        }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+        .form-header h2 {
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .form-header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .form-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+    .form-floating {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .form-control {
+        height: 60px;
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        font-size: 1rem;
+        transition: var(--transition);
+        padding: 20px 15px 5px 15px;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(114, 9, 183, 0.25);
+        }
+
+    .form-label {
+        position: absolute;
+        top: 20px;
+        left: 15px;
+        color: #6c757d;
+        transition: var(--transition);
+        pointer-events: none;
+    }
+
+    .form-control:focus ~ .form-label,
+    .form-control:not(:placeholder-shown) ~ .form-label {
+        top: 5px;
+        left: 15px;
+        font-size: 0.8rem;
+        color: var(--accent-color);
+    }
+
+    .text-danger {
+        color: var(--danger-color) !important;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .invalid-feedback {
+        color: var(--danger-color);
+        font-size: 0.85rem;
+    }
+
+    .btn-update {
+        background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+        color: white;
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        width: 100%;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 15px rgba(114, 9, 183, 0.4);
+        margin-top: 20px;
+    }
+
+        .btn-update:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(114, 9, 183, 0.5);
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        }
+
+        .btn-update:disabled {
+            background: #e9ecef;
+            color: #6c757d;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+    @@media (max-width: 768px) {
+        .role-edit-container {
+            margin: 10% auto;
+            padding: 30px 20px;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 @if (TempData["Failed"] != null)
 {
     <div id="errorAlert" class="custom-alert alert-danger">
-        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+        <i class="fa-solid fa-circle-exclamation"></i> @TempData["Failed"]!.ToString()
     </div>
 }
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
-        console.log("Validation scriptleri yüklendi.");
-    </script>
-    <script>
-        validateForms('nameInput', 'nameError','addButton');
-    </script>
-    <script>
-        showAlertError('errorAlert');
-        console.log('errorAlert calisti');
-    </script>
+        // Enhanced validation with premium styling
+        function validateForms(inputId, errorId, buttonId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            const button = document.getElementById(buttonId);
 
+            input.addEventListener('input', function() {
+                if (this.value.trim() === '') {
+                    this.classList.add('is-invalid');
+                    error.style.display = 'block';
+                    button.disabled = true;
+                } else {
+                    this.classList.remove('is-invalid');
+                    error.style.display = 'none';
+                    button.disabled = false;
+                }
+            });
+
+            // Initial check
+            if (input.value.trim() === '') {
+                input.classList.add('is-invalid');
+                error.style.display = 'block';
+                button.disabled = true;
+            }
+        }
+
+        // Premium alert animation
+        function showAlertError(alertId) {
+            const alert = document.getElementById(alertId);
+            if (alert) {
+                setTimeout(() => {
+                    alert.classList.add('show-alert');
+                }, 100);
+
+                setTimeout(() => {
+                    alert.classList.remove('show-alert');
+                }, 5000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            validateForms('nameInput', 'nameError', 'addButton');
+            showAlertError('errorAlert');
+            console.log('Premium role edit form initialized');
+        });
+    </script>
 }
 
 <form asp-area="Admin" asp-controller="Roles" asp-action="RoleEdit" method="post">
     <input type="hidden" asp-for="WillEditedBy" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
-    <section class="py-3 py-md-5 py-xl-8" style="margin-top:10%">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="mb-5">
-                        <h2 class="display-5 fw-bold text-center text-gradient">Edit Role</h2>
-                        <p class="text-center text-muted m-0">Edit role for perfect management!</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-10 col-xl-8">
-                    <div class="row gy-5 justify-content-center">
-                        <div class="col-12 col-lg-6">
-                            <div class="row gy-3 overflow-hidden">
-                                <div class="col-12">
-                                    <div class="form-floating mb-3">
-                                        <input class="form-control custom-input" asp-for="Name" id="nameInput">
-                                        <label class="form-label custom-label" asp-for="Name">Role Name</label>
-                                        <span class="text-danger mt-2" asp-validation-for="Name"></span>
-                                        <div id="nameError" class="invalid-feedback mb-2" style="display:none;">The name field cannot be left blank..</div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="d-grid">
-                                        <button class="btn btn-lg btn-premium text-white rounded-3 fs-6" id="addButton" type="submit">Update Role!</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="role-edit-container">
+        <div class="form-header">
+            <h2><i class="fas fa-edit"></i> Edit Role</h2>
+            <p>Update role information for advanced permission management</p>
+        </div>
+
+        <div class="form-floating">
+            <input class="form-control" asp-for="Name" id="nameInput" placeholder=" ">
+            <label class="form-label" asp-for="Name">Role Name</label>
+            <span class="text-danger" asp-validation-for="Name"></span>
+            <div id="nameError" class="invalid-feedback" style="display:none;">
+                <i class="fas fa-exclamation-circle"></i> The role name cannot be empty
             </div>
         </div>
-    </section>
-</form>
 
+        <button class="btn-update" id="addButton" type="submit">
+            <i class="fas fa-sync-alt"></i> UPDATE ROLE
+        </button>
+    </div>
+</form>

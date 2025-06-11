@@ -41,6 +41,7 @@ builder.Services.ConfigureApplicationCookie(opt =>
 
     opt.LoginPath = new PathString("/User/SignIn");
     opt.LogoutPath = new PathString("/User/Logout");
+    opt.AccessDeniedPath = new PathString("/User/AccessDenied");
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));

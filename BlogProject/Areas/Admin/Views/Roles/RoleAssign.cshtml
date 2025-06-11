@@ -400,7 +400,7 @@ else if (TempData["Failed"] != null)
         </div>
 
         <div class="user-profile d-flex align-items-center">
-            <img src="/img/userPhotos/@Model.Username/@Model.ProfileImage" alt="Profil Picture" class="profile-picture">
+            <img src=@((Model.ProfileImage != null ? $"/img/userPhotos/{@Model.Username}/{@Model.ProfileImage}" : "/img/defaultProfilePhoto.jpg")) alt="Profil Picture" class="profile-picture">
             <div class="profile-info mt-1">
                 <h2 class="d-flex align-items-center">@Model.Name @Model.Surname <span class="badge @(Model.IsSuspended ? "badge-danger" : "badge-primary")">@(Model.IsSuspended ? "Suspended" : "Active")</span></h2>
                 <p class="username">@Model.Username</p>
@@ -409,7 +409,7 @@ else if (TempData["Failed"] != null)
                 <div class="d-flex align-items-center justify-content-start">
                     <i class="fas fa-clock mb-1"></i>
                     <p>Last Login:</p>
-                    <p class=" ms-2" style="opacity:50%">@((Model.LastLoginDate != null) ? TimeDifference.TimeAgo(Model.LastLoginDate.Value) : "Bilinmiyor")</p>
+                    <p class=" ms-2" style="opacity:50%">@((Model.LastLoginDate != null) ? TimeDifference.TimeAgo(Model.LastLoginDate.Value) : "Unknown")</p>
                 </div>
                 <div class="d-flex">
 
