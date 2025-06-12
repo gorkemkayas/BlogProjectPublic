@@ -83,6 +83,28 @@ header {
     padding: 0.5rem 0;
 }
 
+.elegant {
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+.elegant-tag {
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.60rem;
+}
+.elegant-name {
+    font-weight: 200;
+    text-transform: uppercase;
+    font-size: 0.80rem;
+}
+.elegant-text {
+    font-weight: 200;
+    text-transform: uppercase;
+    
+}
+
+
     .nav-link-item:after {
         content: '';
         position: absolute;
@@ -244,6 +266,18 @@ footer {
 .ad-left {
     left: 0;
     border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.post-area {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 .ad-right {

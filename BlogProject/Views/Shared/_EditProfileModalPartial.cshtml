@@ -347,13 +347,13 @@
                                             <div class="py-1 d-flex flex-column  col-md-7">
                                                 <div class="d-flex justify-content-center">
                                                 <strong class="col-md-4 ps-2 align-content-center">Email Address:</strong>
-                                                <input asp-for="@Model.EmailAddress" id="emailInput" class="form-control ps-0 pe-5 me-2 custom-input col-md-7" value="@Model.EmailAddress">
+                                                <input asp-for="@Model.EmailAddress" id="emailInput" class="form-control custom-input" value="@Model.EmailAddress">
 
                                                 </div>
                                                 <div id="emailError" class="invalid-feedback" style="display: none;margin-inline-start:9rem;">The value you entered does not match the email format.</div>
                                             </div>
                                             <div class="py-1 d-flex align-items-center col-md-5">
-                                                <strong asp-for="@Model.PhoneNumber">Phone Number:</strong><input type="tel" class="form-control col-md-6 ps-4 ms-3 custom-input" asp-for="@Model.PhoneNumber" placeholder="No Information" value="@Model.PhoneNumber">
+                                                <strong asp-for="@Model.PhoneNumber">Phone Number:</strong><input type="tel" class="form-control custom-input" asp-for="@Model.PhoneNumber" placeholder="No Information" value="@Model.PhoneNumber">
                                             </div>
                                         </div>
                                     </div>

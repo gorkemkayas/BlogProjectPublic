@@ -214,6 +214,14 @@ body {
         color: black !important;
     }
 
+.blacktogray {
+    color: black !important;
+    transition: color 0.3s ease-in;
+}
+
+    .blacktogray:hover {
+        color: #555555 !important;
+    }
 .graytored {
     color:darkgray !important;
     transition: color 0.1s ease-in;
