@@ -19,6 +19,7 @@ using NuGet.Common;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Security.Policy;
+using static BlogProject.Utilities.RoleService;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BlogProject.Services.Concrete
@@ -46,6 +47,47 @@ namespace BlogProject.Services.Concrete
             _commentService = commentService;
             _mapper = mapper;
         }
+        public async Task<ServiceResult<AppUser>> DeleteUserByTypeAsync(string id, DeleteType deleteType, string deleterId)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                var serviceResult = new ServiceResult<AppUser>()
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "UserNotFound", Description = "User not found." } }
+                };
+
+                return serviceResult;
+            }
+            var deleterUserId = deleterId;
+
+            var result = new IdentityResult();
+            switch (deleteType)
+            {
+                case DeleteType.Soft:
+                    user.IsDeleted = true;
+                    //user.DeletedById = deleterUserId;
+                    //user.DeletedDate = DateTime.Now;
+                    result = await _userManager.UpdateAsync(user);
+                    break;
+                case DeleteType.Hard:
+                    user.IsDeleted = true;
+                    user.DeletedBy = deleterUserId;
+                    result = await _userManager.DeleteAsync(user);
+                    break;
+            }
+            if (!result.Succeeded)
+            {
+                return new ServiceResult<AppUser>() { IsSuccess = false, Errors = new List<IdentityError>() { new IdentityError() { Code = "UserCannotDeleted", Description = "User cannot deleted." } } };
+            }
+            return new ServiceResult<AppUser>()
+            {
+                IsSuccess = true
+            };
+        }
+
 
         public bool CheckEmailConfirmed(AppUser user)
         {

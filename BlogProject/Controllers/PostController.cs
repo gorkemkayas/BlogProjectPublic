@@ -26,25 +26,27 @@ namespace BlogProject.Controllers
 
         public async Task<IActionResult> NewPost()
         {
-            ViewBag.AuthorName = User.Identity?.Name;
-            ViewBag.AuthorBio = "Yazar Hakkında Kısa Bilgi";
-
-            var availableCategories = await _context.Categories.ToListAsync();
-            var availableTags = await _context.Tags.ToListAsync();
-            var viewModel = new CreatePostViewModel
+            var model = new CreatePostViewModel
             {
-                AvailableCategories = availableCategories.Select(c => new SelectListItem
+                // Kategorileri veritabanından veya servisten doldurun
+                AvailableCategories = new List<SelectListItem>
                 {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList(),
-                AvailableTags = availableTags.Select(t => new SelectListItem
+                    new SelectListItem { Value = "1", Text = "Teknoloji" },
+                    new SelectListItem { Value = "2", Text = "Yazılım" },
+                    new SelectListItem { Value = "3", Text = "Tasarım" }
+                },
+
+                // Etiketleri veritabanından veya servisten doldurun
+                AvailableTags = new List<SelectListItem>
                 {
-                    Value = t.Id.ToString(),
-                    Text = t.Name
-                }).ToList()
+                    new SelectListItem { Value = "1", Text = "C#" },
+                    new SelectListItem { Value = "2", Text = "ASP.NET Core" },
+                    new SelectListItem { Value = "3", Text = "MVC" },
+                    new SelectListItem { Value = "4", Text = "Entity Framework" }
+                }
             };
-            return View(viewModel);
+
+            return View(model);
         }
     }
 }

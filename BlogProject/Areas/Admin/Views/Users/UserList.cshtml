@@ -25,70 +25,70 @@ else if (TempData["Failed"] != null)
 }
 
 @section Scripts {
-    <script>
-        showAlertSuccess('successAlert');
-        showAlertError('errorAlert');
+<script>
+    showAlertSuccess('successAlert');
+    showAlertError('errorAlert');
 
-                const suspendModal = document.getElementById('suspendModal');
+    const suspendModal = document.getElementById('suspendModal');
 
-        suspendModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const userId = button.getAttribute('data-user-id');
-            const username = button.getAttribute('data-username');
+    suspendModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const userId = button.getAttribute('data-user-id');
+    const username = button.getAttribute('data-username');
 
-            suspendModal.querySelector('#modalUserId').value = userId;
-            suspendModal.querySelector('#suspendUsername').textContent = username;
+    suspendModal.querySelector('#modalUserId').value = userId;
+    suspendModal.querySelector('#suspendUsername').textContent = username;
 
-            // Reset select boxes
-            document.getElementById('ReasonCategory').selectedIndex = 0;
-            document.getElementById('ReasonDetail').innerHTML = '<option value="" disabled selected>Select a detailed reason</option>';
-        });
+    // Reset select boxes
+    document.getElementById('ReasonCategory').selectedIndex = 0;
+    document.getElementById('ReasonDetail').innerHTML = '<option value="" disabled selected>Select a detailed reason</option>';
+    });
 
-        // Reason data
-        const reasonMap = {
-            Spam: [
-                "Repeated unsolicited messages",
-                "Promotional content",
-                "Mass friend requests"
-            ],
-            Harassment: [
-                "Offensive language",
-                "Threatening messages",
-                "Discriminatory behavior"
-            ],
-            Fake: [
-                "Impersonating someone",
-                "Fake profile photo or info",
-                "Bot-like activity"
-            ],
-            Violation: [
-                "Sharing illegal content",
-                "Circumventing moderation",
-                "Multiple account abuse"
-            ],
-            Remove: [
-                "Remove Current Suspension"
-            ]
-        };
+    // Reason data
+    const reasonMap = {
+    Spam: [
+    "Repeated unsolicited messages",
+    "Promotional content",
+    "Mass friend requests"
+    ],
+    Harassment: [
+    "Offensive language",
+    "Threatening messages",
+    "Discriminatory behavior"
+    ],
+    Fake: [
+    "Impersonating someone",
+    "Fake profile photo or info",
+    "Bot-like activity"
+    ],
+    Violation: [
+    "Sharing illegal content",
+    "Circumventing moderation",
+    "Multiple account abuse"
+    ],
+    Remove: [
+    "Remove Current Suspension"
+    ]
+    };
 
-        // Dynamic population of detailed reasons
-        const categorySelect = document.getElementById("ReasonCategory");
-        const detailSelect = document.getElementById("ReasonDetail");
+    // Dynamic population of detailed reasons
+    const categorySelect = document.getElementById("ReasonCategory");
+    const detailSelect = document.getElementById("ReasonDetail");
 
-        categorySelect.addEventListener("change", function () {
-            const selectedCategory = this.value;
-            const options = reasonMap[selectedCategory] || [];
+    categorySelect.addEventListener("change", function () {
+    const selectedCategory = this.value;
+    const options = reasonMap[selectedCategory] || [];
 
-            detailSelect.innerHTML = '<option value="" disabled selected>Select a detailed reason</option>';
+    detailSelect.innerHTML = '<option value="" disabled selected>Select a detailed reason</option>';
 
-            options.forEach(reason => {
-                const option = document.createElement("option");
-                option.value = reason;
-                option.textContent = reason;
-                detailSelect.appendChild(option);
-            });
-        });
-    </script>
+    options.forEach(reason => {
+    const option = document.createElement("option");
+    option.value = reason;
+    option.textContent = reason;
+    detailSelect.appendChild(option);
+    });
+    });
+</script>
 }
 <div class="mb-4">
     <div class="d-flex align-items-center mb-2">
@@ -105,15 +105,15 @@ else if (TempData["Failed"] != null)
 <div class="d-flex justify-content-end mb-3">
     <form asp-action="UserList" method="get" class="d-flex align-items-center gap-2">
         <div class="form-check form-switch d-flex align-content-center gap-2"
-             data-bs-toggle="tooltip" data-bs-placement="top" title="Include deleted roles?">
+        data-bs-toggle="tooltip" data-bs-placement="top" title="Include deleted roles?">
             <input class="form-check-input" type="checkbox"
-                   name="includeDeleted"
-                   value="true"
-                   id="includeDeletedSwitch"
+            name="includeDeleted"
+            value="true"
+            id="includeDeletedSwitch"
             @(Model.IncludeDeleted ? "checked" : "")
-                   onchange="this.form.submit(); toggleEyeIconAndText(this);" />
+            onchange="this.form.submit(); toggleEyeIconAndText(this);" />
             <label class="form-check-label fw-semibold small text-secondary d-flex align-items-center"
-                   for="includeDeletedSwitch">
+            for="includeDeletedSwitch">
                 <i id="eyeIcon" class="bi text-gradient @(Model.IncludeDeleted ? "bi-eye" :"bi-eye-slash-fill") me-2 transition"></i>
                 <span id="eyeLabelText" class="text-gradient">
                     @(Model.IncludeDeleted ? "Remove deleted ones." : "Include deleted ones.")
@@ -178,8 +178,8 @@ else if (TempData["Failed"] != null)
                                 <!-- User ID -->
                                 <div class="d-flex align-items-center gap-2 mt-1">
                                     <span class="badge text-gradient bg-opacity-10 text-dark font-monospace ps-0 fs-8"
-                                          data-bs-toggle="tooltip"
-                                          title="User ID: @user.Id">
+                                    data-bs-toggle="tooltip"
+                                    title="User ID: @user.Id">
                                         ID: @user.Id
                                     </span>
                                 </div>
@@ -223,11 +223,11 @@ else if (TempData["Failed"] != null)
                     <td>
                         <div class="d-flex gap-2">
                             <i class="bi bi-envelope @(user.EmailConfirmed ? "text-success" : "text-danger")"
-                               data-bs-toggle="tooltip"
-                               title="@(user.EmailConfirmed ? "Email verified" : "Email not verified")"></i>
+                            data-bs-toggle="tooltip"
+                            title="@(user.EmailConfirmed ? "Email verified" : "Email not verified")"></i>
                             <i class="bi bi-shield @(user.TwoFactorEnabled ? "text-success" : "text-danger")"
-                               data-bs-toggle="tooltip"
-                               title="@(user.TwoFactorEnabled ? "2FA enabled" : "2FA disabled")"></i>
+                            data-bs-toggle="tooltip"
+                            title="@(user.TwoFactorEnabled ? "2FA enabled" : "2FA disabled")"></i>
                         </div>
                     </td>
 
@@ -236,9 +236,17 @@ else if (TempData["Failed"] != null)
                         @if (user.IsSuspended)
                         {
                             <span class="badge bg-warning bg-opacity-25 text-warning"
+                            data-bs-toggle="tooltip"
+                            title="Suspended until @user.SuspendedTo">
+                                <i class="bi bi-slash-circle me-1"></i>Suspended
+                            </span>
+                        }
+                        else if(user.IsDeleted)
+                        {
+                            <span class="badge bg-danger bg-opacity-50 text-white"
                                   data-bs-toggle="tooltip"
                                   title="Suspended until @user.SuspendedTo">
-                                <i class="bi bi-slash-circle me-1"></i>Suspended
+                                <i class="bi bi-slash-circle me-1"></i>Archived
                             </span>
                         }
                         else
@@ -253,42 +261,42 @@ else if (TempData["Failed"] != null)
                     <td class="text-center">
                         <div class="dropdown">
                             <button class="btn btn-sm btn-light rounded-pill px-3"
-                                    type="button"
-                                    data-bs-toggle="dropdown">
+                            type="button"
+                            data-bs-toggle="dropdown">
                                 <i class="bi bi-gear"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <button class="dropdown-item"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#suspendModal"
-                                            data-user-id="@user.Id"
-                                            data-username="@user.Username">
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#suspendModal"
+                                    data-user-id="@user.Id"
+                                    data-username="@user.Username">
                                         <i class="bi bi-pause-circle me-2"></i>Suspend
                                     </button>
                                 </li>
                                 <li>
                                     <a class="dropdown-item"
-                                       asp-area=""
-                                       asp-controller="User"
-                                       asp-action="Profile"
-                                       asp-route-userName="@user.Username">
+                                    asp-area=""
+                                    asp-controller="User"
+                                    asp-action="Profile"
+                                    asp-route-userName="@user.Username">
                                         <i class="bi bi-eye me-2"></i>View Profile
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item"
-                                       asp-area="Admin"
-                                       asp-controller="Roles"
-                                       asp-action="RoleAssign"
-                                       asp-route-userName="@user.Username">
+                                    asp-area="Admin"
+                                    asp-controller="Roles"
+                                    asp-action="RoleAssign"
+                                    asp-route-userName="@user.Username">
                                         <i class="bi bi-person-lines-fill me-2"></i>Assign/View Roles
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <button class="dropdown-item text-danger"
-                                            data-role-id="@user.Id"
+                                    <button class="dropdown-item text-danger delete-button"
+                                            data-user-id="@user.Id"
                                             data-bs-toggle="modal"
                                             data-bs-target="#confirmDeleteModal">
                                         <i class="bi bi-archive me-2"></i>Archive
@@ -397,38 +405,39 @@ else if (TempData["Failed"] != null)
 @await Html.PartialAsync("_Pagination", Model)
 
 <script>
-    let selectedRoleId = null;
+    document.addEventListener('DOMContentLoaded', function () {
+        let selectedUserId = null;
 
-    // Sil butonuna basıldığında role ID'yi al
-    document.querySelectorAll('.delete-button').forEach(button => {
-        button.addEventListener('click', function () {
-            selectedRoleId = this.getAttribute('data-role-id');
+        // Sil butonuna basıldığında user ID'yi al
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function () {
+                selectedUserId = this.getAttribute('data-user-id');
+                console.log("Seçilen ID:", selectedUserId);
+            });
         });
-    });
 
-    // Evet'e basıldığında silme isteği gönder
-    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-        // Modal'ı hemen kapat
-        const modalEl = document.getElementById('confirmDeleteModal');
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        modalInstance?.hide();
+        // Evet'e basıldığında silme isteği gönder
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+            // Modal'ı kapat
+            const modalEl = document.getElementById('confirmDeleteModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance?.hide();
 
-        // Silme isteğini gönder
-        fetch(`/Roles/RoleDelete/${selectedRoleId}`, {
-            method: 'POST'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status) {
-                // Başarılıysa yönlendir
-                window.location.href = data.redirectUrl; // Yönlendirme URL'si alınır ve sayfa yönlendirilir
-            } else {
-                // Hata durumunda, tekrar yönlendirme yapılır (gereksizse bu kısmı kaldırabilirsiniz)
-                window.location.href = data.redirectUrl;
-            }
-        })
-        .catch(err => {
-            console.error("Silme sırasında hata oluştu:", err);
+            // Silme isteğini gönder
+            fetch(`/Users/UserDelete/${selectedUserId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    window.location.href = data.redirectUrl;
+                }
+            })
+            .catch(err => {
+                console.error("Silme sırasında hata oluştu:", err);
+            });
         });
     });
 

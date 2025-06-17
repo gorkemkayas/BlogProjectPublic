@@ -1,602 +1,760 @@
-﻿@{
-    Layout = "_Layout";
-}
-
-@model CreatePostViewModel
-
-@{
-    ViewData["Title"] = "Yeni Gönderi Oluştur";
-}
-
-<style>
-    :root {
-        --primary-bg: #ffffff;
-        --secondary-bg: #f8f9fa;
-        --border-color: #e0e0e0;
-        --text-primary: #212529;
-        --text-secondary: #6c757d;
-        --hover-color: #f1f1f1;
-        --focus-shadow: 0 0 0 0.25rem rgba(130, 130, 130, 0.25);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    body {
-        background-color: var(--secondary-bg);
-        color: var(--text-primary);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    }
-
-    .container-fluid {
-        max-width: 1400px;
-        padding: 0 2rem;
-    }
-
-    .editor-container {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 340px;
-        gap: 2rem;
-    }
-
-    .main-content {
-        background: var(--primary-bg);
-        border-radius: 12px;
-        box-shadow: var(--shadow-md);
-        padding: 2rem;
-    }
-
-    .sidebar {
-        position: sticky;
-        top: 1rem;
-        height: fit-content;
-    }
-
-    .form-control, .form-select {
-        background-color: var(--primary-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-        .form-control:focus, .form-select:focus {
-            border-color: #999;
-            box-shadow: var(--focus-shadow);
+﻿<div style="position: relative;">
+    <div style="
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+  
+">
+        <!-- Bu div layoutun container genişliğini aşar -->
+        @{
+            Layout = "_Layout";
         }
 
-    .form-control-lg {
-        font-size: 1.5rem;
-        font-weight: 600;
-        padding: 1rem 1.25rem;
-    }
+        @model CreatePostViewModel
 
-    .card {
-        background-color: var(--primary-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        box-shadow: var(--shadow-md);
-        margin-bottom: 1.5rem;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+        @{
+            ViewData["Title"] = "Publish new post";
         }
 
-    .card-body {
-        padding: 1.5rem;
-    }
-
-    .card-title {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .btn-primary {
-        background-color: var(--text-primary);
-        border: none;
-        border-radius: 8px;
-        padding: 1rem 2rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-transform: uppercase;
-        font-size: 0.875rem;
-    }
-
-        .btn-primary:hover {
-            background-color: #000;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-    .form-check-input:checked {
-        background-color: var(--text-primary);
-        border-color: var(--text-primary);
-    }
-
-    .form-switch .form-check-input {
-        width: 3em;
-        height: 1.5em;
-    }
-
-    .img-preview {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        margin-top: 1rem;
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
-    }
-
-    .ck.ck-editor {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: var(--shadow-md);
-    }
-
-    .ck.ck-editor__main > .ck-editor__editable {
-        min-height: 500px;
-        background: var(--primary-bg);
-        color: var(--text-primary);
-        padding: 1.5rem;
-        font-size: 1.1rem;
-        line-height: 1.8;
-    }
-
-    .ck.ck-toolbar {
-        background: var(--secondary-bg);
-        border-bottom: 1px solid var(--border-color);
-        padding: 0.5rem;
-    }
-
-    .ck.ck-button {
-        border-radius: 6px !important;
-    }
-
-    h1 {
-        font-weight: 800;
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        padding-bottom: 1rem;
-        letter-spacing: -0.5px;
-    }
-
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 80px;
-            height: 4px;
-            background-color: var(--text-primary);
-            border-radius: 2px;
-        }
-
-    .editor-actions {
-        display: flex;
-        gap: 1rem;
-        margin-top: 2rem;
-    }
-
-    .image-upload-area {
-        border: 2px dashed var(--border-color);
-        border-radius: 12px;
-        padding: 2rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s;
-        margin-bottom: 1.5rem;
-    }
-
-        .image-upload-area:hover {
-            border-color: #999;
-            background-color: rgba(0,0,0,0.02);
-        }
-
-    .image-upload-icon {
-        font-size: 2.5rem;
-        color: var(--text-secondary);
-        margin-bottom: 1rem;
-    }
-
-    .select2-container--default .select2-selection--multiple {
-        background-color: var(--primary-bg);
-        border: 1px solid var(--border-color);
-        min-height: 42px;
-        border-radius: 8px;
-    }
-
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            border-radius: 6px;
-        }
-
-    .floating-toolbar {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        display: flex;
-        gap: 1rem;
-        z-index: 1000;
-    }
-
-    @@media (max-width: 992px) {
-        .editor-container {
-            grid-template-columns: 1fr;
-        }
-
-        .sidebar {
-            position: static;
-        }
-    }
-</style>
-
-<div class="container-fluid py-5">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <h1>@ViewData["Title"]</h1>
-        <a href="#" class="btn btn-outline-dark">Taslakları Görüntüle</a>
-    </div>
-
-    <div class="editor-container">
-        <div class="main-content">
-            <!-- Başlık -->
-            <div class="mb-5">
-                <label asp-for="Title" class="form-label fw-bold mb-2 d-block">Başlık</label>
-                <input asp-for="Title" class="form-control form-control-lg" placeholder="Dikkat çekici bir başlık girin" required />
-                <span asp-validation-for="Title" class="text-danger small d-block mt-2"></span>
-            </div>
-
-            <!-- Alt Başlık -->
-            <div class="mb-5">
-                <label asp-for="Subtitle" class="form-label fw-bold mb-2 d-block">Alt Başlık (Opsiyonel)</label>
-                <input asp-for="Subtitle" class="form-control" placeholder="İsteğe bağlı alt başlık" />
-                <span asp-validation-for="Subtitle" class="text-danger small d-block mt-2"></span>
-            </div>
-
-            <!-- Ana İçerik -->
-            <div class="mb-4">
-                <label asp-for="Content" class="form-label fw-bold mb-2 d-block">İçerik</label>
-                <div class="mb-3">
-                    <textarea asp-for="Content" class="form-control" id="contentEditor" rows="10" required></textarea>
-                    <span asp-validation-for="Content" class="text-danger small d-block mt-2"></span>
-                </div>
-            </div>
-
-            <!-- Alt İçerik -->
-            <div class="mb-5">
-                <label asp-for="SubContent" class="form-label fw-bold mb-2 d-block">Özet İçerik (Opsiyonel)</label>
-                <textarea asp-for="SubContent" class="form-control" id="subContentEditor" rows="5"></textarea>
-                <span asp-validation-for="SubContent" class="text-danger small d-block mt-2"></span>
-            </div>
-        </div>
-
-        <div class="sidebar">
-            <!-- Kapak Resmi -->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Kapak Resmi</h5>
-                    <label for="coverImageInput" class="image-upload-area">
-                        <div class="image-upload-icon">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                        </div>
-                        <h6>Resmi sürükleyip bırakın veya tıklayarak seçin</h6>
-                        <p class="text-muted small">Önerilen boyut: 1200x630px</p>
-                    </label>
-                    <input asp-for="CoverImage" class="d-none" type="file" accept="image/*" id="coverImageInput">
-                    <div id="imagePreviewContainer">
-                        @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
-                        {
-                            <img src="@Model.CoverImageUrl" class="img-fluid rounded img-preview" alt="Kapak resmi" id="imagePreview">
-                        }
-                    </div>
-                    <span asp-validation-for="CoverImage" class="text-danger small d-block mt-2"></span>
-                </div>
-            </div>
-
-            <!-- Kategori -->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Kategori</h5>
-                    <select asp-for="CategoryId" asp-items="Model.AvailableCategories" class="form-select" required>
-                        <option value="">-- Kategori Seçin --</option>
-                    </select>
-                    <span asp-validation-for="CategoryId" class="text-danger small d-block mt-2"></span>
-                </div>
-            </div>
-
-            <!-- Etiketler -->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Etiketler</h5>
-                    <select asp-for="TagIds" asp-items="Model.AvailableTags" class="form-select" multiple id="tagSelect">
-                    </select>
-                    <small class="text-muted d-block mt-2">İlgili etiketleri seçin</small>
-                </div>
-            </div>
-
-            <!-- Taslak -->
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-check form-switch">
-                        <input asp-for="IsDraft" class="form-check-input" type="checkbox" id="draftSwitch">
-                        <label asp-for="IsDraft" class="form-check-label fw-bold"></label>
-                    </div>
-                    <small class="text-muted d-block mt-2">Taslak olarak kaydedilen gönderiler yayınlanmaz</small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="floating-toolbar">
-        <button type="button" class="btn btn-dark btn-lg rounded-circle shadow-lg" id="addImageBtn" data-bs-toggle="tooltip" data-bs-placement="left" title="Resim Ekle">
-            <i class="fas fa-image"></i>
-        </button>
-        <button type="button" class="btn btn-dark btn-lg rounded-circle shadow-lg" id="previewBtn" data-bs-toggle="tooltip" data-bs-placement="left" title="Önizleme">
-            <i class="fas fa-eye"></i>
-        </button>
-        <button type="submit" class="btn btn-primary btn-lg shadow-lg px-4" id="submitBtn">
-            @(Model.IsDraft ? "Taslak Kaydet" : "Yayınla")
-        </button>
-    </div>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-
-    <!-- CKEditor 5 -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/super-build/ckeditor.js"></script>
-
-    <!-- Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <script>
-        // CKEditor 5 Superbuild Initialization
-        CKEDITOR.ClassicEditor.create(document.getElementById("contentEditor"), {
-            toolbar: {
-                items: [
-                    'heading', '|',
-                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                    'bulletedList', 'numberedList', 'todoList', '|',
-                    'outdent', 'indent', '|',
-                    'undo', 'redo',
-                    '-',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-                    'alignment', '|',
-                    'link', 'uploadImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                    'textPartLanguage', '|',
-                    'sourceEditing'
-                ],
-                shouldNotGroupWhenFull: true
-            },
-            list: {
-                properties: {
-                    styles: true,
-                    startIndex: true,
-                    reversed: true
-                }
-            },
-            heading: {
-                options: [
-                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-                    { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
-                    { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
-                    { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
-                ]
-            },
-            fontSize: {
-                options: [10, 12, 14, 'default', 18, 20, 22],
-                supportAllValues: true
-            },
-            htmlSupport: {
-                allow: [
-                    {
-                        name: /.*/,
-                        attributes: true,
-                        classes: true,
-                        styles: true
-                    }
-                ]
-            },
-            htmlEmbed: {
-                showPreviews: true
-            },
-            link: {
-                decorators: {
-                    addTargetToExternalLinks: true,
-                    defaultProtocol: 'https://',
-                    toggleDownloadable: {
-                        mode: 'manual',
-                        label: 'Downloadable',
-                        attributes: {
-                            download: 'file'
-                        }
-                    }
-                }
-            },
-            mention: {
-                feeds: [
-                    {
-                        marker: '@@',
-                        feed: [
-                            '@@apple', '@@bears', '@@brownie', '@@cake', '@@cake', '@@candy', '@@canes', '@@chocolate', '@@cookie', '@@cotton', '@@cream',
-                            '@@cupcake', '@@danish', '@@donut', '@@dragée', '@@fruitcake', '@@gingerbread', '@@gummi', '@@ice', '@@jelly-o',
-                            '@@liquorice', '@@macaroon', '@@marzipan', '@@oat', '@@pie', '@@plum', '@@pudding', '@@sesame', '@@snaps', '@@soufflé',
-                            '@@sugar', '@@sweet', '@@topping', '@@wafer'
-                        ],
-                        minimumCharacters: 1
-                    }
-                ]
-            },
-            removePlugins: [
-                'CKBox',
-                'CKFinder',
-                'EasyImage',
-                'RealTimeCollaborativeComments',
-                'RealTimeCollaborativeTrackChanges',
-                'RealTimeCollaborativeRevisionHistory',
-                'PresenceList',
-                'Comments',
-                'TrackChanges',
-                'TrackChangesData',
-                'RevisionHistory',
-                'Pagination',
-                'WProofreader',
-                'MathType'
-            ]
-        }).then(editor => {
-            window.contentEditor = editor;
-        }).catch(error => {
-            console.error(error);
-        });
-
-        // Sub Content Editor
-        CKEDITOR.ClassicEditor.create(document.getElementById("subContentEditor"), {
-            toolbar: {
-                items: [
-                    'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
-                    'undo', 'redo'
-                ]
+        <style>
+            :root {
+                --primary-bg: #ffffff;
+                --secondary-bg: #f8f9fa;
+                --border-color: #e0e0e0;
+                --text-primary: #212529;
+                --text-secondary: #6c757d;
+                --hover-color: #f1f1f1;
+                --focus-shadow: 0 0 0 0.25rem rgba(130, 130, 130, 0.25);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             }
-        }).then(editor => {
-            window.subContentEditor = editor;
-        }).catch(error => {
-            console.error(error);
-        });
 
-        // Select2 Initialization
-        $(document).ready(function() {
-            $('#tagSelect').select2({
-                placeholder: "Etiket seçin",
-                allowClear: true,
-                width: '100%',
-                closeOnSelect: false
-            });
+            body {
+                background-color: var(--secondary-bg);
+                color: var(--text-primary);
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            }
 
-            // Tooltip initialization
-            $('[data-bs-toggle="tooltip"]').tooltip();
-        });
+            .full-width-container {
+                width: 100%;
+                padding: 0 2rem;
+                margin: 0;
+                max-width: none;
+            }
 
-        // Cover Image Preview
-        document.getElementById('coverImageInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    let previewContainer = document.getElementById('imagePreviewContainer');
-                    previewContainer.innerHTML = `
-                        <img src="${e.target.result}" class="img-fluid rounded img-preview" alt="Kapak resmi önizleme" id="imagePreview">
-                        <div class="d-flex justify-content-between mt-2">
-                            <small class="text-muted">${file.name}</small>
-                            <button type="button" class="btn btn-sm btn-outline-danger" id="removeImageBtn">Kaldır</button>
+            .editor-container {
+                display: grid;
+                grid-template-columns: 280px minmax(0, 1fr) 340px;
+                gap: 2rem;
+                align-items: start;
+            }
+
+            .left-sidebar {
+                position: sticky;
+                top: 1rem;
+                height: fit-content;
+            }
+
+            .main-content {
+                background: var(--primary-bg);
+                border-radius: 12px;
+                box-shadow: var(--shadow-md);
+                padding: 2rem;
+                min-height: 80vh;
+            }
+
+            .right-sidebar {
+                position: sticky;
+                top: 1rem;
+                height: fit-content;
+            }
+
+            .form-control, .form-select {
+                background-color: var(--primary-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 0.75rem 1rem;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+                .form-control:focus, .form-select:focus {
+                    border-color: #999;
+                    box-shadow: var(--focus-shadow);
+                }
+
+            .form-control-lg {
+                font-size: 1.5rem;
+                font-weight: 600;
+                padding: 1rem 1.25rem;
+            }
+
+            .card {
+                background-color: var(--primary-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                box-shadow: var(--shadow-md);
+                margin-bottom: 1.5rem;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+                .card:hover {
+                    transform: translateY(-2px);
+                    box-shadow: var(--shadow-lg);
+                }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .card-title {
+                font-size: 0.95rem;
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-bottom: 1rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .btn-primary {
+                background-color: var(--text-primary);
+                border: none;
+                border-radius: 8px;
+                padding: 1rem 2rem;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                text-transform: uppercase;
+                font-size: 0.875rem;
+            }
+
+                .btn-primary:hover {
+                    background-color: #000;
+                    transform: translateY(-2px);
+                    box-shadow: var(--shadow-lg);
+                }
+
+            .form-check-input:checked {
+                background-color: var(--text-primary);
+                border-color: var(--text-primary);
+            }
+
+            .form-switch .form-check-input {
+                width: 3em;
+                height: 1.5em;
+            }
+
+            .img-preview {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                margin-top: 1rem;
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+            }
+
+            .ck.ck-editor {
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: var(--shadow-md);
+            }
+
+            .ck.ck-editor__main > .ck-editor__editable {
+                min-height: 500px;
+                background: var(--primary-bg);
+                color: var(--text-primary);
+                padding: 1.5rem;
+                font-size: 1.1rem;
+                line-height: 1.8;
+            }
+
+            .ck.ck-toolbar {
+                background: var(--secondary-bg);
+                border-bottom: 1px solid var(--border-color);
+                padding: 0.5rem;
+            }
+
+            .ck.ck-button {
+                border-radius: 6px !important;
+            }
+
+            h1 {
+                font-weight: 800;
+                font-size: 2.5rem;
+                margin-bottom: 2rem;
+                position: relative;
+                padding-bottom: 1rem;
+                letter-spacing: -0.5px;
+                text-align: center;
+            }
+
+                h1::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 80px;
+                    height: 4px;
+                    background-color: var(--text-primary);
+                    border-radius: 2px;
+                }
+
+            .editor-actions {
+                display: flex;
+                gap: 1rem;
+                margin-top: 2rem;
+                justify-content: center;
+            }
+
+            .image-upload-area {
+                border: 2px dashed var(--border-color);
+                border-radius: 12px;
+                padding: 2rem;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                margin-bottom: 1.5rem;
+            }
+
+                .image-upload-area:hover {
+                    border-color: #999;
+                    background-color: rgba(0,0,0,0.02);
+                }
+
+            .image-upload-icon {
+                font-size: 2.5rem;
+                color: var(--text-secondary);
+                margin-bottom: 1rem;
+            }
+
+            .select2-container--default .select2-selection--multiple {
+                background-color: var(--primary-bg);
+                border: 1px solid var(--border-color);
+                min-height: 42px;
+                border-radius: 8px;
+            }
+
+                .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                    background-color: var(--secondary-bg);
+                    border: 1px solid var(--border-color);
+                    color: var(--text-primary);
+                    border-radius: 6px;
+                }
+
+            .floating-toolbar {
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                display: flex;
+                gap: 1rem;
+                z-index: 1000;
+            }
+
+            /* Sol sidebar için özel stiller */
+            .quick-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .quick-action-btn {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 0.75rem;
+                background: var(--primary-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                text-decoration: none;
+                color: var(--text-primary);
+                transition: all 0.2s;
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+
+                .quick-action-btn:hover {
+                    background: var(--secondary-bg);
+                    transform: translateY(-1px);
+                    box-shadow: var(--shadow-md);
+                    color: var(--text-primary);
+                }
+
+                .quick-action-btn i {
+                    font-size: 1.1rem;
+                    width: 20px;
+                    text-align: center;
+                }
+
+            @@media (max-width: 1200px) {
+                .editor-container
+
+            {
+                grid-template-columns: 1fr;
+            }
+
+            .left-sidebar, .right-sidebar {
+                position: static;
+            }
+
+            .left-sidebar {
+                order: 3;
+            }
+
+            .main-content {
+                order: 1;
+            }
+
+            .right-sidebar {
+                order: 2;
+            }
+
+            }
+
+            @@media (max-width: 768px) {
+                .full-width-container
+
+            {
+                padding: 0 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .floating-toolbar {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                justify-content: center;
+                margin-top: 2rem;
+            }
+
+            }
+        </style>
+
+        <div class="full-width-container py-5">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="w-100">@ViewData["Title"]</h1>
+            </div>
+
+            <div class="editor-container">
+                <!-- Sol Sidebar - Hızlı Eylemler -->
+                <div class="left-sidebar">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Quick Actions</h5>
+                            <div class="quick-actions">
+                                <a href="#" class="quick-action-btn">
+                                    <i class="fas fa-save"></i>
+                                    <span>Save Draft</span>
+                                </a>
+                                <a href="#" class="quick-action-btn">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Preview</span>
+                                </a>
+                                <a href="#" class="quick-action-btn">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>Drafts</span>
+                                </a>
+                                <a href="#" class="quick-action-btn">
+                                    <i class="fas fa-history"></i>
+                                    <span>History</span>
+                                </a>
+                                <a href="#" class="quick-action-btn">
+                                    <i class="fas fa-cog"></i>
+                                    <span>Settings</span>
+                                </a>
+                            </div>
                         </div>
-                    `;
+                    </div>
 
-                    document.getElementById('removeImageBtn').addEventListener('click', function() {
-                        document.getElementById('coverImageInput').value = '';
-                        previewContainer.innerHTML = `
+                    <!-- İstatistikler -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Statistics</h5>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="d-flex justify-between">
+                                    <small class="text-muted">Word Count:</small>
+                                    <small class="fw-bold" id="wordCount">0</small>
+                                </div>
+                                <div class="d-flex justify-between">
+                                    <small class="text-muted">Character count:</small>
+                                    <small class="fw-bold" id="charCount">0</small>
+                                </div>
+                                <div class="d-flex justify-between">
+                                    <small class="text-muted">Reading Time:</small>
+                                    <small class="fw-bold" id="readTime">0 mn</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ana İçerik - Ortada -->
+                <div class="main-content">
+                    <!-- Başlık -->
+                    <div class="mb-5">
+                        <label asp-for="Title" class="form-label fw-bold mb-2 d-block">Title</label>
+                        <input asp-for="Title" class="form-control form-control-lg" placeholder="Enter an eye-catching title" required />
+                        <span asp-validation-for="Title" class="text-danger small d-block mt-2"></span>
+                    </div>
+
+                    <!-- Alt Başlık -->
+                    <div class="mb-5">
+                        <label asp-for="Subtitle" class="form-label fw-bold mb-2 d-block">Subheading (Optional)</label>
+                        <input asp-for="Subtitle" class="form-control" placeholder="Optional subtitle" />
+                        <span asp-validation-for="Subtitle" class="text-danger small d-block mt-2"></span>
+                    </div>
+
+                    <!-- Ana İçerik -->
+                    <div class="mb-4">
+                        <label asp-for="Content" class="form-label fw-bold mb-2 d-block">Content</label>
+                        <div class="mb-3">
+                            <textarea asp-for="Content" class="form-control" id="contentEditor" rows="10" required></textarea>
+                            <span asp-validation-for="Content" class="text-danger small d-block mt-2"></span>
+                        </div>
+                    </div>
+
+                    <!-- Alt İçerik -->
+                    <div class="mb-5">
+                        <label asp-for="SubContent" class="form-label fw-bold mb-2 d-block">Summary Content (Optional)</label>
+                        <textarea asp-for="SubContent" class="form-control" id="subContentEditor" rows="5"></textarea>
+                        <span asp-validation-for="SubContent" class="text-danger small d-block mt-2"></span>
+                    </div>
+
+                    <!-- Eylem Butonları -->
+                    <div class="editor-actions">
+                        <button type="button" class="btn btn-outline-dark" id="previewBtn">
+                            <i class="fas fa-eye me-2"></i>Preview
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-paper-plane me-2"></i>@(Model.IsDraft ? "Save Draft" : "Publish")
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sağ Sidebar -->
+                <div class="right-sidebar">
+                    <!-- Kapak Resmi -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Cover Image</h5>
                             <label for="coverImageInput" class="image-upload-area">
                                 <div class="image-upload-icon">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                 </div>
-                                <h6>Resmi sürükleyip bırakın veya tıklayarak seçin</h6>
-                                <p class="text-muted small">Önerilen boyut: 1200x630px</p>
+                                <h6>Drag and drop the image or click to select it.</h6>
+                                <p class="text-muted small">Recommended size: 1200x630px</p>
                             </label>
-                        `;
-                    });
-                }
-                reader.readAsDataURL(file);
+                            <input asp-for="CoverImage" class="d-none" type="file" accept="image/*" id="coverImageInput">
+                            <div id="imagePreviewContainer">
+                                @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+                                {
+                                    <img src="@Model.CoverImageUrl" class="img-fluid rounded img-preview" alt="Kapak resmi" id="imagePreview">
+                                }
+                            </div>
+                            <span asp-validation-for="CoverImage" class="text-danger small d-block mt-2"></span>
+                        </div>
+                    </div>
+
+                    <!-- Kategori -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Category</h5>
+                            <select asp-for="CategoryId" asp-items="Model.AvailableCategories" class="form-select" required>
+                                <option value="">-- Select Category --</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger small d-block mt-2"></span>
+                        </div>
+                    </div>
+
+                    <!-- Etiketler -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Tags</h5>
+                            <select asp-for="TagIds" asp-items="Model.AvailableTags" class="form-select" multiple id="tagSelect">
+                            </select>
+                            <small class="text-muted d-block mt-2">Select relevant tags</small>
+                        </div>
+                    </div>
+
+                    <!-- Yayın Ayarları -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Publish Settings</h5>
+                            <div class="form-check form-switch mb-3 d-flex align-content-center">
+                                <input asp-for="IsDraft" class="form-check-input" type="checkbox" id="draftSwitch">
+                                <label asp-for="IsDraft" class="form-check-label fw-bold ms-2" style="margin-top:2px">Save as draft</label>
+                            </div>
+                            <small class="text-muted d-block">Posts saved as drafts will not be published.</small>
+
+                            <hr class="my-3">
+
+                            <div class="mb-3">
+                                <label class="form-label small text-muted">Publication Date</label>
+                                <input type="datetime-local" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="allowComments" checked>
+                                <label class="form-check-label small" for="allowComments">
+                                    Allow comments
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
             }
-        });
 
-        // Add Image Button for Content Editor
-        document.getElementById('addImageBtn').addEventListener('click', function() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.multiple = true;
-            input.click();
+            <!-- Font Awesome -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
-            input.onchange = function(e) {
-                Array.from(e.target.files).forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        window.contentEditor.execute('insertImage', {
-                            source: e.target.result,
-                            alt: file.name
-                        });
-                    }
-                    reader.readAsDataURL(file);
+            <!-- CKEditor 5 -->
+            <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/super-build/ckeditor.js"></script>
+
+            <!-- Select2 -->
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+            <script>
+                // CKEditor 5 Superbuild Initialization
+                CKEDITOR.ClassicEditor.create(document.getElementById("contentEditor"), {
+                    toolbar: {
+                        items: [
+                            'heading', '|',
+                            'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                            'bulletedList', 'numberedList', 'todoList', '|',
+                            'outdent', 'indent', '|',
+                            'undo', 'redo',
+                            '-',
+                            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                            'alignment', '|',
+                            'link', 'uploadImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                            'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                            'textPartLanguage', '|',
+                            'sourceEditing'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    },
+                    list: {
+                        properties: {
+                            styles: true,
+                            startIndex: true,
+                            reversed: true
+                        }
+                    },
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                            { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
+                            { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
+                            { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
+                        ]
+                    },
+                    fontSize: {
+                        options: [10, 12, 14, 'default', 18, 20, 22],
+                        supportAllValues: true
+                    },
+                    htmlSupport: {
+                        allow: [
+                            {
+                                name: /.*/,
+                                attributes: true,
+                                classes: true,
+                                styles: true
+                            }
+                        ]
+                    },
+                    htmlEmbed: {
+                        showPreviews: true
+                    },
+                    link: {
+                        decorators: {
+                            addTargetToExternalLinks: true,
+                            defaultProtocol: 'https://',
+                            toggleDownloadable: {
+                                mode: 'manual',
+                                label: 'Downloadable',
+                                attributes: {
+                                    download: 'file'
+                                }
+                            }
+                        }
+                    },
+                    mention: {
+                        feeds: [
+                            {
+                                marker: '@@',
+                                feed: [
+                                    '@@apple', '@@bears', '@@brownie', '@@cake', '@@cake', '@@candy', '@@canes', '@@chocolate', '@@cookie', '@@cotton', '@@cream',
+                                    '@@cupcake', '@@danish', '@@donut', '@@dragée', '@@fruitcake', '@@gingerbread', '@@gummi', '@@ice', '@@jelly-o',
+                                    '@@liquorice', '@@macaroon', '@@marzipan', '@@oat', '@@pie', '@@plum', '@@pudding', '@@sesame', '@@snaps', '@@soufflé',
+                                    '@@sugar', '@@sweet', '@@topping', '@@wafer'
+                                ],
+                                minimumCharacters: 1
+                            }
+                        ]
+                    },
+                    removePlugins: [
+                        'CKBox',
+                        'CKFinder',
+                        'EasyImage',
+                        'RealTimeCollaborativeComments',
+                        'RealTimeCollaborativeTrackChanges',
+                        'RealTimeCollaborativeRevisionHistory',
+                        'PresenceList',
+                        'Comments',
+                        'TrackChanges',
+                        'TrackChangesData',
+                        'RevisionHistory',
+                        'Pagination',
+                        'WProofreader',
+                        'MathType'
+                    ]
+                }).then(editor => {
+                    window.contentEditor = editor;
+
+                    // Kelime ve karakter sayacı
+                    editor.model.document.on('change:data', () => {
+                        updateWordCount();
+                    });
+                }).catch(error => {
+                    console.error(error);
                 });
-            };
-        });
 
-        // Draft Switch Text Update
-        document.getElementById('draftSwitch').addEventListener('change', function() {
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.textContent = this.checked ? 'Taslak Kaydet' : 'Yayınla';
-        });
+                // Sub Content Editor
+                CKEDITOR.ClassicEditor.create(document.getElementById("subContentEditor"), {
+                    toolbar: {
+                        items: [
+                            'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+                            'undo', 'redo'
+                        ]
+                    }
+                }).then(editor => {
+                    window.subContentEditor = editor;
+                }).catch(error => {
+                    console.error(error);
+                });
 
-        // Preview Button
-        document.getElementById('previewBtn').addEventListener('click', function() {
-            // Burada önizleme modal'ı açılabilir
-            alert('Önizleme özelliği aktif edilecek!');
-        });
+                // Select2 Initialization
+                $(document).ready(function() {
+                    $('#tagSelect').select2({
+                        placeholder: "Select a tag",
+                        allowClear: true,
+                        width: '100%',
+                        closeOnSelect: false
+                    });
 
-        // Drag and drop for cover image
-        const uploadArea = document.querySelector('.image-upload-area');
+                    // Tooltip initialization
+                    $('[data-bs-toggle="tooltip"]').tooltip();
+                });
 
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, preventDefaults, false);
-        });
+                // Kelime sayacı fonksiyonu
+                function updateWordCount() {
+                    if (window.contentEditor) {
+                        const data = window.contentEditor.getData();
+                        const text = data.replace(/<[^>]*>/g, '').trim();
+                        const words = text ? text.split(/\s+/).length : 0;
+                        const chars = text.length;
+                        const readTime = Math.ceil(words / 200); // Ortalama okuma hızı: 200 kelime/dakika
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
+                        document.getElementById('wordCount').textContent = words;
+                        document.getElementById('charCount').textContent = chars;
+                        document.getElementById('readTime').textContent = readTime + ' dk';
+                    }
+                }
+
+                // Cover Image Preview
+                document.getElementById('coverImageInput').addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            let previewContainer = document.getElementById('imagePreviewContainer');
+                            previewContainer.innerHTML = `
+                                <img src="${e.target.result}" class="img-fluid rounded img-preview" alt="Cover image preview" id="imagePreview">
+                                <div class="d-flex justify-content-between mt-2">
+                                    <small class="text-muted">${file.name}</small>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" id="removeImageBtn">Remove</button>
+                                </div>
+                            `;
+
+                            document.getElementById('removeImageBtn').addEventListener('click', function() {
+                                document.getElementById('coverImageInput').value = '';
+                                previewContainer.innerHTML = '';
+                            });
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Draft Switch Text Update
+                document.getElementById('draftSwitch').addEventListener('change', function() {
+                    const submitBtn = document.getElementById('submitBtn');
+                    const icon = submitBtn.querySelector('i');
+                    if (this.checked) {
+                        submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Save Draft';
+                    } else {
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Publish';
+                    }
+                });
+
+                // Preview Button
+                document.getElementById('previewBtn').addEventListener('click', function() {
+                    // Burada önizleme modal'ı açılabilir
+                    alert('The preview feature will be activated!');
+                });
+
+                // Drag and drop for cover image
+                const uploadArea = document.querySelector('.image-upload-area');
+
+                if (uploadArea) {
+                    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                        uploadArea.addEventListener(eventName, preventDefaults, false);
+                    });
+
+                    function preventDefaults(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+
+                    ['dragenter', 'dragover'].forEach(eventName => {
+                        uploadArea.addEventListener(eventName, highlight, false);
+                    });
+
+                    ['dragleave', 'drop'].forEach(eventName => {
+                        uploadArea.addEventListener(eventName, unhighlight, false);
+                    });
+
+                    function highlight() {
+                        uploadArea.classList.add('bg-light');
+                    }
+
+                    function unhighlight() {
+                        uploadArea.classList.remove('bg-light');
+                    }
+
+                    uploadArea.addEventListener('drop', handleDrop, false);
+
+                    function handleDrop(e) {
+                        const dt = e.dataTransfer;
+                        const files = dt.files;
+                        document.getElementById('coverImageInput').files = files;
+                        const event = new Event('change');
+                        document.getElementById('coverImageInput').dispatchEvent(event);
+                    }
+                }
+            </script>
         }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, highlight, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, unhighlight, false);
-        });
-
-        function highlight() {
-            uploadArea.classList.add('bg-light');
-        }
-
-        function unhighlight() {
-            uploadArea.classList.remove('bg-light');
-        }
-
-        uploadArea.addEventListener('drop', handleDrop, false);
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            document.getElementById('coverImageInput').files = files;
-            const event = new Event('change');
-            document.getElementById('coverImageInput').dispatchEvent(event);
-        }
-    </script>
-}
+    </div>
+</div>

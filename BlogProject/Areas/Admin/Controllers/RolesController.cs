@@ -17,6 +17,7 @@ namespace BlogProject.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
     [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
+    [IgnoreAntiforgeryToken]
     public class RolesController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -197,7 +198,7 @@ namespace BlogProject.Areas.Admin.Controllers
             return RedirectToAction("RoleAssign", new { userName = user.UserName });
         }
 
-        [HttpPost]
+        [HttpPost]  
         [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleRemoveFromUser(string userName, string roleId, bool fromRoleUsers = false)
         {

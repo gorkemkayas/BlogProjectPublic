@@ -1,12 +1,15 @@
 ﻿using BlogProject.Areas.Admin.Models;
 using BlogProject.Services.Abstract;
+using BlogProject.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BlogProject.Areas.Admin.Controllers
 {
     [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
     [Area("Admin")]
+    [IgnoreAntiforgeryToken]
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
@@ -48,6 +51,26 @@ namespace BlogProject.Areas.Admin.Controllers
             }
 
             return RedirectToAction("UserList", "Users");
+        }
+
+        [HttpPost("Users/UserDelete/{id}")]
+        public async Task<IActionResult> UserDelete(string id)
+        {
+            var deleterUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(deleterUserId))
+            {
+                TempData["Failed"] = "Invalid user ID!";
+                return RedirectToAction("UserList", "Users");
+            }
+            var result = await _userService.DeleteUserByTypeAsync(id,RoleService.DeleteType.Soft, deleterUserId);
+
+            if (!result.IsSuccess)
+            {
+                TempData["Failed"] = "Invalid user ID!";
+                return Json(new { status = false, redirectUrl = Url.Action(nameof(UserList)) });
+            }
+            TempData["Succeed"] = "User deleted successfully!";
+            return Json(new { status = true, redirectUrl = Url.Action(nameof(UserList)) });
         }
     }
 }
