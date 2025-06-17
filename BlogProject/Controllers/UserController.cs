@@ -295,7 +295,7 @@ namespace BlogProject.Controllers
 
             return View(visitorProfileInfo);
         }
-
+      
         [HttpPost]
         public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
         {

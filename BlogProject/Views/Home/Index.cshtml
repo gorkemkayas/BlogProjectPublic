@@ -520,7 +520,7 @@
         <h2 class="section-title">Featured Articles</h2>
         <div class="post-grid">
             <!-- Post 1 -->
-            <article class="post-card">
+            <article class="post-card ">
                 <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Coding" class="post-img">
                 </div>
@@ -769,6 +769,483 @@
         </div>
     </div>
 
+    <!-- Compact Premium Authors -->
+    <section class="compact-authors">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Writers</h2>
+                <p class="section-subtitle">The minds behind our best content</p>
+            </div>
+
+            <div class="authors-grid">
+                <!-- Author 1 -->
+                <div class="author-card">
+                    <div class="author-img-container">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
+                             alt="Sarah Johnson" class="author-img">
+                    </div>
+                    <div class="author-info">
+                        <h3 class="author-name">Sarah Johnson</h3>
+                        <p class="author-expertise">Tech Writer</p>
+                        <div class="author-stats">
+                            <span class="stat">42 Articles</span>
+                            <span class="stat">28K Followers</span>
+                        </div>
+                    </div>
+                    <a href="#" class="author-view">View</a>
+                </div>
+
+                <!-- Author 2 -->
+                <div class="author-card">
+                    <div class="author-img-container">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
+                             alt="Michael Chen" class="author-img">
+                    </div>
+                    <div class="author-info">
+                        <h3 class="author-name">Michael Chen</h3>
+                        <p class="author-expertise">Design Director</p>
+                        <div class="author-stats">
+                            <span class="stat">36 Articles</span>
+                            <span class="stat">34K Followers</span>
+                        </div>
+                    </div>
+                    <a href="#" class="author-view">View</a>
+                </div>
+
+                <!-- Author 3 -->
+                <div class="author-card">
+                    <div class="author-img-container">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
+                             alt="David Rodriguez" class="author-img">
+                    </div>
+                    <div class="author-info">
+                        <h3 class="author-name">David Rodriguez</h3>
+                        <p class="author-expertise">Product Expert</p>
+                        <div class="author-stats">
+                            <span class="stat">58 Articles</span>
+                            <span class="stat">42K Followers</span>
+                        </div>
+                    </div>
+                    <a href="#" class="author-view">View</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Compact Premium Authors */
+        .compact-authors {
+            background-color: #fff;
+            padding: 2rem 0;
+            padding-top: 4rem;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: #888;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .author-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .author-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                border-color: #e0e0e0;
+            }
+
+        .author-img-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+            border: 3px solid #f5f5f5;
+            transition: all 0.3s ease;
+        }
+
+        .author-card:hover .author-img-container {
+            border-color: #e0e0e0;
+        }
+
+        .author-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .author-info {
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+        }
+
+        .author-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.3rem;
+        }
+
+        .author-expertise {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 1rem;
+        }
+
+        .author-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .stat {
+            position: relative;
+        }
+
+            .stat:not(:last-child):after {
+                content: "•";
+                position: absolute;
+                right: -0.8rem;
+                color: #ddd;
+            }
+
+        .author-view {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.8rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+            .author-view:hover {
+                background: #333;
+                transform: translateY(-2px);
+            }
+
+        @@media (max-width: 768px) {
+            .compact-authors
+
+        {
+            padding: 3rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .authors-grid {
+            grid-template-columns: 1fr;
+            max-width: 350px;
+        }
+
+        .author-card {
+            padding: 1.2rem;
+        }
+
+        }
+    </style>
+
+    <br />
+    <br />
+    <!-- Premium Most Read Posts -->
+    <section class="premium-most-read">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Most Read</h2>
+                <p class="section-subtitle">Trending articles this week</p>
+            </div>
+
+            <div class="posts-ranking">
+                <!-- Post 1 -->
+                <a href="#" class="post-item">
+                    <div class="post-rank-wrapper">
+                        <span class="post-rank">1</span>
+                        <div class="rank-underline"></div>
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title">The Future of Web Development in 2024</h3>
+                        <div class="post-meta">
+                            <span class="post-category">Technology</span>
+                            <span class="post-views">24K views</span>
+                        </div>
+                    </div>
+                    <div class="post-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <!-- Post 2 -->
+                <a href="#" class="post-item">
+                    <div class="post-rank-wrapper">
+                        <span class="post-rank">2</span>
+                        <div class="rank-underline"></div>
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title">Minimalist Design Principles for Modern Websites</h3>
+                        <div class="post-meta">
+                            <span class="post-category">Design</span>
+                            <span class="post-views">18K views</span>
+                        </div>
+                    </div>
+                    <div class="post-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <!-- Post 3 -->
+                <a href="#" class="post-item">
+                    <div class="post-rank-wrapper">
+                        <span class="post-rank">3</span>
+                        <div class="rank-underline"></div>
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title">How to Improve Your Productivity as a Developer</h3>
+                        <div class="post-meta">
+                            <span class="post-category">Productivity</span>
+                            <span class="post-views">15K views</span>
+                        </div>
+                    </div>
+                    <div class="post-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <!-- Post 4 -->
+                <a href="#" class="post-item">
+                    <div class="post-rank-wrapper">
+                        <span class="post-rank">4</span>
+                        <div class="rank-underline"></div>
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title">The Psychology Behind Effective UI/UX</h3>
+                        <div class="post-meta">
+                            <span class="post-category">Psychology</span>
+                            <span class="post-views">12K views</span>
+                        </div>
+                    </div>
+                    <div class="post-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Premium Most Read Posts */
+        .premium-most-read {
+            background-color: #fff;
+            padding: 4rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: #777;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .posts-ranking {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .post-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #f5f5f5;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+            .post-item:last-child {
+                border-bottom: none;
+            }
+
+            .post-item:hover {
+                background-color: #fafafa;
+                transform: translateX(5px);
+            }
+
+        .post-rank-wrapper {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .post-rank {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #000;
+            display: block;
+            text-align: center;
+            line-height: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .rank-underline {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: rgba(0, 0, 0, 0.08);
+            z-index: 0;
+            transition: all 0.3s ease;
+        }
+
+        .post-item:hover .rank-underline {
+            height: 12px;
+            background-color: rgba(0, 0, 0, 0.12);
+        }
+
+        .post-content {
+            flex-grow: 1;
+        }
+
+        .post-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            transition: color 0.3s;
+        }
+
+        .post-item:hover .post-title {
+            color: #333;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .post-category {
+            font-size: 0.75rem;
+            color: #fff;
+            background-color: #000;
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-views {
+            font-size: 0.8rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-arrow {
+            margin-left: 1rem;
+            color: #ccc;
+            transition: all 0.3s;
+        }
+
+        .post-item:hover .post-arrow {
+            color: #000;
+            transform: translateX(3px);
+        }
+
+        @@media (max-width: 768px) {
+            .premium-most-read
+
+        {
+            padding: 3rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .post-item {
+            padding: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .post-rank-wrapper {
+            margin-right: 1rem;
+        }
+
+        .post-content {
+            width: calc(100% - 60px);
+        }
+
+        .post-title {
+            font-size: 1rem;
+        }
+
+        .post-meta {
+            gap: 1rem;
+        }
+
+        }
+    </style>
 
     <script>
         // Basit dropdown fonksiyonu

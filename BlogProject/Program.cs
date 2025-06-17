@@ -18,7 +18,10 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(opt =>
+{
+    opt.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); // CSRF saldırılarına karşı koruma için ekledik.
+});
 
 // Service sınıflarından IUrlHelper ve IActionContextAccessor'ı kullanabilmek için ekledik.
 builder.Services.AddHttpContextAccessor();
