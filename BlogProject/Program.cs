@@ -88,7 +88,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // eğer http:local... li istek gelirse https:local... e yönlendirmesini söylüyoruz.
 app.UseStaticFiles();
 
 app.UseRouting();
