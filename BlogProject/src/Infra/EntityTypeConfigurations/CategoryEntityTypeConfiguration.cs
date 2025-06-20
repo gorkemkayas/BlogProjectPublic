@@ -15,7 +15,7 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
 
             // Description
             builder.Property(e => e.Description)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(500);
 
             // IsDraft

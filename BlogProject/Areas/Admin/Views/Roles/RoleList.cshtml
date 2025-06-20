@@ -152,11 +152,14 @@ else if (TempData["Failed"] != null)
                             }
                             else
                             {
-                                <a class="btn btn-sm disabled btn-light rounded-pill d-flex align-items-center px-3 border-0 shadow-sm"
-                                   asp-controller="Roles" asp-action="RoleEdit" asp-route-id="@role.Id">
-                                    <i class="bi bi-pencil me-2 text-primary"></i>Edit
-                                </a>
-                                <button class="btn btn-sm btn-outline-success d-flex align-items-center px-3 rounded-pill hover-shadow-sm ">
+                                    <a class="btn btn-sm disabled btn-light rounded-pill d-flex align-items-center px-3 border-0 shadow-sm"
+                                       asp-controller="Roles" asp-action="RoleEdit" asp-route-id="@role.Id">
+                                        <i class="bi bi-pencil me-2 text-primary"></i>Edit
+                                    </a>
+                                <button class="btn btn-sm btn-outline-success d-flex align-items-center px-3 rounded-pill hover-shadow-sm activate-button"
+                                            data-role-id="@role.Id"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#confirmActivateModal">
                                     <i class="bi bi-eye me-2"></i>Restore
                                 </button>
                                 <button class="btn disabled btn-sm btn-outline-dark d-flex align-items-center px-3 rounded-pill hover-shadow-sm">
@@ -190,6 +193,24 @@ else if (TempData["Failed"] != null)
     </div>
 </div>
 
+<div class="modal fade" id="confirmActivateModal" tabindex="-1" aria-labelledby="confirmActivateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmActivateModalLabel">Onayla</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                Bu etiketi aktif etmek istediğinize emin misiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" class="btn btn-success" id="confirmActivateBtn">Evet, Aktif et</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 @await Html.PartialAsync("_Pagination", Model)
@@ -203,6 +224,14 @@ else if (TempData["Failed"] != null)
             selectedRoleId = this.getAttribute('data-role-id');
         });
     });
+
+    // Aktif et butonuna basıldığında user ID'yi al
+        document.querySelectorAll('.activate-button').forEach(button => {
+            button.addEventListener('click', function () {
+                selectedRoleId = this.getAttribute('data-role-id');
+                console.log("Seçilen ID:", selectedRoleId);
+            });
+        });
 
     // Evet'e basıldığında silme isteği gönder
     document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
@@ -229,6 +258,29 @@ else if (TempData["Failed"] != null)
             console.error("Silme sırasında hata oluştu:", err);
         });
     });
+    // Evet'e basıldığında aktif etme isteği gönder
+        document.getElementById('confirmActivateBtn').addEventListener('click', function () {
+            // Modal'ı kapat
+            const modalEl = document.getElementById('confirmActivateModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance?.hide();
+            console.log("aktif etme isteğinin önünde suan.");
+            // Aktif etme isteğini gönder
+            fetch(`/Roles/RoleActivate/${selectedRoleId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    window.location.href = data.redirectUrl;
+                }
+            })
+            .catch(err => {
+                console.error("Aktif etme sırasında hata oluştu:", err);
+            });
+        });
 
     function toggleEyeIcon(checkbox) {
         const icon = document.getElementById("eyeIcon");

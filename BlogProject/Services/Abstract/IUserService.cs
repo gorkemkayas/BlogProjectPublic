@@ -41,5 +41,7 @@ namespace BlogProject.Services.Abstract
         Task<List<AppUser>> GetUsers();
 
         Task<ServiceResult<AppUser>> DeleteUserByTypeAsync(string id, DeleteType deleteType, string deleterUserId);
+
+        Task<ServiceResult<AppUser>> ActivateUserById(string userId);
     }
 }

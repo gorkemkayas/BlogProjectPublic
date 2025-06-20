@@ -244,8 +244,8 @@ else if (TempData["Failed"] != null)
                         else if(user.IsDeleted)
                         {
                             <span class="badge bg-danger bg-opacity-50 text-white"
-                                  data-bs-toggle="tooltip"
-                                  title="Suspended until @user.SuspendedTo">
+                            data-bs-toggle="tooltip"
+                            title="Suspended until @user.SuspendedTo">
                                 <i class="bi bi-slash-circle me-1"></i>Archived
                             </span>
                         }
@@ -294,14 +294,28 @@ else if (TempData["Failed"] != null)
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <button class="dropdown-item text-danger delete-button"
-                                            data-user-id="@user.Id"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#confirmDeleteModal">
-                                        <i class="bi bi-archive me-2"></i>Archive
-                                    </button>
-                                </li>
+                                @if (!user.IsDeleted)
+                                {
+                                    <li>
+                                        <button class="dropdown-item text-danger delete-button"
+                                        data-user-id="@user.Id"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmDeleteModal">
+                                            <i class="bi bi-archive me-2"></i>Archive
+                                        </button>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <button class="dropdown-item text-success activate-button"
+                                                data-user-id="@user.Id"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#confirmActivateModal">
+                                            <i class="bi bi-archive me-2"></i>Activate
+                                        </button>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     </td>
@@ -324,6 +338,24 @@ else if (TempData["Failed"] != null)
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
                 <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Evet, Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmActivateModal" tabindex="-1" aria-labelledby="confirmActivateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmActivateModalLabel">Onayla</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                Bu etiketi aktif etmek istediğinize emin misiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" class="btn btn-success" id="confirmActivateBtn">Evet, Aktif et</button>
             </div>
         </div>
     </div>
@@ -416,6 +448,14 @@ else if (TempData["Failed"] != null)
             });
         });
 
+        // Aktif et butonuna basıldığında user ID'yi al
+        document.querySelectorAll('.activate-button').forEach(button => {
+            button.addEventListener('click', function () {
+                selectedUserId = this.getAttribute('data-user-id');
+                console.log("Seçilen ID:", selectedUserId);
+            });
+        });
+
         // Evet'e basıldığında silme isteği gönder
         document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
             // Modal'ı kapat
@@ -437,6 +477,30 @@ else if (TempData["Failed"] != null)
             })
             .catch(err => {
                 console.error("Silme sırasında hata oluştu:", err);
+            });
+        });
+
+        // Evet'e basıldığında aktif etme isteği gönder
+        document.getElementById('confirmActivateBtn').addEventListener('click', function () {
+            // Modal'ı kapat
+            const modalEl = document.getElementById('confirmActivateModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance?.hide();
+            console.log("aktif etme isteğinin önünde suan.");
+            // Aktif etme isteğini gönder
+            fetch(`/Users/UserActivate/${selectedUserId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    window.location.href = data.redirectUrl;
+                }
+            })
+            .catch(err => {
+                console.error("Aktif etme sırasında hata oluştu:", err);
             });
         });
     });

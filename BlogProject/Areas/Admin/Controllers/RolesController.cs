@@ -127,6 +127,27 @@ namespace BlogProject.Areas.Admin.Controllers
             return Json(new { status = true, redirectUrl = Url.Action(nameof(RoleList)) });
         }
 
+        [HttpPost("Roles/RoleActivate/{id}")]
+        [Authorize(Roles = "Manager,Bölge Sorumlusu,Takım Lideri")]
+        public async Task<IActionResult> RoleActivate(string id)
+        {
+            var activatorUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(activatorUserId))
+            {
+                TempData["Failed"] = "Invalid user ID!";
+                return RedirectToAction(nameof(RoleList), "Role");
+            }
+            var result = await _roleService.ActivateRoleById(id);
+
+            if (!result.IsSuccess)
+            {
+                TempData["Failed"] = "An error occured while attemping activate role.";
+                return Json(new { status = false, redirectUrl = Url.Action(nameof(RoleList)) });
+            }
+            TempData["Succeed"] = "Role activated successfully!";
+            return Json(new { status = true, redirectUrl = Url.Action(nameof(RoleList)) });
+        }
+
         [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleAssign(string userName)
         {

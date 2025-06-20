@@ -503,6 +503,34 @@ namespace BlogProject.Services.Concrete
 
             return (false, errors);
         }
+
+        public async Task<ServiceResult<AppUser>> ActivateUserById(string userId)
+        {
+            var user = await _blogdbContext.Users.FindAsync(Guid.Parse(userId));
+            if (user == null)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "UserNotFound", Description = "User not found." } }
+                };
+            }
+            try
+            {
+                user.IsDeleted = false;
+                _blogdbContext.Users.Update(user);
+                await _blogdbContext.SaveChangesAsync();
+                return new ServiceResult<AppUser>() { IsSuccess = true, Data = user };
+            }
+            catch (Exception)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "ActivateUserError", Description = "An error occurred while activating the user." } }
+                };
+            }
+        }
     }
 
 }

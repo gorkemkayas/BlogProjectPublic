@@ -161,6 +161,7 @@ namespace BlogProject.Controllers
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                return View(request);
 
             }
 
