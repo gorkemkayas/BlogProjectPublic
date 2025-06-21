@@ -1,0 +1,329 @@
+﻿@using BlogProject.Areas.Admin.Models
+@using BlogProject.Utilities
+@using System.Security.Claims
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_AdminLayout";
+}
+
+@model ItemPagination<CategoryViewModel>
+
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+
+@section Scripts {
+<script>
+    showAlertSuccess('successAlert');
+    showAlertError('errorAlert');
+</script>
+}
+<div class="mb-4">
+    <div class="d-flex align-items-center mb-2">
+        <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+            <i class="fas fa-user-tie fs-2 text-primary"></i>
+        </div>
+        <div>
+            <h1 class="mb-0 fw-bold text-gradient text-start">Category Management</h1>
+            <p class="text-muted mb-0">Streamline permissions and access with our comprehensive user management system.</p>
+        </div>
+    </div>
+    <div class="border-bottom pb-3 mb-3"></div>
+</div>
+<div class="d-flex justify-content-end mb-3">
+    <form asp-action="CategoryList" method="get" class="d-flex align-items-center gap-2">
+        <div class="form-check form-switch d-flex align-content-center gap-2"
+        data-bs-toggle="tooltip" data-bs-placement="top" title="Include deleted roles?">
+            <input class="form-check-input" type="checkbox"
+            name="includeDeleted"
+            value="true"
+            id="includeDeletedSwitch"
+            @(Model.IncludeDeleted ? "checked" : "")
+            onchange="this.form.submit(); toggleEyeIconAndText(this);" />
+            <label class="form-check-label fw-semibold small text-secondary d-flex align-items-center"
+            for="includeDeletedSwitch">
+                <i id="eyeIcon" class="bi text-gradient @(Model.IncludeDeleted ? "bi-eye" :"bi-eye-slash-fill") me-2 transition"></i>
+                <span id="eyeLabelText" class="text-gradient">
+                    @(Model.IncludeDeleted ? "Remove deleted ones." : "Include deleted ones.")
+                </span>
+            </label>
+        </div>
+    </form>
+</div>
+
+
+
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="bg-dark bg-opacity-5">
+            <tr>
+                <th class="ps-4 text-uppercase fw-normal small">CategoryId</th>
+                <th class="text-uppercase fw-normal small d-none d-lg-table-cell">Name</th>
+                <th class="text-uppercase fw-normal small d-none d-md-table-cell">IsDeleted</th>
+                <th class="text-uppercase fw-normal small">Created Time</th>
+                <th class="text-uppercase fw-normal small">Created By</th>
+                <th class="text-uppercase fw-normal small">Edited Time</th>
+                <th class="text-uppercase fw-normal small">Edited By</th>
+                <th class="text-center text-uppercase fw-normal small">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = (Model.CurrentPage - 1) * Model.PageSize;
+            }
+            @foreach (var category in Model.Items)
+            {
+                i++;
+                <tr style="@(category.IsDeleted ? "opacity:40%" : "" )">
+                    <!-- User Column -->
+                    <!-- User Column -->
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <p>@category.Id</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <p>@category.Name</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <p>@category.IsDeleted</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <p>@category.CreatedDate</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            @if (category.CreatedBy is null)
+                            {
+                                <p class="small text-black-50">Not edited.</p>
+                            }
+                            else
+                            {
+                                @await Component.InvokeAsync("UserPicName", new { userId = category.CreatedBy, width = "36", height = "36" })
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            @if (category.EditedDate is null)
+                            {
+                                <p class="small text-black-50">Not edited.</p>
+                            }
+                            else
+                            {
+                                <p>@category.EditedDate</p>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            @if (category.EditedBy is null)
+                            {
+                                <p class="small text-black-50">Not edited.</p>
+                            }
+                            else
+                            {
+                                @await Component.InvokeAsync("UserPicName", new { userId = category.EditedBy, width = "36", height = "36" })
+                            }
+                        </div>
+                    </td>
+
+
+                    <!-- Actions Column -->
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light rounded-pill px-3"
+                            type="button"
+                            data-bs-toggle="dropdown">
+                                <i class="bi bi-gear"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item"
+                                    asp-area="Admin"
+                                    asp-controller="Category"
+                                    asp-action="CategoryUpdate"
+                                    asp-route-categoryId="@category.Id">
+                                        <i class="bi bi-eye me-2"></i>Update Category
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                @if(!category.IsDeleted)
+                                {
+                                    <li>
+                                        <button class="dropdown-item text-danger delete-button"
+                                        data-category-id="@category.Id"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmDeleteModal">
+                                            <i class="bi bi-archive me-2"></i>Archive
+                                        </button>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <button class="dropdown-item text-success activate-button" style="opacity:100%"
+                                                data-category-id="@category.Id"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#confirmActivateModal">
+                                            <i class="bi bi-archive me-2"></i> Activate
+                                        </button>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Onayla</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                Bu kategoriyi silmek istediğinize emin misiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Evet, Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmActivateModal" tabindex="-1" aria-labelledby="confirmActivateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmActivateModalLabel">Onayla</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                Bu kategoriyi aktif etmek istediğinize emin misiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" class="btn btn-success" id="confirmActivateBtn">Evet, Aktif et</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@await Html.PartialAsync("_Pagination", Model)
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let selectedCategoryId = null;
+
+        // Sil butonuna basıldığında user ID'yi al
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function () {
+                selectedCategoryId = this.getAttribute('data-category-id');
+                console.log("Seçilen ID:", selectedCategoryId);
+            });
+        });
+
+        // Aktif et butonuna basıldığında user ID'yi al
+        document.querySelectorAll('.activate-button').forEach(button => {
+            button.addEventListener('click', function () {
+                selectedCategoryId = this.getAttribute('data-category-id');
+                console.log("Seçilen ID:", selectedCategoryId);
+            });
+        });
+
+        // Evet'e basıldığında silme isteği gönder
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+            // Modal'ı kapat
+            const modalEl = document.getElementById('confirmDeleteModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance?.hide();
+            console.log("silme isteğinin önünde suan.");
+            // Silme isteğini gönder
+            fetch(`/Category/CategoryDelete/${selectedCategoryId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    window.location.href = data.redirectUrl;
+                }
+            })
+            .catch(err => {
+                console.error("Silme sırasında hata oluştu:", err);
+            });
+        });
+
+        // Evet'e basıldığında aktif etme isteği gönder
+        document.getElementById('confirmActivateBtn').addEventListener('click', function () {
+            // Modal'ı kapat
+            const modalEl = document.getElementById('confirmActivateModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance?.hide();
+            console.log("aktif etme isteğinin önünde suan.");
+            // Aktif etme isteğini gönder
+            fetch(`/Category/CategoryActivate/${selectedCategoryId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    window.location.href = data.redirectUrl;
+                }
+            })
+            .catch(err => {
+                console.error("Aktif etme sırasında hata oluştu:", err);
+            });
+        });
+    });
+
+    function toggleEyeIcon(checkbox) {
+        const icon = document.getElementById("eyeIcon");
+        if (checkbox.checked) {
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash-fill");
+        } else {
+            icon.classList.remove("bi-eye-slash-fill");
+            icon.classList.add("bi-eye");
+        }
+    }
+
+    // Sayfa yüklendiğinde tooltipleri aktive et
+    document.addEventListener("DOMContentLoaded", function () {
+        const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltips.map(el => new bootstrap.Tooltip(el));
+    });
+</script>
+
+
+

@@ -11,12 +11,10 @@ namespace BlogProject.Services.Abstract
         Task<ServiceResult<AppRole>> AddRoleAsync(AppRole role);
         Task<List<RoleViewModel>> GetAllRolesAsync();
         Task<ItemPagination<RoleViewModel>> GetPagedRolesAsync(int page = 1, int pageSize = 4, bool includeDeleted = false);
-
         Task<AppRole> GetRoleByIdAsync(string id);
         Task<ServiceResult<AppRole>> UpdateRoleAsync(RoleEditViewModel request);
-
         Task<ServiceResult<AppRole>> DeleteRoleByTypeAsync(string id, DeleteType deleteType, string deleterUserId);
-
         Task<RoleUsersViewModel> GetRolesWithUsers(string roleName);
+        Task<ServiceResult<AppRole>> ActivateRoleById(string roleId);
     }
 }

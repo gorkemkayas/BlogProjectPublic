@@ -70,7 +70,13 @@ namespace BlogProject.Controllers
             }
 
             returnUrl = returnUrl ?? Url.Action("Index", "Home");
+            
             TempData["Succeed"] = "You have logged in successfully.";
+
+            if (!Url.IsLocalUrl(returnUrl))
+            {
+                return RedirectToAction(nameof(Index), "Home");
+            }
 
             return Redirect(returnUrl!);
         }
@@ -155,6 +161,7 @@ namespace BlogProject.Controllers
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                return View(request);
 
             }
 
@@ -295,7 +302,7 @@ namespace BlogProject.Controllers
 
             return View(visitorProfileInfo);
         }
-
+      
         [HttpPost]
         public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
         {

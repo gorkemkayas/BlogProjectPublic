@@ -50,6 +50,8 @@ namespace BlogProject.Extensions
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ITagService, TagService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IUsernameGenerator, UsernameGenerator>();

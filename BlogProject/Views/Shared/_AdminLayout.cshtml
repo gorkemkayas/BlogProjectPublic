@@ -105,6 +105,60 @@
                 </nav>
             </div>
 
+            <!-- Categories Section -->
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#categoriesSubmenu">
+                <i class="fas fa-user-tag"></i> Categories <i class="fas fa-angle-down ms-auto"></i>
+            </a>
+            <div class="collapse show" id="categoriesSubmenu">
+                <nav class="nav flex-column">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="CategoryAdd">
+                        <i class="fas fa-plus-circle"></i> Add Category
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="CategoryList">
+                        <i class="fas fa-list-ul"></i> Category List
+                    </a>
+                    @* <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="CategoryList">
+                        <i class="fas fa-list-ul"></i> Category List
+                    </a> *@
+                    @* <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Edit">
+                        <i class="fas fa-edit"></i> Edit Role
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Delete">
+                        <i class="fas fa-trash-alt"></i> Delete Role
+                    </a> *@
+                   @*  <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleList">
+                        <i class="fas fa-list-ul"></i> Role List
+                    </a> *@
+                </nav>
+            </div>
+
+            <!-- Tags Section -->
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#tagsSubmenu">
+                <i class="fas fa-user-tag"></i> Tags <i class="fas fa-angle-down ms-auto"></i>
+            </a>
+            <div class="collapse show" id="tagsSubmenu">
+                <nav class="nav flex-column">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Tag" asp-action="TagAdd">
+                        <i class="fas fa-plus-circle"></i> Add Tag
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Tag" asp-action="TagList">
+                        <i class="fas fa-list-ul"></i> Tag List
+                    </a>
+                    @* <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="CategoryList">
+                        <i class="fas fa-list-ul"></i> Category List
+                    </a> *@
+                    @* <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Edit">
+                        <i class="fas fa-edit"></i> Edit Role
+                    </a>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="Delete">
+                        <i class="fas fa-trash-alt"></i> Delete Role
+                    </a> *@
+                    @*  <a class="nav-link" asp-area="Admin" asp-controller="Roles" asp-action="RoleList">
+                        <i class="fas fa-list-ul"></i> Role List
+                    </a> *@
+                </nav>
+            </div>
+
             <a class="nav-link" href="#">
                 <i class="fas fa-cog"></i> Settings
             </a>

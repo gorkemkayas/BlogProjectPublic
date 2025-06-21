@@ -5,6 +5,7 @@ using BlogProject.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using static BlogProject.Utilities.RoleService;
 
 namespace BlogProject.Services.Abstract
 {
@@ -38,5 +39,9 @@ namespace BlogProject.Services.Abstract
         Task<List<AppUser>> MostContributors(int countUser);
         Task<List<AppUser>> NewUsers(int countUser);
         Task<List<AppUser>> GetUsers();
+
+        Task<ServiceResult<AppUser>> DeleteUserByTypeAsync(string id, DeleteType deleteType, string deleterUserId);
+
+        Task<ServiceResult<AppUser>> ActivateUserById(string userId);
     }
 }

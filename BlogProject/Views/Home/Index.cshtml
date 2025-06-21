@@ -1,8 +1,10 @@
 ﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minimal Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --black: #000000;
@@ -11,17 +13,130 @@
             --medium-gray: #e0e0e0;
             --dark-gray: #333333;
             --accent: #555555;
+            --primary: #2563eb; /* Mavi ton */
+            --danger: #dc2626; /* Kırmızı ton */
         }
 
-        .logo {
+       
+
+        /* Header */
+        .header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--medium-gray);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        
+
+        .brand-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--black);
             text-decoration: none;
-            letter-spacing: -0.5px;
         }
 
-        
+            .brand-logo .dot {
+                color: var(--primary);
+            }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-signin, .btn-signup {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-signin {
+            border: 1px solid var(--medium-gray);
+            color: var(--dark-gray);
+            background: transparent;
+        }
+
+            .btn-signin:hover {
+                background-color: var(--light-gray);
+            }
+
+        .btn-signup {
+            border: 1px solid var(--primary);
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+            .btn-signup:hover {
+                background-color: #1d4ed8;
+            }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .user-dropdown-toggle {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-photo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .notification-badge {
+            width: 8px;
+            height: 8px;
+            background-color: var(--danger);
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .dropdown-menu {
+            border: 1px solid var(--medium-gray);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+            .dropdown-item i {
+                width: 20px;
+                text-align: center;
+                margin-right: 0.5rem;
+            }
+
 
         /* Hero Section */
         .hero {
@@ -65,6 +180,13 @@
             }
 
         /* Blog Grid */
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--black);
+        }
+
         .post-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -204,7 +326,55 @@
                 background-color: var(--medium-gray);
             }
 
-        
+        /* Footer */
+        .footer {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .footer-links li {
+                margin-bottom: 0.75rem;
+            }
+
+            .footer-links a {
+                color: var(--medium-gray);
+                text-decoration: none;
+                transition: color 0.3s;
+                font-size: 0.9rem;
+            }
+
+                .footer-links a:hover {
+                    color: var(--white);
+                }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--dark-gray);
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+        }
 
         /* Responsive */
         @@media (max-width: 768px) {
@@ -219,7 +389,27 @@
         }
 
         .nav-links {
-            gap: 1.25rem;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            position: static;
+            transform: none;
+            order: -1;
+        }
+
+        .navbar {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .social-icons {
+            order: 1;
+        }
+
+        .user-actions {
+            order: 2;
+            margin-left: auto;
         }
 
         }
@@ -230,6 +420,7 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-animation"></div>
         <div class="container">
             <h1 class="hero-title">Thoughts, Stories & Ideas</h1>
             <p class="hero-subtitle">A minimalist blog about technology, design, and the intersection between them.</p>
@@ -237,12 +428,99 @@
         </div>
     </section>
 
+    <style>
+        .hero {
+            background-color: #f5f5f5;
+            text-align: center;
+            padding: 6rem 1rem;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.03) 100%);
+            animation: shimmer 8s infinite linear;
+            z-index: 0;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #333;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background-color: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid #000;
+        }
+
+            .hero-cta:hover {
+                background-color: transparent;
+                color: #000;
+            }
+
+        @@keyframes shimmer {
+            0%
+
+        {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
+
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .hero-title
+
+        {
+            font-size: 2.2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+
+        }
+    </style>
+
     <!-- Featured Posts -->
     <div class="container">
-        <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: var(--black);">Featured Articles</h2>
+        <h2 class="section-title">Featured Articles</h2>
         <div class="post-grid">
             <!-- Post 1 -->
-            <article class="post-card">
+            <article class="post-card post-title-link ">
                 <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Coding" class="post-img">
                 </div>
@@ -255,7 +533,7 @@
             </article>
 
             <!-- Post 2 -->
-            <article class="post-card">
+            <article class="post-card post-title-link">
                 <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Design" class="post-img">
                 </div>
@@ -268,7 +546,7 @@
             </article>
 
             <!-- Post 3 -->
-            <article class="post-card">
+            <article class="post-card post-title-link">
                 <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Productivity" class="post-img">
                 </div>
@@ -284,22 +562,174 @@
 
     <!-- Newsletter -->
     <section class="newsletter">
+        <div class="newsletter-pattern"></div>
         <div class="container">
             <h2 class="newsletter-title">Stay Updated</h2>
             <p class="newsletter-subtitle">Subscribe to our newsletter to receive the latest articles and news directly to your inbox.</p>
             <form class="newsletter-form">
-                <input type="email" placeholder="Your email address" class="newsletter-input" required>
-                <button type="submit" class="newsletter-btn">Subscribe</button>
+                <div class="input-group">
+                    <input type="email" placeholder="Your email address" class="newsletter-input" required>
+                    <button type="submit" class="newsletter-btn">
+                        Subscribe
+                        <span class="arrow-icon">→</span>
+                    </button>
+                </div>
             </form>
         </div>
     </section>
 
+    <style>
+        .newsletter {
+            background-color: #fff;
+            padding: 5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .newsletter-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(#f5f5f5 1px, transparent 1px), linear-gradient(90deg, #f5f5f5 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: patternMove 20s linear infinite;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .newsletter .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .newsletter-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .newsletter-subtitle {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .input-group {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 0.9rem 1.5rem;
+            border: 1px solid #e0e0e0;
+            border-right: none;
+            font-size: 0.95rem;
+            background: #fff;
+            transition: all 0.3s;
+        }
+
+            .newsletter-input:focus {
+                outline: none;
+                border-color: #000;
+            }
+
+        .newsletter-btn {
+            padding: 0 1.8rem;
+            background-color: #000;
+            color: #fff;
+            border: 1px solid #000;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .newsletter-btn:hover {
+                background-color: #333;
+                border-color: #333;
+            }
+
+        .arrow-icon {
+            transition: transform 0.3s;
+        }
+
+        .newsletter-btn:hover .arrow-icon {
+            transform: translateX(3px);
+        }
+
+        @@keyframes patternMove {
+            from
+
+        {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 40px 40px;
+        }
+
+        }
+
+        @@keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .input-group
+
+        {
+            flex-direction: column;
+            box-shadow: none;
+        }
+
+        .newsletter-input {
+            border-right: 1px solid #e0e0e0;
+            border-bottom: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .newsletter-btn {
+            justify-content: center;
+            padding: 0.8rem;
+        }
+
+        }
+    </style>
+
     <!-- More Articles -->
     <div class="container">
-        <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: var(--black);">Latest Articles</h2>
+        <h2 class="section-title">Latest Articles</h2>
         <div class="post-grid">
             <!-- Post 4 -->
-            <article class="post-card">
+            <article class="post-card post-title-link">
                 <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Code" class="post-img">
                 </div>
@@ -312,7 +742,7 @@
             </article>
 
             <!-- Post 5 -->
-            <article class="post-card">
+            <article class="post-card post-title-link">
                 <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Mountains" class="post-img">
                 </div>
@@ -325,7 +755,7 @@
             </article>
 
             <!-- Post 6 -->
-            <article class="post-card">
+            <article class="post-card post-title-link">
                 <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Meeting" class="post-img">
                 </div>
@@ -339,5 +769,758 @@
         </div>
     </div>
 
+    <!-- Compact Premium Authors -->
+    <section class="compact-authors">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Writers</h2>
+                <p class="section-subtitle">The minds behind our best content</p>
+            </div>
+
+            <div class="authors-grid">
+                <!-- Author 1 -->
+                <div class="author-card">
+                    <div class="author-img-container">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
+                             alt="Sarah Johnson" class="author-img">
+                    </div>
+                    <div class="author-info">
+                        <h3 class="author-name">Sarah Johnson</h3>
+                        <p class="author-expertise">Tech Writer</p>
+                        <div class="author-stats">
+                            <span class="stat">42 Articles</span>
+                            <span class="stat">28K Followers</span>
+                        </div>
+                    </div>
+                    <a href="#" class="author-view">View</a>
+                </div>
+
+                <!-- Author 2 -->
+                <div class="author-card">
+                    <div class="author-img-container">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
+                             alt="Michael Chen" class="author-img">
+                    </div>
+                    <div class="author-info">
+                        <h3 class="author-name">Michael Chen</h3>
+                        <p class="author-expertise">Design Director</p>
+                        <div class="author-stats">
+                            <span class="stat">36 Articles</span>
+                            <span class="stat">34K Followers</span>
+                        </div>
+                    </div>
+                    <a href="#" class="author-view">View</a>
+                </div>
+
+                <!-- Author 3 -->
+                <div class="author-card">
+                    <div class="author-img-container">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
+                             alt="David Rodriguez" class="author-img">
+                    </div>
+                    <div class="author-info">
+                        <h3 class="author-name">David Rodriguez</h3>
+                        <p class="author-expertise">Product Expert</p>
+                        <div class="author-stats">
+                            <span class="stat">58 Articles</span>
+                            <span class="stat">42K Followers</span>
+                        </div>
+                    </div>
+                    <a href="#" class="author-view">View</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Compact Premium Authors */
+        .compact-authors {
+            background-color: #fff;
+            padding: 2rem 0;
+            padding-top: 4rem;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: #888;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .author-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .author-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                border-color: #e0e0e0;
+            }
+
+        .author-img-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+            border: 3px solid #f5f5f5;
+            transition: all 0.3s ease;
+        }
+
+        .author-card:hover .author-img-container {
+            border-color: #e0e0e0;
+        }
+
+        .author-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .author-info {
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+        }
+
+        .author-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.3rem;
+        }
+
+        .author-expertise {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 1rem;
+        }
+
+        .author-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .stat {
+            position: relative;
+        }
+
+            .stat:not(:last-child):after {
+                content: "•";
+                position: absolute;
+                right: -0.8rem;
+                color: #ddd;
+            }
+
+        .author-view {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.8rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+            .author-view:hover {
+                background: #333;
+                transform: translateY(-2px);
+            }
+
+        @@media (max-width: 768px) {
+            .compact-authors
+
+        {
+            padding: 3rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .authors-grid {
+            grid-template-columns: 1fr;
+            max-width: 350px;
+        }
+
+        .author-card {
+            padding: 1.2rem;
+        }
+
+        }
+    </style>
+
+    <br />
+    <br />
+    <!-- Premium Most Read Posts -->
+    <section class="premium-most-read">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Most Read</h2>
+                <p class="section-subtitle">Trending articles this week</p>
+            </div>
+
+            <div class="posts-ranking">
+                <!-- Post 1 -->
+                <a href="#" class="post-item post-title-link">
+                    <div class="post-rank-wrapper">
+                        <span class="post-rank">1</span>
+                        <div class="rank-underline"></div>
+                    </div>
+                    <div class="post-content ">
+                        <h3 class="post-title">The Future of Web Development in 2024</h3>
+                        <div class="post-meta">
+                            <span class="post-category">Technology</span>
+                            <span class="post-views">24K views</span>
+                        </div>
+                    </div>
+                    <div class="post-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <!-- Post 2 -->
+                <a href="#" class="post-item post-title-link">
+                    <div class="post-rank-wrapper">
+                        <span class="post-rank">2</span>
+                        <div class="rank-underline"></div>
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title">Minimalist Design Principles for Modern Websites</h3>
+                        <div class="post-meta">
+                            <span class="post-category">Design</span>
+                            <span class="post-views">18K views</span>
+                        </div>
+                    </div>
+                    <div class="post-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <!-- Post 3 -->
+                <a href="#" class="post-item post-title-link">
+                    <div class="post-rank-wrapper">
+                        <span class="post-rank">3</span>
+                        <div class="rank-underline"></div>
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title">How to Improve Your Productivity as a Developer</h3>
+                        <div class="post-meta">
+                            <span class="post-category">Productivity</span>
+                            <span class="post-views">15K views</span>
+                        </div>
+                    </div>
+                    <div class="post-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <!-- Post 4 -->
+                <a href="#" class="post-item post-title-link">
+                    <div class="post-rank-wrapper">
+                        <span class="post-rank">4</span>
+                        <div class="rank-underline"></div>
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title">The Psychology Behind Effective UI/UX</h3>
+                        <div class="post-meta">
+                            <span class="post-category">Psychology</span>
+                            <span class="post-views">12K views</span>
+                        </div>
+                    </div>
+                    <div class="post-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Premium Most Read Posts */
+        .premium-most-read {
+            background-color: #fff;
+            padding: 4rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: #777;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .posts-ranking {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .post-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #f5f5f5;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+            .post-item:last-child {
+                border-bottom: none;
+            }
+
+            .post-item:hover {
+                background-color: #fafafa;
+                transform: translateX(5px);
+            }
+
+        .post-rank-wrapper {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .post-rank {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #000;
+            display: block;
+            text-align: center;
+            line-height: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .rank-underline {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: rgba(0, 0, 0, 0.08);
+            z-index: 0;
+            transition: all 0.3s ease;
+        }
+
+        .post-item:hover .rank-underline {
+            height: 12px;
+            background-color: rgba(0, 0, 0, 0.12);
+        }
+
+        .post-content {
+            flex-grow: 1;
+        }
+
+        .post-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            transition: color 0.3s;
+        }
+
+        .post-item:hover .post-title {
+            color: #333;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .post-category {
+            font-size: 0.75rem;
+            color: #fff;
+            background-color: #000;
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .post-views {
+            font-size: 0.8rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-arrow {
+            margin-left: 1rem;
+            color: #ccc;
+            transition: all 0.3s;
+        }
+
+        .post-item:hover .post-arrow {
+            color: #000;
+            transform: translateX(3px);
+        }
+
+        @@media (max-width: 768px) {
+            .premium-most-read
+
+        {
+            padding: 3rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .post-item {
+            padding: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .post-rank-wrapper {
+            margin-right: 1rem;
+        }
+
+        .post-content {
+            width: calc(100% - 60px);
+        }
+
+        .post-title {
+            font-size: 1rem;
+        }
+
+        .post-meta {
+            gap: 1rem;
+        }
+
+        }
+    </style>
+
+    <br />
+    <!-- Popular Tags Section -->
+    <section class="popular-tags">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Popular Tags</h2>
+                <p class="section-subtitle">Explore topics by tags</p>
+            </div>
+
+            <div class="tags-container">
+                <a href="#" class="tag">Technology</a>
+                <a href="#" class="tag">Design</a>
+                <a href="#" class="tag">Minimalism</a>
+                <a href="#" class="tag">Web Development</a>
+                <a href="#" class="tag">UX</a>
+                <a href="#" class="tag">Productivity</a>
+                <a href="#" class="tag">JavaScript</a>
+                <a href="#" class="tag">Typography</a>
+                <a href="#" class="tag">Figma</a>
+                <a href="#" class="tag">React</a>
+                <a href="#" class="tag">CSS</a>
+                <a href="#" class="tag">Photography</a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Popular Tags Styles */
+        .popular-tags {
+            background-color: #fff;
+            padding: 4rem 0;
+            border-top: 1px solid #f5f5f5;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: #777;
+            letter-spacing: 0.5px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+            .tag:hover {
+                background-color: #000;
+                color: #fff;
+                border-color: #000;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        @@media (max-width: 768px) {
+            .popular-tags
+
+        {
+            padding: 3rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .tags-container {
+            gap: 0.6rem;
+        }
+
+        .tag {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        }
+    </style>
+
+    <br />
+    <!-- Premium Location Map Section -->
+    <section class="location-map">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Location</h2>
+                <p class="section-subtitle">Visit our creative space</p>
+            </div>
+            <div class="map-container">
+                <!-- Google Maps Embed API -->
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d191.238482694376!2d27.238592752798873!3d40.21822513566592!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2str!4v1750171591735!5m2!1sen!2str"
+                        width="100%"
+                        height="400"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        class="map-iframe">
+                </iframe>
+
+                <div class="map-overlay">
+                    <div class="map-info">
+                        <h3>Minimal Blog HQ</h3>
+                        <p>123 Design Street<br>Creative District<br>New York, NY 10001</p>
+                        <a href="#" class="map-directions">
+                            Get Directions
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Premium Map Styles */
+        .location-map {
+            background-color: #fff;
+            padding: 4rem 0;
+            border-top: 1px solid #f5f5f5;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: #777;
+            letter-spacing: 0.5px;
+        }
+
+        .map-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        .map-iframe {
+            filter: grayscale(100%) contrast(90%);
+            display: block;
+        }
+
+        .map-overlay {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255,255,255,0.95);
+            padding: 1.5rem;
+            max-width: 250px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .map-info h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .map-info p {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .map-directions {
+            display: inline-flex;
+            align-items: center;
+            color: #000;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+            .map-directions i {
+                margin-left: 0.5rem;
+                transition: transform 0.3s;
+            }
+
+            .map-directions:hover {
+                color: #555;
+            }
+
+                .map-directions:hover i {
+                    transform: translateX(3px);
+                }
+
+        @@media (max-width: 768px) {
+            .location-map
+
+        {
+            padding: 3rem 1rem;
+        }
+
+        .map-overlay {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            max-width: 100%;
+            margin-top: -1px;
+            border-top: none;
+        }
+
+        .map-iframe {
+            height: 300px;
+        }
+
+        }
+    </style>
+    <script>
+        // Basit dropdown fonksiyonu
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownToggle = document.querySelector('.user-dropdown');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+
+            if (dropdownToggle && dropdownMenu) {
+                dropdownToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // Dışarı tıklandığında dropdown'ı kapat
+                document.addEventListener('click', function(e) {
+                    if (!dropdownToggle.contains(e.target) {
+                        dropdownMenu.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

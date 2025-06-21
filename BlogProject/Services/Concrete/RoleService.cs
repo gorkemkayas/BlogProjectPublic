@@ -2,6 +2,7 @@
 using BlogProject.Areas.Admin.Controllers;
 using BlogProject.Areas.Admin.Models;
 using BlogProject.Services.Abstract;
+using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.Utilities;
 using Microsoft.AspNetCore.Identity;
@@ -12,13 +13,15 @@ namespace BlogProject.Services.Concrete
 {
     public partial class RoleService : IRoleService
     {
-        public readonly RoleManager<AppRole> _roleManager;
-        public readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<AppRole> _roleManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly BlogDbContext _context;
 
-        public RoleService(RoleManager<AppRole> roleManager, UserManager<AppUser> userManager)
+        public RoleService(RoleManager<AppRole> roleManager, UserManager<AppUser> userManager, BlogDbContext context)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _context = context;
         }
 
         public async Task<ServiceResult<AppRole>> AddRoleAsync(AppRole role)
@@ -183,6 +186,35 @@ namespace BlogProject.Services.Concrete
             };
 
             return roleUsers; 
+        }
+
+        public async Task<ServiceResult<AppRole>> ActivateRoleById(string roleId)
+        {
+            var role = await _context.Roles.FindAsync(Guid.Parse(roleId));
+            if (role == null)
+            {
+                return new ServiceResult<AppRole>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "RoleNotFound", Description = "Role not found." } }
+                };
+            }
+            try
+            {
+                role.IsDeleted = false;
+                role.ModifiedDate = DateTime.Now;
+                _context.Roles.Update(role);
+                await _context.SaveChangesAsync();
+                return new ServiceResult<AppRole>() { IsSuccess = true, Data = role };
+            }
+            catch (Exception)
+            {
+                return new ServiceResult<AppRole>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "ActivateRoleError", Description = "An error occurred while activating the role." } }
+                };
+            }
         }
     }
 }
