@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
 using BlogProject.Services.DTOs;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.src.Infra.Entitites.PartialEntities;
+using BlogProject.Utilities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -263,6 +266,49 @@ namespace BlogProject.Services.Concrete
             _blogDbContext.Update(post);
 
             await _blogDbContext.SaveChangesAsync();
+        }
+
+        public async Task<ServiceResult<object>> CreatePostAsync(CreatePostViewModel model)
+        {
+            if (model == null)
+            {
+                new ServiceResult<object>
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError> { new IdentityError { Code = "ModelNull", Description = "Post bilgileri boş bırakılamaz." } }
+                };
+            }
+            try
+            {
+                var newPostEntity = _mapper.Map<PostEntity>(model);
+                await _blogDbContext.Posts.AddAsync(newPostEntity);
+                await _blogDbContext.SaveChangesAsync();
+
+                var result = new ServiceResult<object>
+                {
+                    IsSuccess = true
+                };
+
+                return result;
+            }
+            catch (DbUpdateException ex)
+            {
+                var result = new ServiceResult<object>
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError> { new IdentityError { Code = "DbUpdateError", Description = "Veritabanına post eklenirken hata oluştu." } }
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var result = new ServiceResult<object>
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError> { new IdentityError { Code = "PostCreationError", Description = "Post ekleme sırasında hata oluştu." } }
+                };
+                return result;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BlogProject.Areas.Admin.Models;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.Utilities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using static BlogProject.Utilities.RoleService;
 
 namespace BlogProject.Services.Abstract
@@ -13,5 +14,6 @@ namespace BlogProject.Services.Abstract
         Task<ServiceResult<TagEntity>> UpdateTagAsync(TagUpdateViewModel model);
         Task<ServiceResult<TagEntity>> ActivateTagById(string tagId);
         Task<ServiceResult<TagEntity>> DeleteTagByTypeAsync(string id, DeleteType deleteType, string deleterId);
+        ServiceResult<List<SelectListItem>> GetAllTagSelectList();
     }
 }

@@ -1,10 +1,11 @@
-﻿<div style="position: relative;">
+﻿@using System.Security.Claims
+<div style="position: relative;">
     <div style="
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
-  
+
 ">
         <!-- Bu div layoutun container genişliğini aşar -->
         @{
@@ -287,226 +288,222 @@
                 }
 
             @@media (max-width: 1200px) {
-                .editor-container
+                .editor-container {
+                    grid-template-columns: 1fr;
+                }
 
-            {
-                grid-template-columns: 1fr;
-            }
+                .left-sidebar, .right-sidebar {
+                    position: static;
+                }
 
-            .left-sidebar, .right-sidebar {
-                position: static;
-            }
+                .left-sidebar {
+                    order: 3;
+                }
 
-            .left-sidebar {
-                order: 3;
-            }
+                .main-content {
+                    order: 1;
+                }
 
-            .main-content {
-                order: 1;
-            }
-
-            .right-sidebar {
-                order: 2;
-            }
-
+                .right-sidebar {
+                    order: 2;
+                }
             }
 
             @@media (max-width: 768px) {
-                .full-width-container
+                .full-width-container {
+                    padding: 0 1rem;
+                }
 
-            {
-                padding: 0 1rem;
-            }
+                h1 {
+                    font-size: 2rem;
+                }
 
-            h1 {
-                font-size: 2rem;
-            }
-
-            .floating-toolbar {
-                position: relative;
-                bottom: auto;
-                right: auto;
-                justify-content: center;
-                margin-top: 2rem;
-            }
-
+                .floating-toolbar {
+                    position: relative;
+                    bottom: auto;
+                    right: auto;
+                    justify-content: center;
+                    margin-top: 2rem;
+                }
             }
         </style>
 
-        <div class="full-width-container py-5">
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <h1 class="w-100">@ViewData["Title"]</h1>
-            </div>
-
-            <div class="editor-container">
-                <!-- Sol Sidebar - Hızlı Eylemler -->
-                <div class="left-sidebar">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Quick Actions</h5>
-                            <div class="quick-actions">
-                                <a href="#" class="quick-action-btn post-title-link">
-                                    <i class="fas fa-save"></i>
-                                    <span>Save Draft</span>
-                                </a>
-                                <a href="#" class="quick-action-btn  post-title-link">
-                                    <i class="fas fa-eye"></i>
-                                    <span>Preview</span>
-                                </a>
-                                <a href="#" class="quick-action-btn  post-title-link">
-                                    <i class="fas fa-file-alt"></i>
-                                    <span>Drafts</span>
-                                </a>
-                                <a href="#" class="quick-action-btn  post-title-link">
-                                    <i class="fas fa-history"></i>
-                                    <span>History</span>
-                                </a>
-                                <a href="#" class="quick-action-btn  post-title-link">
-                                    <i class="fas fa-cog"></i>
-                                    <span>Settings</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- İstatistikler -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Statistics</h5>
-                            <div class="d-flex flex-column gap-2">
-                                <div class="d-flex justify-between">
-                                    <small class="text-muted">Word Count:</small>
-                                    <small class="fw-bold" id="wordCount">0</small>
-                                </div>
-                                <div class="d-flex justify-between">
-                                    <small class="text-muted">Character count:</small>
-                                    <small class="fw-bold" id="charCount">0</small>
-                                </div>
-                                <div class="d-flex justify-between">
-                                    <small class="text-muted">Reading Time:</small>
-                                    <small class="fw-bold" id="readTime">0 mn</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <form asp-controller="Post" asp-action="NewPost" method="post">
+            <input type="hidden" asp-for="AuthorId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+            <div class="full-width-container py-5">
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <h1 class="w-100">@ViewData["Title"]</h1>
                 </div>
 
-                <!-- Ana İçerik - Ortada -->
-                <div class="main-content">
-                    <!-- Başlık -->
-                    <div class="mb-5">
-                        <label asp-for="Title" class="form-label fw-bold mb-2 d-block">Title</label>
-                        <input asp-for="Title" class="form-control form-control-lg" placeholder="Enter an eye-catching title" required />
-                        <span asp-validation-for="Title" class="text-danger small d-block mt-2"></span>
-                    </div>
-
-                    <!-- Alt Başlık -->
-                    <div class="mb-5">
-                        <label asp-for="Subtitle" class="form-label fw-bold mb-2 d-block">Subheading (Optional)</label>
-                        <input asp-for="Subtitle" class="form-control" placeholder="Optional subtitle" />
-                        <span asp-validation-for="Subtitle" class="text-danger small d-block mt-2"></span>
-                    </div>
-
-                    <!-- Ana İçerik -->
-                    <div class="mb-4">
-                        <label asp-for="Content" class="form-label fw-bold mb-2 d-block">Content</label>
-                        <div class="mb-3">
-                            <textarea asp-for="Content" class="form-control" id="contentEditor" rows="10" required></textarea>
-                            <span asp-validation-for="Content" class="text-danger small d-block mt-2"></span>
-                        </div>
-                    </div>
-
-                    <!-- Alt İçerik -->
-                    <div class="mb-5">
-                        <label asp-for="SubContent" class="form-label fw-bold mb-2 d-block">Summary Content (Optional)</label>
-                        <textarea asp-for="SubContent" class="form-control" id="subContentEditor" rows="5"></textarea>
-                        <span asp-validation-for="SubContent" class="text-danger small d-block mt-2"></span>
-                    </div>
-
-                    <!-- Eylem Butonları -->
-                    <div class="editor-actions">
-                        <button type="button" class="btn btn-outline-dark" id="previewBtn">
-                            <i class="fas fa-eye me-2"></i>Preview
-                        </button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn">
-                            <i class="fas fa-paper-plane me-2"></i>@(Model.IsDraft ? "Save Draft" : "Publish")
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Sağ Sidebar -->
-                <div class="right-sidebar">
-                    <!-- Kapak Resmi -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Cover Image</h5>
-                            <label for="coverImageInput" class="image-upload-area">
-                                <div class="image-upload-icon">
-                                    <i class="fas fa-cloud-upload-alt"></i>
+                <div class="editor-container">
+                    <!-- Sol Sidebar - Hızlı Eylemler -->
+                    <div class="left-sidebar">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Quick Actions</h5>
+                                <div class="quick-actions">
+                                    <a href="#" class="quick-action-btn post-title-link">
+                                        <i class="fas fa-save"></i>
+                                        <span>Save Draft</span>
+                                    </a>
+                                    <a href="#" class="quick-action-btn  post-title-link">
+                                        <i class="fas fa-eye"></i>
+                                        <span>Preview</span>
+                                    </a>
+                                    <a href="#" class="quick-action-btn  post-title-link">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>Drafts</span>
+                                    </a>
+                                    <a href="#" class="quick-action-btn  post-title-link">
+                                        <i class="fas fa-history"></i>
+                                        <span>History</span>
+                                    </a>
+                                    <a href="#" class="quick-action-btn  post-title-link">
+                                        <i class="fas fa-cog"></i>
+                                        <span>Settings</span>
+                                    </a>
                                 </div>
-                                <h6>Drag and drop the image or click to select it.</h6>
-                                <p class="text-muted small">Recommended size: 1200x630px</p>
-                            </label>
-                            <input asp-for="CoverImage" class="d-none" type="file" accept="image/*" id="coverImageInput">
-                            <div id="imagePreviewContainer">
-                                @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
-                                {
-                                    <img src="@Model.CoverImageUrl" class="img-fluid rounded img-preview" alt="Kapak resmi" id="imagePreview">
-                                }
                             </div>
-                            <span asp-validation-for="CoverImage" class="text-danger small d-block mt-2"></span>
                         </div>
-                    </div>
 
-                    <!-- Kategori -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Category</h5>
-                            <select asp-for="CategoryId" asp-items="Model.AvailableCategories" class="form-select" required>
-                                <option value="">-- Select Category --</option>
-                            </select>
-                            <span asp-validation-for="CategoryId" class="text-danger small d-block mt-2"></span>
-                        </div>
-                    </div>
-
-                    <!-- Etiketler -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Tags</h5>
-                            <select asp-for="TagIds" asp-items="Model.AvailableTags" class="form-select" multiple id="tagSelect">
-                            </select>
-                            <small class="text-muted d-block mt-2">Select relevant tags</small>
-                        </div>
-                    </div>
-
-                    <!-- Yayın Ayarları -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Publish Settings</h5>
-                            <div class="form-check form-switch mb-3 d-flex align-content-center">
-                                <input asp-for="IsDraft" class="form-check-input" type="checkbox" id="draftSwitch">
-                                <label asp-for="IsDraft" class="form-check-label fw-bold ms-2" style="margin-top:2px">Save as draft</label>
+                        <!-- İstatistikler -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Statistics</h5>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="d-flex justify-between">
+                                        <small class="text-muted">Word Count:</small>
+                                        <small class="fw-bold" id="wordCount">0</small>
+                                    </div>
+                                    <div class="d-flex justify-between">
+                                        <small class="text-muted">Character count:</small>
+                                        <small class="fw-bold" id="charCount">0</small>
+                                    </div>
+                                    <div class="d-flex justify-between">
+                                        <small class="text-muted">Reading Time:</small>
+                                        <small class="fw-bold" id="readTime">0 mn</small>
+                                    </div>
+                                </div>
                             </div>
-                            <small class="text-muted d-block">Posts saved as drafts will not be published.</small>
+                        </div>
+                    </div>
+                    <!-- Ana İçerik - Ortada -->
+                    <div class="main-content">
+                        <!-- Başlık -->
+                        <div class="mb-5">
+                            <label asp-for="Title" class="form-label fw-bold mb-2 d-block">Title</label>
+                            <input asp-for="Title" class="form-control form-control-lg" placeholder="Enter an eye-catching title" required />
+                            <span asp-validation-for="Title" class="text-danger small d-block mt-2"></span>
+                        </div>
 
-                            <hr class="my-3">
+                        <!-- Alt Başlık -->
+                        <div class="mb-5">
+                            <label asp-for="Subtitle" class="form-label fw-bold mb-2 d-block">Subheading (Optional)</label>
+                            <input asp-for="Subtitle" class="form-control" placeholder="Optional subtitle" />
+                            <span asp-validation-for="Subtitle" class="text-danger small d-block mt-2"></span>
+                        </div>
 
+                        <!-- Ana İçerik -->
+                        <div class="mb-4">
+                            <label asp-for="Content" class="form-label fw-bold mb-2 d-block">Content</label>
                             <div class="mb-3">
-                                <label class="form-label small text-muted">Publication Date</label>
-                                <input type="datetime-local" class="form-control form-control-sm">
+                                <textarea asp-for="Content" class="form-control" id="contentEditor" rows="10" required></textarea>
+                                <span asp-validation-for="Content" class="text-danger small d-block mt-2"></span>
                             </div>
+                        </div>
 
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="allowComments" checked>
-                                <label class="form-check-label small" for="allowComments">
-                                    Allow comments
+                        <!-- Alt İçerik -->
+                        <div class="mb-5">
+                            <label asp-for="SubContent" class="form-label fw-bold mb-2 d-block">Summary Content (Optional)</label>
+                            <textarea asp-for="SubContent" class="form-control"  rows="5"></textarea>
+                            <span asp-validation-for="SubContent" class="text-danger small d-block mt-2"></span>
+                        </div>
+
+                        <!-- Eylem Butonları -->
+                        <div class="editor-actions">
+                            <button type="button" class="btn btn-outline-dark" id="previewBtn">
+                                <i class="fas fa-eye me-2"></i>Preview
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-paper-plane me-2"></i>@(Model.IsDraft ? "Save Draft" : "Publish")
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sağ Sidebar -->
+                    <div class="right-sidebar">
+                        <!-- Kapak Resmi -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Cover Image</h5>
+                                <label for="coverImageInput" class="image-upload-area">
+                                    <div class="image-upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <h6>Drag and drop the image or click to select it.</h6>
+                                    <p class="text-muted small">Recommended size: 1200x630px</p>
                                 </label>
+                                <input asp-for="CoverImage" class="d-none" type="file" accept="image/*" id="coverImageInput">
+                                <div id="imagePreviewContainer">
+                                    @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+                                    {
+                                        <img src="@Model.CoverImageUrl" class="img-fluid rounded img-preview" alt="Kapak resmi" id="imagePreview">
+                                    }
+                                </div>
+                                <span asp-validation-for="CoverImage" class="text-danger small d-block mt-2"></span>
+                            </div>
+                        </div>
+
+                        <!-- Kategori -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Category</h5>
+                                <select asp-for="CategoryId" asp-items="Model.AvailableCategories" class="form-select" required>
+                                    <option value="">-- Select Category --</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger small d-block mt-2"></span>
+                            </div>
+                        </div>
+
+                        <!-- Etiketler -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Tags</h5>
+                                <select asp-for="TagIds" asp-items="Model.AvailableTags" class="form-select" multiple id="tagSelect">
+                                </select>
+                                <small class="text-muted d-block mt-2">Select relevant tags</small>
+                            </div>
+                        </div>
+
+                        <!-- Yayın Ayarları -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Publish Settings</h5>
+                                <div class="form-check form-switch mb-3 d-flex align-content-center">
+                                    <input asp-for="IsDraft" class="form-check-input" type="checkbox" id="draftSwitch">
+                                    <label asp-for="IsDraft" class="form-check-label fw-bold ms-2" style="margin-top:2px">Save as draft</label>
+                                </div>
+                                <small class="text-muted d-block">Posts saved as drafts will not be published.</small>
+
+                                <hr class="my-3">
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-muted">Publication Date</label>
+                                    <input type="datetime-local" class="form-control form-control-sm">
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="allowComments" checked>
+                                    <label class="form-check-label small" for="allowComments">
+                                        Allow comments
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         @section Scripts {
             @{

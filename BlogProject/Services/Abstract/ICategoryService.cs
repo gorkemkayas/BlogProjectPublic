@@ -2,6 +2,7 @@
 using BlogProject.src.Infra.Entitites;
 using BlogProject.Utilities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using static BlogProject.Utilities.RoleService;
 
 namespace BlogProject.Services.Abstract
@@ -15,6 +16,8 @@ namespace BlogProject.Services.Abstract
 
         Task<ServiceResult<CategoryEntity>> DeleteCategoryByTypeAsync(string id, DeleteType deleteType, string deleterId);
         Task<ServiceResult<CategoryEntity>> ActivateCategoryById(string categoryId);
+
+        ServiceResult<List<SelectListItem>> GetAllCategorySelectList();
 
 
 

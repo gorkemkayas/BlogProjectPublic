@@ -5,6 +5,7 @@ using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.Utilities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using static BlogProject.Utilities.RoleService;
 
@@ -212,6 +213,30 @@ namespace BlogProject.Services.Concrete
                     IsSuccess = false,
                     Errors = new List<IdentityError>() { new IdentityError { Code = "ActivateTagError", Description = "An error occurred while activating the tag." } }
                 };
+            }
+        }
+
+        public ServiceResult<List<SelectListItem>> GetAllTagSelectList()
+        {
+            try
+            {
+                var selectListTags = _context.Tags.Where(a => a.IsDeleted == false).Select(t => new SelectListItem() { Text = t.Name, Value = t.Name });
+                var result = new ServiceResult<List<SelectListItem>>()
+                {
+                    IsSuccess = true,
+                    Data = selectListTags.ToList()
+                };
+
+                return result;
+            }
+            catch (Exception)
+            {
+                var result = new ServiceResult<List<SelectListItem>>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "GetAllTagSelectListError", Description = "An error occurred while retrieving the tag select list." } }
+                };
+                return result;
             }
         }
     }

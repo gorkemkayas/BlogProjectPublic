@@ -37,6 +37,8 @@ namespace BlogProject.Models.ViewModels
         [Display(Name = "Taslak olarak kaydet")]
         public bool IsDraft { get; set; } = true;
 
+        public string AuthorId { get; set; } = null!;
+
         // Select list'ler
         public List<SelectListItem> AvailableCategories { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
@@ -48,16 +50,16 @@ namespace BlogProject.Models.ViewModels
         [Display(Name = "Yorumlara izin ver")]
         public bool AllowComments { get; set; } = true;
 
-        // SEO ile ilgili alanlar
-        [Display(Name = "SEO Başlık")]
-        [StringLength(60, ErrorMessage = "SEO başlığı en fazla 60 karakter olabilir.")]
-        public string SeoTitle { get; set; }
+        //// SEO ile ilgili alanlar
+        //[Display(Name = "SEO Başlık")]
+        //[StringLength(60, ErrorMessage = "SEO başlığı en fazla 60 karakter olabilir.")]
+        //public string SeoTitle { get; set; }
 
-        [Display(Name = "SEO Açıklama")]
-        [StringLength(160, ErrorMessage = "SEO açıklaması en fazla 160 karakter olabilir.")]
-        public string SeoDescription { get; set; }
+        //[Display(Name = "SEO Açıklama")]
+        //[StringLength(160, ErrorMessage = "SEO açıklaması en fazla 160 karakter olabilir.")]
+        //public string SeoDescription { get; set; }
 
-        [Display(Name = "SEO Etiketler")]
-        public string SeoTags { get; set; }
+        //[Display(Name = "SEO Etiketler")]
+        //public string SeoTags { get; set; }
     }
 }

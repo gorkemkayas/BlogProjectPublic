@@ -1,6 +1,8 @@
-﻿using BlogProject.Services.DTOs;
+﻿using BlogProject.Models.ViewModels;
+using BlogProject.Services.DTOs;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.src.Infra.Entitites.PartialEntities;
+using BlogProject.Utilities;
 
 namespace BlogProject.Services.Abstract
 {
@@ -13,6 +15,8 @@ namespace BlogProject.Services.Abstract
         // CreatePostDto ile UpdatePostDto ları baştan yapıcam şuanda boş, hata vermesin diye.
         public Task AddPostAsync(CreatePostDto createPostDto);
         public Task UpdatePostAsync(Guid postId, UpdatePostDto updatePostDto);
+
+        Task<ServiceResult<object>> CreatePostAsync(CreatePostViewModel model);
 
         public Task SoftDeletePostAsync(Guid postId);
         public Task<UpdatePostDto> GetPostInfoForUpdate(Guid postId);

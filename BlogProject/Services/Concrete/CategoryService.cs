@@ -5,6 +5,7 @@ using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.Utilities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using static BlogProject.Utilities.RoleService;
 
@@ -209,6 +210,30 @@ namespace BlogProject.Services.Concrete
                     IsSuccess = false,
                     Errors = new List<IdentityError>() { new IdentityError { Code = "ActivateCategoryError", Description = "An error occurred while activating the category." } }
                 };
+            }
+        }
+
+        public ServiceResult<List<SelectListItem>> GetAllCategorySelectList()
+        {
+            try
+            {
+                var selectListCategories = _context.Categories.Where(a => a.IsDeleted == false).Select(t => new SelectListItem() { Text = t.Name, Value = t.Name });
+                var result = new ServiceResult<List<SelectListItem>>()
+                {
+                    IsSuccess = true,
+                    Data = selectListCategories.ToList()
+                };
+
+                return result;
+            }
+            catch (Exception)
+            {
+                var result = new ServiceResult<List<SelectListItem>>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "GetAllCategoriesSelectListError", Description = "An error occurred while retrieving the category select list." } }
+                };
+                return result;
             }
         }
     }

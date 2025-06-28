@@ -11,6 +11,7 @@ namespace BlogProject.Services.DTOs.MappingProfile
         {
             CreateMap<CreatePostDto, PostEntity>();
             CreateMap<UpdatePostDto, PostEntity>().ReverseMap();
+            CreateMap<PostEntity, CreatePostViewModel>().ReverseMap();
             CreateMap<AppUser, UserViewModel>().ReverseMap();
             CreateMap<CategoryEntity, CategoryViewModel>().ReverseMap();
             CreateMap<CategoryEntity, CategoryUpdateViewModel>().ReverseMap();
