@@ -793,7 +793,7 @@
                         <img src="/img/userPhotos/gorkemkayas5269/WhatsApp_Image_2025-06-11_at_21.30.19_c95a0f93.jpg" />
                         <span>Y</span>
                     </div>
-                    <form class="comment-input" id="commentForm">
+                    <form class="comment-input main-comment-form" id="commentForm">
                         <textarea id="commentText" placeholder="Share your thoughts..." rows="3" required></textarea>
                         <div class="form-actions">
                             <button type="submit" class="btn post-reply-btn-alt2" id="submitBtn">Post Comment</button>
@@ -802,103 +802,121 @@
                     </form>
 
                     <script>
-                        // Bu değerleri gerçek uygulamanızda backend'den alın
-                        // const currentUserId = "@User.FindFirstValue(ClaimTypes.NameIdentifier)"; // String olarak tanımlandı
-                        // const currentPostId = "@Model.Post.Id"; // String olarak tanımlandı
-                        const parentCommentId = null; // Ana yorum için null, cevap için parent comment ID
+                        // Bu değerleri backend'den Razor ile al (örnek: ViewBag vs)
 
-                        document.getElementById('commentForm').addEventListener('submit', async function(e) {
-                        e.preventDefault();
+                        const parentCommentId = null; // Ana yorum olduğu için null
 
-                        const commentText = document.getElementById('commentText').value.trim();
-                        const submitBtn = document.getElementById('submitBtn');
-                        const messageContainer = document.getElementById('messageContainer');
+                        document.getElementById('commentForm').addEventListener('submit', async function (e) {
+                            e.preventDefault();
 
-                        if (!commentText) {
-                        showMessage('Lütfen yorum metnini girin.', 'error');
-                        return;
-                        }
+                            const commentText = document.getElementById('commentText').value.trim();
+                            const submitBtn = document.getElementById('submitBtn');
+                            const messageContainer = document.getElementById('messageContainer');
 
-                        // Butonu devre dışı bırak ve loading durumunu göster
-                        submitBtn.disabled = true;
-                        submitBtn.textContent = 'Gönderiliyor...';
+                            if (!commentText) {
+                                showMessage('Lütfen yorum metnini girin.', 'error');
+                                return;
+                            }
 
-                        // Mesaj konteynerini temizle
-                        messageContainer.innerHTML = '';
+                            submitBtn.disabled = true;
+                            submitBtn.textContent = 'Gönderiliyor...';
+                            messageContainer.innerHTML = '';
 
-                        try {
-                        // ViewModel objesi oluştur
-                        const viewModel = {
-                        AuthorId: currentUserId,
-                        Comment: commentText,
-                        PostId: currentPostId,
-                        ParentCommentId: parentCommentId
-                        };
+                            try {
+                                const viewModel = {
+                                    AuthorId: currentUserId,
+                                    Comment: commentText,
+                                    PostId: currentPostId,
+                                    ParentCommentId: parentCommentId
+                                };
 
-                        console.log('Gönderilen data:', viewModel); // Debug için
+                                const response = await fetch('/Comment/AddComment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                                    },
+                                    body: JSON.stringify(viewModel)
+                                });
 
-                        // AJAX isteği gönder
-                        const response = await fetch('/Comment/AddComment', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // CSRF token için
-                        },
-                        body: JSON.stringify(viewModel)
-                        });
+                                if (response.ok) {
+                                    const result = await response.json();
+                                    // showMessage('Yorumunuz başarıyla gönderildi!', 'success');
+                                    document.getElementById('commentText').value = '';
+                                    addCommentToList(result);
+                                } else {
+                                    const errorText = await response.text();
+                                    showMessage('Yorum gönderilirken hata oluştu: ' + errorText, 'error');
+                                }
 
-                        console.log('Response status:', response.status); // Debug için
-
-                        if (response.ok) {
-                        const result = await response.json();
-
-                        // Başarılı mesaj göster
-                        showMessage('Yorumunuz başarıyla gönderildi!', 'success');
-
-                        // Formu temizle
-                        document.getElementById('commentText').value = '';
-
-                        // Yeni yorumu listeye ekle
-                        addCommentToList(result);
-
-                        } else {
-                        // Hata durumunda
-                        const errorText = await response.text();
-                        console.log('Error response:', errorText); // Debug için
-                        showMessage('Yorum gönderilirken hata oluştu: ' + errorText, 'error');
-                        }
-
-                        } catch (error) {
-                        console.error('AJAX hatası:', error);
-                        showMessage('Bağlantı hatası oluştu. Lütfen tekrar deneyin.', 'error');
-                        } finally {
-                        // Butonu tekrar aktif et
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Post Comment';
-                        }
+                            } catch (error) {
+                                console.error('AJAX hatası:', error);
+                                showMessage('Bağlantı hatası oluştu. Lütfen tekrar deneyin.', 'error');
+                            } finally {
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = 'Post Comment';
+                            }
                         });
 
                         function showMessage(message, type) {
-                        const messageContainer = document.getElementById('messageContainer');
-                        messageContainer.innerHTML = `<div class="${type}-message">${message}</div>`;
-
-                        // 5 saniye sonra mesajı kaldır
-                        setTimeout(() => {
-                        messageContainer.innerHTML = '';
-                        }, 5000);
+                            const messageContainer = document.getElementById('messageContainer');
+                            messageContainer.innerHTML = `<div class="${type}-message">${message}</div>`;
+                            setTimeout(() => {
+                                messageContainer.innerHTML = '';
+                            }, 5000);
                         }
 
                         function addCommentToList(comment) {
-                        // Bu fonksiyonu kendi yorum listesi yapınıza göre düzenleyin
-                        console.log('Yeni yorum eklendi:', comment);
+                            const newCommentHtml = `
+                            <div class="comment">
+                                <div class="commentor-avatar">
+                                    <img src="${comment.authorProfileUrl}" />
+                                    <span>${comment.authorName?.charAt(0) || "?"}</span>
+                                </div>
+                                <div class="comment-body">
+                                    <div class="comment-header">
+                                        <span class="comment-author">${comment.authorName}</span>
+                                        <span class="comment-date">${comment.createdDate}</span>
+                                    </div>
+                                    <div class="comment-content">
+                                        <p>${comment.comment}</p>
+                                    </div>
+                                    <div class="comment-footer">
+                                        <button class="reply-btn" type="button" data-comment-id="${comment.commentId}">Reply</button>
+                                        <button class="like-btn">Like (0)</button>
+                                    </div>
 
-                        // Örnek kullanım - yorum listesi div'i varsa:
-                        // const commentList = document.getElementById('commentList');
-                        // const commentHTML = `<div class="comment-item">${comment.Comment}</div>`;
-                        // commentList.insertAdjacentHTML('afterbegin', commentHTML);
+                                    <div class="reply-box d-flex d-none justify-content-start comment-reply-sm mt-4">
+                                        <div class="commentor-avatar ms-1">
+                                            <img src="${comment.authorProfileUrl}" />
+                                            <span>${comment.authorName?.charAt(0) || "?"}</span>
+                                        </div>
+                                        <form class="comment-input reply-form" method="post">
+                                            <textarea name="ReplyText" class="reply-textarea" placeholder="Share your reply..." rows="3" required cols="40"></textarea>
+                                            <input type="hidden" name="ParentCommentId" value="${comment.commentId}" />
+                                            <div class="form-actions">
+                                                <button type="submit" class="btn post-reply-btn-alt2">Post Reply</button>
+                                            </div>
+                                            <div class="messageContainer"></div>
+                                        </form>
+                                    </div>
+
+                                    <div class="reply-list mt-3 ms-2"></div>
+                                </div>
+                            </div>
+                            `;
+
+                            const firstComment = document.querySelector(".comment");
+                            if (firstComment) {
+                                firstComment.insertAdjacentHTML('beforebegin', newCommentHtml);
+                            } else {
+                                const commentListContainer = document.getElementById("commentList") || document.body;
+                                commentListContainer.insertAdjacentHTML('beforeend', newCommentHtml);
+                            }
                         }
                     </script>
+
                 </div>
             }
             else
@@ -912,7 +930,7 @@
                 <hr />
             }
             <!-- Comment List -->
-            <div class="comment-list">
+            <div class="comment-list commentList">
                 @* <!-- Main Comment -->
                 <div class="comment">
                     <div class="comment-avatar">
@@ -1042,6 +1060,120 @@
                             </div>
                         </div>
                     }
+
+                    <script>
+                        const parentCommentId = null; // Ana yorum için null
+
+                        document.getElementById('commentForm').addEventListener('submit', async function(e) {
+                            e.preventDefault();
+
+                            const commentText = document.getElementById('commentText').value.trim();
+                            const submitBtn = document.getElementById('submitBtn');
+                            const messageContainer = document.getElementById('messageContainer');
+
+                            if (!commentText) {
+                                showMessage('Lütfen yorum metnini girin.', 'error');
+                                return;
+                            }
+
+                            submitBtn.disabled = true;
+                            submitBtn.textContent = 'Gönderiliyor...';
+                            messageContainer.innerHTML = '';
+
+                            try {
+                                const viewModel = {
+                                    AuthorId: currentUserId,
+                                    Comment: commentText,
+                                    PostId: currentPostId,
+                                    ParentCommentId: parentCommentId
+                                };
+
+                                const response = await fetch('/Comment/AddComment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                                    },
+                                    body: JSON.stringify(viewModel)
+                                });
+
+                                if (response.ok) {
+                                    const result = await response.json();
+
+                                    showMessage('Yorumunuz başarıyla gönderildi!', 'success');
+                                    document.getElementById('commentText').value = '';
+
+                                    addCommentToList(result);
+                                } else {
+                                    const errorText = await response.text();
+                                    showMessage('Yorum gönderilirken hata oluştu: ' + errorText, 'error');
+                                }
+
+                            } catch (error) {
+                                console.error('AJAX hatası:', error);
+                                showMessage('Bağlantı hatası oluştu. Lütfen tekrar deneyin.', 'error');
+                            } finally {
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = 'Post Comment';
+                            }
+                        });
+
+                        function showMessage(message, type) {
+                            const messageContainer = document.getElementById('messageContainer');
+                            messageContainer.innerHTML = `<div class="${type}-message">${message}</div>`;
+
+                            setTimeout(() => {
+                                messageContainer.innerHTML = '';
+                            }, 5000);
+                        }
+
+                        function addCommentToList(comment) {
+                            const commentList = document.getElementById('commentList');
+
+                            const commentHtml = `
+                                <div class="comment">
+                                    <div class="commentor-avatar">
+                                        <img src="${comment.authorProfileUrl}" />
+                                        <span>${comment.authorName?.charAt(0) || "?"}</span>
+                                    </div>
+                                    <div class="comment-body">
+                                        <div class="comment-header">
+                                            <span class="comment-author">${comment.authorName}</span>
+                                            <span class="comment-date">${comment.createdDate}</span>
+                                        </div>
+                                        <div class="comment-content">
+                                            <p>${comment.comment}</p>
+                                        </div>
+                                        <div class="comment-footer">
+                                            <button class="reply-btn" type="button" data-comment-id="${comment.commentId}">Reply</button>
+                                            <button class="like-btn">Like (0)</button>
+                                        </div>
+
+                                        <div class="reply-box d-flex d-none justify-content-start comment-reply-sm mt-4">
+                                            <div class="commentor-avatar ms-1">
+                                                <img src="${comment.authorProfileUrl}" />
+                                                <span>${comment.authorName?.charAt(0) || "?"}</span>
+                                            </div>
+                                            <form class="comment-input reply-form" method="post">
+                                                <textarea name="ReplyText" class="reply-textarea" placeholder="Share your reply..." rows="3" required cols="40"></textarea>
+                                                <input type="hidden" name="ParentCommentId" value="${comment.commentId}" />
+                                                <div class="form-actions">
+                                                    <button type="submit" class="btn post-reply-btn-alt2">Post Reply</button>
+                                                </div>
+                                                <div class="messageContainer"></div>
+                                            </form>
+                                        </div>
+
+                                        <div class="reply-list mt-3 ms-2"></div>
+                                    </div>
+                                </div>
+                            `;
+
+                            commentList.insertAdjacentHTML('afterbegin', commentHtml);
+                        }
+                    </script>
+
 
                     <!-- JavaScript kodunu foreach döngüsü dışına taşıyın -->
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
