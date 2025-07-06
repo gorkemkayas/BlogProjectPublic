@@ -39,6 +39,125 @@
 </head>
 @* scroll bar animation start *@
 <style>
+
+    /* Header */
+    .header {
+        background-color: var(--white);
+        border-bottom: 1px solid var(--medium-gray);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+
+
+    /* Navbar */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+
+
+
+    .brand-logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--black);
+        text-decoration: none;
+    }
+
+        .brand-logo .dot {
+            color: var(--primary);
+        }
+
+    .user-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .btn-signin, .btn-signup {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-signin {
+        border: 1px solid var(--medium-gray);
+        color: var(--dark-gray);
+        background: transparent;
+    }
+
+        .btn-signin:hover {
+            background-color: var(--light-gray);
+        }
+
+    .btn-signup {
+        border: 1px solid var(--primary);
+        background-color: var(--primary);
+        color: var(--white);
+    }
+
+        .btn-signup:hover {
+            background-color: #1d4ed8;
+        }
+
+    .user-dropdown {
+        display: flex;
+        align-items: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--dark-gray);
+        font-weight: 500;
+    }
+
+    .user-dropdown-toggle {
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-photo {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .notification-badge {
+        width: 8px;
+        height: 8px;
+        background-color: var(--danger);
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .dropdown-menu {
+        border: 1px solid var(--medium-gray);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            margin-right: 0.5rem;
+        }
+
     .dropdown-toggle::after{
     display:contents;
     }

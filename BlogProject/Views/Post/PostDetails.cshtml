@@ -1,560 +1,687 @@
 ﻿@using System.Security.Claims
+@using System.Globalization
 @model PostDetailsViewModel
+@{
+    Layout = "_Layout";
+}
+<script>
+    const currentUserId = "@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value";
+    const currentPostId = "@Model.Post.Id";
+</script>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@Model.Post.Title</title>
     <style>
+
+        /* Header */
+        .header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--medium-gray);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+
+
+        .brand-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+            .brand-logo .dot {
+                color: var(--primary);
+            }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-signin, .btn-signup {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-signin {
+            border: 1px solid var(--medium-gray);
+            color: var(--dark-gray);
+            background: transparent;
+        }
+
+            .btn-signin:hover {
+                background-color: var(--light-gray);
+            }
+
+        .btn-signup {
+            border: 1px solid var(--primary);
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+            .btn-signup:hover {
+                background-color: #1d4ed8;
+            }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .user-dropdown-toggle {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-photo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .notification-badge {
+            width: 8px;
+            height: 8px;
+            background-color: var(--danger);
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .dropdown-menu {
+            border: 1px solid var(--medium-gray);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+            .dropdown-item i {
+                width: 20px;
+                text-align: center;
+                margin-right: 0.5rem;
+            }
+
         :root {
-            --black: #1a1a1a;
-            --white: #ffffff;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-400: #9ca3af;
-            --gray-600: #4b5563;
-            --gray-800: #1f2937;
-            --primary: #3b82f6;
-            --primary-light: #93c5fd;
-            --accent: #7c3aed;
-            --radius: 8px;
-            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            --space-xs: 0.5rem;
-            --space-sm: 0.75rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
+        --black: #1a1a1a;
+        --white: #ffffff;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-400: #9ca3af;
+        --gray-600: #4b5563;
+        --gray-800: #1f2937;
+        --primary: #3b82f6;
+        --primary-light: #93c5fd;
+        --accent: #7c3aed;
+        --radius: 8px;
+        --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        --space-xs: 0.5rem;
+        --space-sm: 0.75rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
         }
 
 
         body {
-            background-color: white;
+        background-color: white;
         }
 
 
         /* Typography */
         h1, h2, h3, h4 {
-            font-weight: 600;
-            line-height: 1.3;
-            color: var(--black);
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--black);
         }
 
         h1 {
-            font-size: 2.25rem;
-            margin-bottom: var(--space-md);
+        font-size: 2.25rem;
+        margin-bottom: var(--space-md);
         }
 
         h2 {
-            font-size: 1.75rem;
-            margin: var(--space-xl) 0 var(--space-md);
+        font-size: 1.75rem;
+        margin: var(--space-xl) 0 var(--space-md);
         }
 
         h3 {
-            font-size: 1.25rem;
+        font-size: 1.25rem;
         }
 
         p {
-            margin-bottom: var(--space-md);
+        margin-bottom: var(--space-md);
         }
 
         a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: color 0.2s;
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.2s;
         }
 
-            a:hover {
-                color: var(--accent);
-            }
+        a:hover {
+        color: var(--accent);
+        }
 
         /* Layout Components */
         .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-xs);
-            margin: var(--space-xl) 0;
-            font-weight: 500;
-            color: var(--gray-600);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        margin: var(--space-xl) 0;
+        font-weight: 500;
+        color: var(--gray-600);
         }
 
-            .back-btn:hover {
-                color: var(--black);
-            }
+        .back-btn:hover {
+        color: var(--black);
+        }
 
         .post-header {
-            margin-bottom: var(--space-xl);
-            text-align: center;
+        margin-bottom: var(--space-xl);
+        text-align: center;
         }
 
         .post-category {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent);
-            margin-bottom: var(--space-sm);
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--accent);
+        margin-bottom: var(--space-sm);
         }
 
         .post-meta {
-            color: var(--gray-600);
-            font-size: 0.9rem;
-            margin-bottom: var(--space-md);
+        color: var(--gray-600);
+        font-size: 0.9rem;
+        margin-bottom: var(--space-md);
         }
 
         .post-image {
-            width: 100%;
-            height: auto;
-            max-height: 450px;
-            object-fit: cover;
-            border-radius: var(--radius);
-            margin: var(--space-xl) 0;
-            box-shadow: var(--shadow-md);
+        width: 100%;
+        height: auto;
+        max-height: 450px;
+        object-fit: cover;
+        border-radius: var(--radius);
+        margin: var(--space-xl) 0;
+        box-shadow: var(--shadow-md);
         }
 
         .post-content {
-            font-size: 1.05rem;
-            line-height: 1.7;
+        font-size: 1.05rem;
+        line-height: 1.7;
         }
 
-            .post-content img {
-                width: 100%;
-                height: auto;
-                border-radius: var(--radius);
-                margin: var(--space-lg) 0;
-            }
+        .post-content img {
+        width: 100%;
+        height: auto;
+        border-radius: var(--radius);
+        margin: var(--space-lg) 0;
+        }
 
         blockquote {
-            border-left: 3px solid var(--primary-light);
-            padding-left: var(--space-lg);
-            margin: var(--space-lg) 0;
-            color: var(--gray-600);
-            font-style: italic;
+        border-left: 3px solid var(--primary-light);
+        padding-left: var(--space-lg);
+        margin: var(--space-lg) 0;
+        color: var(--gray-600);
+        font-style: italic;
         }
 
         ul, ol {
-            margin-bottom: var(--space-md);
-            padding-left: var(--space-lg);
+        margin-bottom: var(--space-md);
+        padding-left: var(--space-lg);
         }
 
         li {
-            margin-bottom: var(--space-xs);
+        margin-bottom: var(--space-xs);
         }
 
         hr {
-            border: 0;
-            height: 1px;
-            background: var(--gray-200);
-            margin: var(--space-xl) 0;
+        border: 0;
+        height: 1px;
+        background: var(--gray-200);
+        margin: var(--space-xl) 0;
         }
 
         /* Author Card */
         .author-card {
-            display: flex;
-            gap: var(--space-lg);
-            align-items: flex-start;
-            padding: var(--space-lg);
-            border-radius: var(--radius);
-            margin: var(--space-xl) 0;
+        display: flex;
+        gap: var(--space-lg);
+        align-items: flex-start;
+        padding: var(--space-lg);
+        border-radius: var(--radius);
+        margin: var(--space-xl) 0;
         }
 
         .author-avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 2px solid var(--white);
-            box-shadow: var(--shadow-sm);
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 2px solid var(--white);
+        box-shadow: var(--shadow-sm);
         }
 
-            .author-avatar img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+        .author-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        }
 
         .commentor-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 2px solid var(--white);
-            box-shadow: var(--shadow-sm);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 2px solid var(--white);
+        box-shadow: var(--shadow-sm);
         }
 
-            .commentor-avatar img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+        .commentor-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        }
 
         .author-by {
-            font-size: 0.75rem;
-            color: var(--gray-600);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: var(--space-xs);
+        font-size: 0.75rem;
+        color: var(--gray-600);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: var(--space-xs);
         }
 
         .author-name {
-            margin-bottom: var(--space-sm);
+        margin-bottom: var(--space-sm);
         }
 
         .author-bio {
-            color: var(--gray-600);
-            font-size: 0.9rem;
-            margin-bottom: var(--space-md);
+        color: var(--gray-600);
+        font-size: 0.9rem;
+        margin-bottom: var(--space-md);
         }
 
         .author-social {
-            display: flex;
-            gap: var(--space-sm);
+        display: flex;
+        gap: var(--space-sm);
         }
 
         .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--gray-100);
-            color: var(--gray-600);
-            transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--gray-100);
+        color: var(--gray-600);
+        transition: all 0.2s;
         }
 
-            .social-link:hover {
-                background: var(--primary-light);
-                color: var(--white);
-            }
+        .social-link:hover {
+        background: var(--primary-light);
+        color: var(--white);
+        }
 
         /* Comments */
         .comments {
-            margin: var(--space-2xl) 0;
+        margin: var(--space-2xl) 0;
         }
 
         .comments-header {
-            margin-bottom: var(--space-lg);
-            padding-bottom: var(--space-md);
-            border-bottom: 1px solid var(--gray-200);
+        margin-bottom: var(--space-lg);
+        padding-bottom: var(--space-md);
+        border-bottom: 1px solid var(--gray-200);
         }
 
         .comments-title {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        font-size: 1.25rem;
         }
 
         .comment-count {
-            background: var(--gray-100);
-            color: var(--gray-600);
-            font-size: 0.8rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
+        background: var(--gray-100);
+        color: var(--gray-600);
+        font-size: 0.8rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
         }
 
         .comment-form {
-            display: flex;
-            gap: var(--space-md);
-            margin-bottom: var(--space-xl);
+        display: flex;
+        gap: var(--space-md);
+        margin-bottom: var(--space-xl);
         }
 
         .form-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        flex-shrink: 0;
         }
 
         .comment-input {
-            flex-grow: 1;
+        flex-grow: 1;
         }
 
-            .comment-input textarea {
-                width: 100%;
-                border: 1px solid var(--gray-200);
-                border-radius: var(--radius);
-                padding: var(--space-md);
-                font-family: inherit;
-                resize: none;
-                min-height: 100px;
-                transition: all 0.2s;
-            }
+        .comment-input textarea {
+        width: 100%;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        padding: var(--space-md);
+        font-family: inherit;
+        resize: none;
+        min-height: 100px;
+        transition: all 0.2s;
+        }
 
-                .comment-input textarea:focus {
-                    outline: none;
-                    border-color: var(--primary);
-                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-                }
+        .comment-input textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
         .commentReply-input {
-            flex-grow: 1;
+        flex-grow: 1;
         }
 
-            .commentReply-input textarea {
-                width: 80%;
-                border: 1px solid var(--gray-200);
-                border-radius: var(--radius);
-                padding: var(--space-md);
-                font-family: inherit;
-                resize: none;
-                min-height: 100px;
-                transition: all 0.2s;
-            }
+        .commentReply-input textarea {
+        width: 80%;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        padding: var(--space-md);
+        font-family: inherit;
+        resize: none;
+        min-height: 100px;
+        transition: all 0.2s;
+        }
 
-                .commentReply-input textarea:focus {
-                    outline: none;
-                    border-color: var(--primary);
-                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-                }
+        .commentReply-input textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
         .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: var(--space-sm);
+        display: flex;
+        justify-content: flex-end;
+        margin-top: var(--space-sm);
         }
 
         .submit-btn {
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            padding: var(--space-sm) var(--space-lg);
-            border-radius: 20px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
+        background: var(--primary);
+        color: var(--white);
+        border: none;
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: 20px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
         }
 
-            .submit-btn:hover {
-                background: var(--accent);
-            }
+        .submit-btn:hover {
+        background: var(--accent);
+        }
 
         .comment-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-xl);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xl);
         }
 
         .comment {
-            display: flex;
-            gap: var(--space-md);
+        display: flex;
+        gap: var(--space-md);
         }
 
         .comment-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        flex-shrink: 0;
         }
 
         .comment-header {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            margin-bottom: var(--space-xs);
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        margin-bottom: var(--space-xs);
         }
 
         .comment-author {
-            font-weight: 500;
+        font-weight: 500;
         }
 
         .comment-date {
-            color: var(--gray-600);
-            font-size: 0.85rem;
+        color: var(--gray-600);
+        font-size: 0.85rem;
         }
 
         .comment-content {
-            line-height: 1.6;
-            margin-bottom: var(--space-sm);
+        line-height: 1.6;
+        margin-bottom: var(--space-sm);
         }
 
         .comment-footer {
-            display: flex;
-            gap: var(--space-md);
+        display: flex;
+        gap: var(--space-md);
         }
 
         .reply-btn, .like-btn {
-            background: none;
-            border: none;
-            color: var(--gray-600);
-            cursor: pointer;
-            font-size: 0.85rem;
-            padding: 0;
-            transition: color 0.2s;
+        background: none;
+        border: none;
+        color: var(--gray-600);
+        cursor: pointer;
+        font-size: 0.85rem;
+        padding: 0;
+        transition: color 0.2s;
         }
 
-            .reply-btn:hover, .like-btn:hover {
-                color: var(--primary);
-            }
+        .reply-btn:hover, .like-btn:hover {
+        color: var(--primary);
+        }
 
         .comment-reply {
-            margin-top: var(--space-lg);
-            margin-left: var(--space-lg);
-            padding-left: var(--space-md);
-            border-left: 2px solid var(--gray-200);
-            display: flex;
-            gap: var(--space-md);
+        margin-top: var(--space-lg);
+        margin-left: var(--space-lg);
+        padding-left: var(--space-md);
+        border-left: 2px solid var(--gray-200);
+        display: flex;
+        gap: var(--space-md);
         }
 
         .comment-reply-sm {
-            margin-top: var(--space-sm); /* Daha küçük boşluk */
-            margin-left: var(--space-sm);
-            padding-left: var(--space-xs); /* Daha az iç boşluk */
-            border-left: 2px solid var(--gray-200);
-            display: flex;
-            gap: var(--space-md);
-            height: 40%;
+        margin-top: var(--space-sm); /* Daha küçük boşluk */
+        margin-left: var(--space-sm);
+        padding-left: var(--space-xs); /* Daha az iç boşluk */
+        border-left: 2px solid var(--gray-200);
+        display: flex;
+        gap: var(--space-md);
+        height: 40%;
         }
 
         /* Related Posts */
         .related-posts {
-            margin: var(--space-2xl) 0;
+        margin: var(--space-2xl) 0;
         }
 
         .related-title {
-            font-size: 1.5rem;
-            margin-bottom: var(--space-xl);
-            text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: var(--space-xl);
+        text-align: center;
         }
 
         .related-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: var(--space-lg);
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--space-lg);
         }
 
         .related-post {
-            border-radius: var(--radius);
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: var(--shadow-sm);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: var(--shadow-sm);
         }
 
-            .related-post:hover {
-                transform: translateY(-4px);
-                box-shadow: var(--shadow-md);
-            }
+        .related-post:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        }
 
         .related-post-img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
         }
 
         .related-post-body {
-            padding: var(--space-md);
+        padding: var(--space-md);
         }
 
         .related-post-title {
-            font-size: 1.1rem;
-            margin-bottom: var(--space-sm);
+        font-size: 1.1rem;
+        margin-bottom: var(--space-sm);
         }
 
         .related-post-link {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-xs);
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--primary);
         }
 
-            .related-post-link:hover {
-                color: var(--accent);
-            }
+        .related-post-link:hover {
+        color: var(--accent);
+        }
 
         /* Responsive */
         @@media (max-width: 640px) {
-            .container {
-                padding: 0 var(--space-sm);
-            }
+        .container {
+        padding: 0 var(--space-sm);
+        }
 
-            h1 {
-                font-size: 1.75rem;
-            }
+        h1 {
+        font-size: 1.75rem;
+        }
 
-            h2 {
-                font-size: 1.5rem;
-            }
+        h2 {
+        font-size: 1.5rem;
+        }
 
-            .author-card {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
+        .author-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        }
 
-            .author-social {
-                justify-content: center;
-            }
+        .author-social {
+        justify-content: center;
+        }
 
-            .comment-form {
-                flex-direction: column;
-            }
+        .comment-form {
+        flex-direction: column;
+        }
 
-            .form-actions {
-                justify-content: flex-start;
-            }
+        .form-actions {
+        justify-content: flex-start;
+        }
         }
 
         /* Alternatif stil 2 - Modern geçiş */
         .post-reply-btn-alt2 {
-            padding: 8px 16px;
-            background: #ffffff;
-            color: #000;
-            border: 1px solid #000;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-            position: relative;
-            overflow: hidden;
+        padding: 8px 16px;
+        background: #ffffff;
+        color: #000;
+        border: 1px solid #000;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+        position: relative;
+        overflow: hidden;
         }
 
-            .post-reply-btn-alt2::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8), transparent);
-                transition: left 0.5s ease;
-            }
+        .post-reply-btn-alt2::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8), transparent);
+        transition: left 0.5s ease;
+        }
 
-            .post-reply-btn-alt2:hover {
-                background: #000;
-                color: #fff;
-                transform: translateY(-3px);
-                box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            }
+        .post-reply-btn-alt2:hover {
+        background: #000;
+        color: #fff;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
 
-                .post-reply-btn-alt2:hover::before {
-                    left: 100%;
-                }
+        .post-reply-btn-alt2:hover::before {
+        left: 100%;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -563,10 +690,10 @@
 
 
         <article>
-            <header class="post-header mb-0">
+            <header class="post-header mb-0" style="position:inherit">
                 <span class="post-category">Technology</span>
                 <h1>@Model.Post.Title</h1>
-                <div class="post-meta">Published on @Model.Post.CreatedTime · @Model.ReadingTime.Minutes min read</div>
+                <div class="post-meta">Published on @Model.Post.CreatedTime.ToString("dddd d, yyyy", CultureInfo.InvariantCulture) · @Model.ReadingTime.Minutes min read</div>
             </header>
 
             <img src="@Model.Post.CoverImageUrl" alt="Web Development" class="post-image">
@@ -676,8 +803,8 @@
 
                     <script>
                         // Bu değerleri gerçek uygulamanızda backend'den alın
-                        const currentUserId = "@User.FindFirstValue(ClaimTypes.NameIdentifier)"; // String olarak tanımlandı
-                        const currentPostId = "@Model.Post.Id"; // String olarak tanımlandı
+                        // const currentUserId = "@User.FindFirstValue(ClaimTypes.NameIdentifier)"; // String olarak tanımlandı
+                        // const currentPostId = "@Model.Post.Id"; // String olarak tanımlandı
                         const parentCommentId = null; // Ana yorum için null, cevap için parent comment ID
 
                         document.getElementById('commentForm').addEventListener('submit', async function(e) {
@@ -835,9 +962,8 @@
                 }
                 else
                 {
-                    @foreach (var comment in Model.Comments)
+                    @foreach (var comment in Model.Comments.Where(c => c.ParentCommentId == null))
                     {
-
                         <!-- Another Comment -->
                         <div class="comment">
                             <div class="commentor-avatar">
@@ -847,54 +973,28 @@
                             <div class="comment-body">
                                 <div class="comment-header">
                                     <span class="comment-author">@comment.Author.FullName</span>
-                                    <span class="comment-date">@comment.CreatedTime</span>
+                                    <span class="comment-date">@comment.CreatedTime.ToString("dddd d, yyyy", CultureInfo.InvariantCulture)</span>
                                 </div>
                                 <div class="comment-content">
                                     <p>@comment.Content</p>
                                 </div>
                                 <div class="comment-footer">
-                                    <button class="reply-btn" type="button" data-comment-id="@comment.Id">Reply</button>
+                                    @if(User.Identity.IsAuthenticated)
+                                    {
+                                        <button class="reply-btn" type="button" data-comment-id="@comment.Id" >Reply</button>
+                                    }
                                     <button class="like-btn">
                                         Like (@(comment.Likes?.Count() ?? 0))
-
                                     </button>
                                 </div>
-
-
-
-                                @if (comment.Replies.Count > 0)
-                                {
-                                    <div class="mt-4 ms-2">
-                                        @foreach (var reply in comment.Replies)
-                                        {
-                                            <div class="comment-reply-sm">
-                                                <div class="commentor-avatar ms-2">
-                                                    <img src="/img/userPhotos/gorkemkayas5269/WhatsApp_Image_2025-06-11_at_21.30.19_c95a0f93.jpg" />
-                                                    <span>Y</span>
-                                                </div>
-                                                <div class="comment-body">
-                                                    <div class="comment-header">
-                                                        <span class="comment-author">@reply.Author.FullName</span>
-                                                        <span class="comment-date">@reply.CreatedTime</span>
-                                                    </div>
-                                                    <div class="comment-content">
-                                                        <p>@reply.Content</p>
-                                                    </div>
-                                                    <div class="comment-footer">
-                                                        @* <button class="reply-btn" type="button" data-comment-id="@reply.Id">Reply</button> *@
-                                                        <button class="like-btn">
-                                                            Like (@(reply.Likes?.Count() ?? 0))
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                                }
                                 <!-- Dinamik olarak açılıp kapanan reply alanı -->
                                 <div class="reply-box d-flex d-none justify-content-start comment-reply-sm mt-4">
                                     <div class="commentor-avatar ms-1">
-                                        <img src="/img/userPhotos/gorkemkayas5269/WhatsApp_Image_2025-06-11_at_21.30.19_c95a0f93.jpg" />
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                        <img src="/img/userPhotos/@User.Identity.Name/@Model.CurrentUser!.ProfilePicture" />
+                                            
+                                        }
                                         <span>Y</span>
                                     </div>
                                     <form class="comment-input reply-form" method="post">
@@ -907,58 +1007,130 @@
                                     </form>
                                 </div>
 
-                                <!-- Sayfada user id ve post id saklı -->
-                                <script>
-                                    const currentUserId = "@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)";
-                                    const currentPostId = "@Model.Post.Id"; // veya ViewData["PostId"] şeklinde
-                                </script>
+                                    <div class="reply-list">
+                                @if (comment.Replies.Count > 0)
+                                {
+                                    <div class="mt-4 ms-2">
 
-                                <script>
-                                    // Reply butonuna basınca formu aç/kapat
-                                    $(document).on("click", ".reply-btn", function () {
-                                        var replyBox = $(this).closest(".comment-body").find(".reply-box");
-                                        replyBox.toggleClass("d-none");
-                                    });
-
-                                    // Form gönderimi
-                                    $(document).on("submit", ".reply-form", function (e) {
-                                        e.preventDefault();
-
-                                        const form = $(this);
-                                        const replyText = form.find(".reply-textarea").val();
-                                        const parentCommentId = form.find("input[name='ParentCommentId']").val();
-
-                                        if (replyText.trim() === "") {
-                                            form.find(".messageContainer").text("Yorum boş olamaz.");
-                                            return;
+                                    
+                                        @foreach (var reply in comment.Replies)
+                                        {
+                                            <div class="comment-reply-sm">
+                                                <div class="commentor-avatar ms-2">
+                                                    <img src="/img/userPhotos/gorkemkayas5269/WhatsApp_Image_2025-06-11_at_21.30.19_c95a0f93.jpg" />
+                                                    <span>Y</span>
+                                                </div>
+                                                <div class="comment-body">
+                                                    <div class="comment-header">
+                                                        <span class="comment-author">@reply.Author.FullName</span>
+                                                            <span class="comment-date">@reply.CreatedTime.ToString("dddd d, yyyy", CultureInfo.InvariantCulture)</span>
+                                                    </div>
+                                                    <div class="comment-content">
+                                                        <p>@reply.Content</p>
+                                                    </div>
+                                                    <div class="comment-footer">
+                                                        <button class="like-btn">
+                                                            Like (@(reply.Likes?.Count() ?? 0))
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         }
-
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "/Comment/AddComment",
-                                            contentType: "application/json",
-                                            data: JSON.stringify({
-                                                AuthorId: currentUserId,
-                                                Comment: replyText,
-                                                PostId: currentPostId,
-                                                ParentCommentId: parentCommentId
-                                            }),
-                                            success: function (response) {
-                                                form.find(".messageContainer").text("Cevap gönderildi.");
-                                                form.find(".reply-textarea").val("");
-                                                form.closest(".reply-box").addClass("d-none");
-                                                // İsteğe bağlı: yorum listesini güncelle veya yeni yorumu ekle
-                                            },
-                                            error: function () {
-                                                form.find(".messageContainer").text("Bir hata oluştu.");
-                                            }
-                                        });
-                                    });
-                                </script>
-
+                                        </div>
+                                }
+                                    </div>
                             </div>
                         </div>
                     }
+
+                    <!-- JavaScript kodunu foreach döngüsü dışına taşıyın -->
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+                    <script>
+                        $(document).ready(function () {
+                            // Reply butonuna basınca o yorumun altındaki formu aç/kapat
+                            $(document).on("click", ".reply-btn", function () {
+                                console.log("Reply button clicked");
+
+                                const comment = $(this).closest(".comment");
+                                const replyBox = comment.find(".reply-box").first();
+
+                                if (replyBox.length) {
+                                    replyBox.toggleClass("d-none");
+                                } else {
+                                    console.warn("Reply box bulunamadı!");
+                                }
+                            });
+
+                            // Form gönderimi
+                            $(document).on("submit", ".reply-form", function (e) {
+                                e.preventDefault();
+
+                                const form = $(this);
+                                const replyText = form.find(".reply-textarea").val();
+                                const parentCommentId = form.find("input[name='ParentCommentId']").val();
+
+                                if (replyText.trim() === "") {
+                                    form.find(".messageContainer").text("Yorum boş olamaz.");
+                                    return;
+                                }
+
+                                                        $.ajax({
+                            type: "POST",
+                            url: "/Comment/AddComment",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                AuthorId: currentUserId,
+                                Comment: replyText,
+                                PostId: currentPostId,
+                                ParentCommentId: parentCommentId
+                            }),
+                            success: function(response) {  // <-- buraya response parametresi geldi!
+                                form.find(".messageContainer").text("Cevap gönderildi.");
+                                form.find(".reply-textarea").val("");
+                                form.closest(".reply-box").addClass("d-none");
+
+                                                        console.log(response.Comment);      // büyük harfli
+                                                        console.log(response.authorProfileUrl);      // büyük harfli
+                        console.log(response.comment);      // küçük harfli
+                        console.log(response.AuthorName);   // büyük harfli
+                        console.log(response.authorName);   // küçük harfli
+                        console.log(response.CreatedDate);  // büyük harfli
+                        console.log(response.createdDate);  // küçük harfli
+                                const newReplyHtml = `
+                                    <div class="comment-reply-sm mt-2">
+                                        <div class="commentor-avatar ms-2">
+                                            <img src="${response.authorProfileUrl}" />
+                                            <span>${response.authorName?.charAt(0) || "?"}</span>
+                                        </div>
+                                        <div class="comment-body">
+                                            <div class="comment-header">
+                                                <span class="comment-author">${response.authorName}</span>
+                                                <span class="comment-date">${response.createdDate}</span>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p>${response.comment}</p>
+                                            </div>
+                                            <div class="comment-footer">
+                                                <button class="like-btn">Like (0)</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+
+                                form.closest(".comment").find(".reply-list").append(newReplyHtml);
+                            },
+                            error: function () {
+                                form.find(".messageContainer").text("Bir hata oluştu.");
+                            }
+                        });
+
+                            });
+                        });
+                    </script>
+
+
+
                 }
             </div>
         </div>

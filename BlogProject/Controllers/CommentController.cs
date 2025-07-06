@@ -4,6 +4,7 @@ using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace BlogProject.Controllers
 {
@@ -34,13 +35,17 @@ namespace BlogProject.Controllers
             {
             var addedComment = await _blogDbContext.Comments.AddAsync(commentEntity);
             await _blogDbContext.SaveChangesAsync();
-            return Json(new
+                var author = await _userManager.FindByIdAsync(model.AuthorId);
+                var profilePhotoUrl = author.ProfilePicture;
+                var url = $"/img/userPhotos/{author.UserName}/{profilePhotoUrl}";
+                return Json(new
             {
                 Success = true,
                 Comment = model.Comment,
-                AuthorName = User.Identity.Name,
-                CreatedDate = DateTime.Now
-            });
+                AuthorName = author.FullName,
+                AuthorProfileUrl = url,
+                CreatedDate = DateTime.Now.ToString("dddd d, yyyy", CultureInfo.InvariantCulture)
+                });
             }
             catch (Exception ex)
             {

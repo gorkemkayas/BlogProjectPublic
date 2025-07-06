@@ -85,7 +85,9 @@ namespace BlogProject.Controllers
             {
                 Post = post,
                 RecommendedPosts = recommendedPost,
-                Comments = comments
+                Comments = comments,
+                CurrentUser = User.Identity.IsAuthenticated ? await _context.Users
+                    .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name) : null
             };
             return View(model);
         }

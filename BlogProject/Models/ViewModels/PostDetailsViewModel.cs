@@ -9,6 +9,7 @@ namespace BlogProject.Models.ViewModels
         public List<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
         public ICollection<PostEntity> RecommendedPosts { get; set; } = new List<PostEntity>();
 
+        public AppUser? CurrentUser { get; set; }
         public TimeSpan ReadingTime
         {
             get
