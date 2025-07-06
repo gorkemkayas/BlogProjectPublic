@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BlogProject.Models.ViewModels;
 using BlogProject.Services.Abstract;
+using BlogProject.Services.CustomMethods.Concrete;
 using BlogProject.Services.DTOs;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
@@ -29,7 +30,7 @@ namespace BlogProject.Services.Concrete
             {
                 throw new ArgumentNullException(nameof(postId));
             }
-            return await _blogDbContext.Posts.FindAsync(postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
+            return await _blogDbContext.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Id == postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
         }
 
         public async Task<ICollection<PostEntity>> GetPostsByAuthorIdAsync(Guid authorId, bool isDescending)
@@ -281,6 +282,15 @@ namespace BlogProject.Services.Concrete
             try
             {
                 var newPostEntity = _mapper.Map<PostEntity>(model);
+                var author = await _blogDbContext.Users.FindAsync(Guid.Parse(model.AuthorId));
+                var category = await _blogDbContext.Categories.FindAsync(Guid.Parse(model.CategoryId));
+
+                newPostEntity.Author = author!;
+                newPostEntity.Category = category!;
+                newPostEntity.CreatedTime = DateTime.Now;
+
+                newPostEntity.CoverImageUrl = await ImageSaver.SaveUserImageAsync(model.CoverImage, model.Title);
+
                 await _blogDbContext.Posts.AddAsync(newPostEntity);
                 await _blogDbContext.SaveChangesAsync();
 
@@ -309,6 +319,30 @@ namespace BlogProject.Services.Concrete
                 };
                 return result;
             }
+        }
+
+        public async Task<ICollection<PostEntity>> GetLatestPostsWithCount(int count = 3)
+        {
+            if (count <= 0)
+            {
+                throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
+            }
+            return await _blogDbContext.Posts
+                .Take(count)
+                .OrderByDescending(p => p.CreatedTime)
+                .Include(p =>p.Category)
+                .ToListAsync(); 
+        }
+        public async Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3)
+        {
+            if (count <= 0)
+            {
+                throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
+            }
+            return await _blogDbContext.Posts
+                .OrderByDescending(p => p.ViewCount)
+                .Take(count)
+                .ToListAsync();
         }
     }
 }

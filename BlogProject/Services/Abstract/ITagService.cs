@@ -15,5 +15,6 @@ namespace BlogProject.Services.Abstract
         Task<ServiceResult<TagEntity>> ActivateTagById(string tagId);
         Task<ServiceResult<TagEntity>> DeleteTagByTypeAsync(string id, DeleteType deleteType, string deleterId);
         ServiceResult<List<SelectListItem>> GetAllTagSelectList();
+        Task<List<TagEntity>> GetPopularTags(int count = 10);
     }
 }

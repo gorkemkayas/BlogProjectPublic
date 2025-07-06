@@ -12,14 +12,16 @@ namespace BlogProject.Controllers
         private readonly IPostService _postService;
         private readonly ITagService _tagService;
         private readonly ICategoryService _categoryService;
+        private readonly ICommentService _commentService;
         private readonly BlogDbContext _context;
 
-        public PostController(IPostService postService, BlogDbContext context, ITagService tagService, ICategoryService categoryService)
+        public PostController(IPostService postService, BlogDbContext context, ITagService tagService, ICategoryService categoryService, ICommentService commentService)
         {
             _postService = postService;
             _context = context;
             _tagService = tagService;
             _categoryService = categoryService;
+            _commentService = commentService;
         }
 
         public IActionResult Index()
@@ -28,7 +30,7 @@ namespace BlogProject.Controllers
             return View();
         }
 
-        [HttpGet]
+        [HttpGet("Post/NewPost")]
         public async Task<IActionResult> NewPost()
         {
             var model = new CreatePostViewModel
@@ -66,6 +68,25 @@ namespace BlogProject.Controllers
             // Kategorileri ve etiketleri tekrar doldurun
             model.AvailableCategories = _categoryService.GetAllCategorySelectList().Data!;
             model.AvailableTags = _tagService.GetAllTagSelectList().Data!;
+            return View(model);
+        }
+
+        [HttpGet("Post/{id}")]
+        public async Task<IActionResult> PostDetails(string id)
+        {
+            var post = await _postService.GetPostByIdAsync(Guid.Parse(id));
+            var recommendedPost = await _postService.GetLatestPostsWithCount(3);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            var comments = await _commentService.GetCommentsByPostIdAsync(id);
+            var model = new PostDetailsViewModel
+            {
+                Post = post,
+                RecommendedPosts = recommendedPost,
+                Comments = comments
+            };
             return View(model);
         }
     }

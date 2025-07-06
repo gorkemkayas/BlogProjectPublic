@@ -21,18 +21,17 @@ namespace BlogProject.Models.ViewModels
         [Display(Name = "Özet İçerik")]
         public string SubContent { get; set; }
 
-        [Display(Name = "Kapak Resmi")]
         public IFormFile CoverImage { get; set; }
 
-        [Display(Name = "Kapak Resmi URL")]
-        public string CoverImageUrl { get; set; }
+        //[Display(Name = "Kapak Resmi URL")]
+        //public string CoverImageUrl { get; set; }
 
         [Required(ErrorMessage = "Kategori seçimi zorunludur.")]
         [Display(Name = "Kategori")]
-        public int CategoryId { get; set; }
+        public string CategoryId { get; set; }
 
         [Display(Name = "Etiketler")]
-        public List<int> TagIds { get; set; } = new List<int>();
+        public List<string> TagIds { get; set; } = new List<string>();
 
         [Display(Name = "Taslak olarak kaydet")]
         public bool IsDraft { get; set; } = true;

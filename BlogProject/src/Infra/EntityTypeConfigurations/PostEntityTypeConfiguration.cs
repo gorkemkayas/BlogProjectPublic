@@ -11,7 +11,7 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             // Title
             builder.Property(e => e.Title)
                    .IsRequired()
-                   .HasMaxLength(50);
+                   .HasMaxLength(100);
 
             // Subtitle
             builder.Property(e => e.Subtitle)

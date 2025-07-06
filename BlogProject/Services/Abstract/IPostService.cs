@@ -15,7 +15,8 @@ namespace BlogProject.Services.Abstract
         // CreatePostDto ile UpdatePostDto ları baştan yapıcam şuanda boş, hata vermesin diye.
         public Task AddPostAsync(CreatePostDto createPostDto);
         public Task UpdatePostAsync(Guid postId, UpdatePostDto updatePostDto);
-
+        Task<ICollection<PostEntity>> GetLatestPostsWithCount(int count = 3);
+        Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3);
         Task<ServiceResult<object>> CreatePostAsync(CreatePostViewModel model);
 
         public Task SoftDeletePostAsync(Guid postId);

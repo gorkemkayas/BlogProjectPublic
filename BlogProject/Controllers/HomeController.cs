@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using BlogProject.Models;
+using BlogProject.Models.ViewModels;
+using BlogProject.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProject.Controllers
@@ -7,15 +9,30 @@ namespace BlogProject.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IPostService _postService;
+        private readonly ITagService _tagService;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, IPostService postService, ITagService tagService)
         {
             _logger = logger;
+            _postService = postService;
+            _tagService = tagService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var mostViewedPosts = await _postService.GetMostViewedPostsWithCount();
+            var LeastPosts = await _postService.GetLatestPostsWithCount();
+            var popularTags = await _tagService.GetPopularTags(15);
+
+            var model = new IndexViewModel
+            {
+                MostViewedPosts = mostViewedPosts,
+                LatestPosts = LeastPosts,
+                PopularTags = popularTags
+            };
+            return View(model);
         }
 
         public IActionResult Privacy()

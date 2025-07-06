@@ -217,7 +217,7 @@ namespace BlogProject.Services.Concrete
         {
             try
             {
-                var selectListCategories = _context.Categories.Where(a => a.IsDeleted == false).Select(t => new SelectListItem() { Text = t.Name, Value = t.Name });
+                var selectListCategories = _context.Categories.Where(a => a.IsDeleted == false).Select(t => new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
                 var result = new ServiceResult<List<SelectListItem>>()
                 {
                     IsSuccess = true,

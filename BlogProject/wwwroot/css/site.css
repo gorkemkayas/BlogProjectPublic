@@ -222,6 +222,15 @@ body {
     .blacktogray:hover {
         color: #555555 !important;
     }
+
+.blacktograydark {
+    color: black !important;
+    transition: color 0.3s ease-in;
+}
+
+    .blacktograydark:hover {
+        color: ButtonFace !important;
+    }
 .graytored {
     color:darkgray !important;
     transition: color 0.1s ease-in;

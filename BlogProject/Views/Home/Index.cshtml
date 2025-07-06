@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+@model IndexViewModel
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -7,409 +9,409 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --black: #000000;
-            --white: #ffffff;
-            --light-gray: #f5f5f5;
-            --medium-gray: #e0e0e0;
-            --dark-gray: #333333;
-            --accent: #555555;
-            --primary: #2563eb; /* Mavi ton */
-            --danger: #dc2626; /* Kırmızı ton */
+        --black: #000000;
+        --white: #ffffff;
+        --light-gray: #f5f5f5;
+        --medium-gray: #e0e0e0;
+        --dark-gray: #333333;
+        --accent: #555555;
+        --primary: #2563eb; /* Mavi ton */
+        --danger: #dc2626; /* Kırmızı ton */
         }
 
-       
+
 
         /* Header */
         .header {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--medium-gray);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        background-color: var(--white);
+        border-bottom: 1px solid var(--medium-gray);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
         }
 
-        
+
 
         /* Navbar */
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
         }
 
-        
+
 
         .brand-logo {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--black);
-            text-decoration: none;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--black);
+        text-decoration: none;
         }
 
-            .brand-logo .dot {
-                color: var(--primary);
-            }
+        .brand-logo .dot {
+        color: var(--primary);
+        }
 
         .user-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
         }
 
         .btn-signin, .btn-signup {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s;
         }
 
         .btn-signin {
-            border: 1px solid var(--medium-gray);
-            color: var(--dark-gray);
-            background: transparent;
+        border: 1px solid var(--medium-gray);
+        color: var(--dark-gray);
+        background: transparent;
         }
 
-            .btn-signin:hover {
-                background-color: var(--light-gray);
-            }
+        .btn-signin:hover {
+        background-color: var(--light-gray);
+        }
 
         .btn-signup {
-            border: 1px solid var(--primary);
-            background-color: var(--primary);
-            color: var(--white);
+        border: 1px solid var(--primary);
+        background-color: var(--primary);
+        color: var(--white);
         }
 
-            .btn-signup:hover {
-                background-color: #1d4ed8;
-            }
+        .btn-signup:hover {
+        background-color: #1d4ed8;
+        }
 
         .user-dropdown {
-            display: flex;
-            align-items: center;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--dark-gray);
-            font-weight: 500;
+        display: flex;
+        align-items: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--dark-gray);
+        font-weight: 500;
         }
 
         .user-dropdown-toggle {
-            display: flex;
-            align-items: center;
+        display: flex;
+        align-items: center;
         }
 
         .profile-photo {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
         }
 
         .notification-badge {
-            width: 8px;
-            height: 8px;
-            background-color: var(--danger);
-            border-radius: 50%;
-            position: absolute;
-            top: 0;
-            right: 0;
+        width: 8px;
+        height: 8px;
+        background-color: var(--danger);
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        right: 0;
         }
 
         .dropdown-menu {
-            border: 1px solid var(--medium-gray);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--medium-gray);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .dropdown-item {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
         }
 
-            .dropdown-item i {
-                width: 20px;
-                text-align: center;
-                margin-right: 0.5rem;
-            }
+        .dropdown-item i {
+        width: 20px;
+        text-align: center;
+        margin-right: 0.5rem;
+        }
 
 
         /* Hero Section */
         .hero {
-            background-color: var(--light-gray);
-            text-align: center;
-            padding: 6rem 1rem;
-            margin-bottom: 4rem;
+        background-color: var(--light-gray);
+        text-align: center;
+        padding: 6rem 1rem;
+        margin-bottom: 4rem;
         }
 
         .hero-title {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--black);
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--black);
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--dark-gray);
-            max-width: 700px;
-            margin: 0 auto 2.5rem;
-            opacity: 0.9;
+        font-size: 1.25rem;
+        color: var(--dark-gray);
+        max-width: 700px;
+        margin: 0 auto 2.5rem;
+        opacity: 0.9;
         }
 
         .hero-cta {
-            display: inline-block;
-            padding: 0.9rem 2.5rem;
-            background-color: var(--black);
-            color: var(--white);
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: 1px solid var(--black);
+        display: inline-block;
+        padding: 0.9rem 2.5rem;
+        background-color: var(--black);
+        color: var(--white);
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: 1px solid var(--black);
         }
 
-            .hero-cta:hover {
-                background-color: transparent;
-                color: var(--black);
-            }
+        .hero-cta:hover {
+        background-color: transparent;
+        color: var(--black);
+        }
 
         /* Blog Grid */
         .section-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            color: var(--black);
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: var(--black);
         }
 
         .post-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
         }
 
         /* Post Cards */
         .post-card {
-            background: var(--white);
-            border: 1px solid var(--medium-gray);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
+        background: var(--white);
+        border: 1px solid var(--medium-gray);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
         }
 
-            .post-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-            }
+        .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
 
         .post-img-container {
-            height: 200px;
-            overflow: hidden;
+        height: 200px;
+        overflow: hidden;
         }
 
         .post-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
         }
 
         .post-card:hover .post-img {
-            transform: scale(1.03);
+        transform: scale(1.03);
         }
 
         .post-body {
-            padding: 1.75rem;
+        padding: 1.75rem;
         }
 
         .post-category {
-            display: inline-block;
-            color: var(--dark-gray);
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        display: inline-block;
+        color: var(--dark-gray);
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         }
 
         .post-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--black);
-            margin-bottom: 0.75rem;
-            line-height: 1.3;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--black);
+        margin-bottom: 0.75rem;
+        line-height: 1.3;
         }
 
         .post-excerpt {
-            color: var(--dark-gray);
-            margin-bottom: 1.5rem;
-            opacity: 0.8;
+        color: var(--dark-gray);
+        margin-bottom: 1.5rem;
+        opacity: 0.8;
         }
 
         .read-more {
-            color: var(--black);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
+        color: var(--black);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
         }
 
-            .read-more::after {
-                content: "→";
-                margin-left: 0.5rem;
-                transition: transform 0.3s;
-            }
+        .read-more::after {
+        content: "→";
+        margin-left: 0.5rem;
+        transition: transform 0.3s;
+        }
 
-            .read-more:hover::after {
-                transform: translateX(3px);
-            }
+        .read-more:hover::after {
+        transform: translateX(3px);
+        }
 
         /* Newsletter */
         .newsletter {
-            background-color: var(--black);
-            color: var(--white);
-            padding: 4rem 2rem;
-            text-align: center;
-            margin: 5rem 0;
+        background-color: var(--black);
+        color: var(--white);
+        padding: 4rem 2rem;
+        text-align: center;
+        margin: 5rem 0;
         }
 
         .newsletter-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
         }
 
         .newsletter-subtitle {
-            opacity: 0.8;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
         }
 
         .newsletter-form {
-            display: flex;
-            max-width: 500px;
-            margin: 0 auto;
+        display: flex;
+        max-width: 500px;
+        margin: 0 auto;
         }
 
         .newsletter-input {
-            flex: 1;
-            padding: 0.9rem 1.25rem;
-            border: none;
-            font-family: inherit;
-            font-size: 0.95rem;
+        flex: 1;
+        padding: 0.9rem 1.25rem;
+        border: none;
+        font-family: inherit;
+        font-size: 0.95rem;
         }
 
-            .newsletter-input:focus {
-                outline: 2px solid var(--white);
-            }
+        .newsletter-input:focus {
+        outline: 2px solid var(--white);
+        }
 
         .newsletter-btn {
-            padding: 0 1.75rem;
-            background-color: var(--white);
-            color: var(--black);
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
+        padding: 0 1.75rem;
+        background-color: var(--white);
+        color: var(--black);
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
         }
 
-            .newsletter-btn:hover {
-                background-color: var(--medium-gray);
-            }
+        .newsletter-btn:hover {
+        background-color: var(--medium-gray);
+        }
 
         /* Footer */
         .footer {
-            background-color: var(--black);
-            color: var(--white);
-            padding: 4rem 0 2rem;
+        background-color: var(--black);
+        color: var(--white);
+        padding: 4rem 0 2rem;
         }
 
         .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 3rem;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        margin-bottom: 3rem;
         }
 
         .footer-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.5px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
         }
 
         .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        list-style: none;
+        padding: 0;
+        margin: 0;
         }
 
-            .footer-links li {
-                margin-bottom: 0.75rem;
-            }
+        .footer-links li {
+        margin-bottom: 0.75rem;
+        }
 
-            .footer-links a {
-                color: var(--medium-gray);
-                text-decoration: none;
-                transition: color 0.3s;
-                font-size: 0.9rem;
-            }
+        .footer-links a {
+        color: var(--medium-gray);
+        text-decoration: none;
+        transition: color 0.3s;
+        font-size: 0.9rem;
+        }
 
-                .footer-links a:hover {
-                    color: var(--white);
-                }
+        .footer-links a:hover {
+        color: var(--white);
+        }
 
         .copyright {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid var(--dark-gray);
-            color: var(--medium-gray);
-            font-size: 0.85rem;
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid var(--dark-gray);
+        color: var(--medium-gray);
+        font-size: 0.85rem;
         }
 
         /* Responsive */
         @@media (max-width: 768px) {
-            .hero-title
+        .hero-title
 
         {
-            font-size: 2.2rem;
+        font-size: 2.2rem;
         }
 
         .footer-grid {
-            grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
         }
 
         .nav-links {
-            gap: 1rem;
+        gap: 1rem;
         }
 
         .brand-logo {
-            position: static;
-            transform: none;
-            order: -1;
+        position: static;
+        transform: none;
+        order: -1;
         }
 
         .navbar {
-            flex-wrap: wrap;
-            gap: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
         }
 
         .social-icons {
-            order: 1;
+        order: 1;
         }
 
         .user-actions {
-            order: 2;
-            margin-left: auto;
+        order: 2;
+        margin-left: auto;
         }
 
         }
@@ -430,86 +432,86 @@
 
     <style>
         .hero {
-            background-color: #f5f5f5;
-            text-align: center;
-            padding: 6rem 1rem;
-            margin-bottom: 4rem;
-            position: relative;
-            overflow: hidden;
+        background-color: #f5f5f5;
+        text-align: center;
+        padding: 6rem 1rem;
+        margin-bottom: 4rem;
+        position: relative;
+        overflow: hidden;
         }
 
         .hero-animation {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.03) 100%);
-            animation: shimmer 8s infinite linear;
-            z-index: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.03) 100%);
+        animation: shimmer 8s infinite linear;
+        z-index: 0;
         }
 
         .hero .container {
-            position: relative;
-            z-index: 1;
+        position: relative;
+        z-index: 1;
         }
 
         .hero-title {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #000;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
+        font-size: 3rem;
+        font-weight: 800;
+        color: #000;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
-            color: #333;
-            max-width: 700px;
-            margin: 0 auto 2.5rem;
-            opacity: 0.9;
+        font-size: 1.25rem;
+        color: #333;
+        max-width: 700px;
+        margin: 0 auto 2.5rem;
+        opacity: 0.9;
         }
 
         .hero-cta {
-            display: inline-block;
-            padding: 0.9rem 2.5rem;
-            background-color: #000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: 1px solid #000;
+        display: inline-block;
+        padding: 0.9rem 2.5rem;
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: 1px solid #000;
         }
 
-            .hero-cta:hover {
-                background-color: transparent;
-                color: #000;
-            }
+        .hero-cta:hover {
+        background-color: transparent;
+        color: #000;
+        }
 
         @@keyframes shimmer {
-            0%
+        0%
 
         {
-            transform: translateX(-100%);
+        transform: translateX(-100%);
         }
 
         100% {
-            transform: translateX(100%);
+        transform: translateX(100%);
         }
 
         }
 
         /* Responsive */
         @@media (max-width: 768px) {
-            .hero-title
+        .hero-title
 
         {
-            font-size: 2.2rem;
+        font-size: 2.2rem;
         }
 
         .hero-subtitle {
-            font-size: 1.1rem;
+        font-size: 1.1rem;
         }
 
         }
@@ -519,20 +521,22 @@
     <div class="container">
         <h2 class="section-title">Featured Articles</h2>
         <div class="post-grid">
-            <!-- Post 1 -->
-            <article class="post-card post-title-link ">
-                <div class="post-img-container">
-                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Coding" class="post-img">
-                </div>
-                <div class="post-body">
-                    <span class="post-category">Technology</span>
-                    <h3 class="post-title">The Future of Web Development</h3>
-                    <p class="post-excerpt">Exploring the emerging technologies that will shape how we build for the web in the coming decade.</p>
-                    <a href="#" class="read-more">Read more</a>
-                </div>
-            </article>
+            @foreach(var post in Model.LatestPosts)
+            {
+                <!-- Post 1 -->
+                <article class="post-card post-title-link ">
+                    <div class="post-img-container">
+                        <img src="@post.CoverImageUrl" alt="Coding" class="post-img">
+                    </div>
+                    <div class="post-body">
+                        <span class="post-category">@post.Category.Name</span>
+                        <h3 class="post-title">@post.Title</h3>
+                        <p class="post-excerpt">@post.Subtitle</p>
+                        <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id.ToString()" class="read-more">Read more</a>
+                    </div>
+                </article>
 
-            <!-- Post 2 -->
+                @*    <!-- Post 2 -->
             <article class="post-card post-title-link">
                 <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Design" class="post-img">
@@ -556,7 +560,8 @@
                     <p class="post-excerpt">Strategies to maintain focus and produce meaningful work in our increasingly connected world.</p>
                     <a href="#" class="read-more">Read more</a>
                 </div>
-            </article>
+            </article> *@
+            }
         </div>
     </div>
 
@@ -580,145 +585,145 @@
 
     <style>
         .newsletter {
-            background-color: #fff;
-            padding: 5rem 2rem;
-            position: relative;
-            overflow: hidden;
-            border-top: 1px solid #e0e0e0;
-            border-bottom: 1px solid #e0e0e0;
+        background-color: #fff;
+        padding: 5rem 2rem;
+        position: relative;
+        overflow: hidden;
+        border-top: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e0e0e0;
         }
 
         .newsletter-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(#f5f5f5 1px, transparent 1px), linear-gradient(90deg, #f5f5f5 1px, transparent 1px);
-            background-size: 40px 40px;
-            animation: patternMove 20s linear infinite;
-            opacity: 0.3;
-            z-index: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(#f5f5f5 1px, transparent 1px), linear-gradient(90deg, #f5f5f5 1px, transparent 1px);
+        background-size: 40px 40px;
+        animation: patternMove 20s linear infinite;
+        opacity: 0.3;
+        z-index: 0;
         }
 
         .newsletter .container {
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
+        position: relative;
+        z-index: 1;
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
         }
 
         .newsletter-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 1rem;
-            animation: fadeInUp 0.8s ease-out;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 1rem;
+        animation: fadeInUp 0.8s ease-out;
         }
 
         .newsletter-subtitle {
-            color: #555;
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+        color: #555;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+        animation: fadeInUp 0.8s ease-out 0.2s both;
         }
 
         .input-group {
-            display: flex;
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            animation: fadeInUp 0.8s ease-out 0.4s both;
+        display: flex;
+        max-width: 500px;
+        margin: 0 auto;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        animation: fadeInUp 0.8s ease-out 0.4s both;
         }
 
         .newsletter-input {
-            flex: 1;
-            padding: 0.9rem 1.5rem;
-            border: 1px solid #e0e0e0;
-            border-right: none;
-            font-size: 0.95rem;
-            background: #fff;
-            transition: all 0.3s;
+        flex: 1;
+        padding: 0.9rem 1.5rem;
+        border: 1px solid #e0e0e0;
+        border-right: none;
+        font-size: 0.95rem;
+        background: #fff;
+        transition: all 0.3s;
         }
 
-            .newsletter-input:focus {
-                outline: none;
-                border-color: #000;
-            }
+        .newsletter-input:focus {
+        outline: none;
+        border-color: #000;
+        }
 
         .newsletter-btn {
-            padding: 0 1.8rem;
-            background-color: #000;
-            color: #fff;
-            border: 1px solid #000;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        padding: 0 1.8rem;
+        background-color: #000;
+        color: #fff;
+        border: 1px solid #000;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         }
 
-            .newsletter-btn:hover {
-                background-color: #333;
-                border-color: #333;
-            }
+        .newsletter-btn:hover {
+        background-color: #333;
+        border-color: #333;
+        }
 
         .arrow-icon {
-            transition: transform 0.3s;
+        transition: transform 0.3s;
         }
 
         .newsletter-btn:hover .arrow-icon {
-            transform: translateX(3px);
+        transform: translateX(3px);
         }
 
         @@keyframes patternMove {
-            from
+        from
 
         {
-            background-position: 0 0;
+        background-position: 0 0;
         }
 
         to {
-            background-position: 40px 40px;
+        background-position: 40px 40px;
         }
 
         }
 
         @@keyframes fadeInUp {
-            from
+        from
 
         {
-            opacity: 0;
-            transform: translateY(20px);
+        opacity: 0;
+        transform: translateY(20px);
         }
 
         to {
-            opacity: 1;
-            transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
         }
 
         }
 
         @@media (max-width: 768px) {
-            .input-group
+        .input-group
 
         {
-            flex-direction: column;
-            box-shadow: none;
+        flex-direction: column;
+        box-shadow: none;
         }
 
         .newsletter-input {
-            border-right: 1px solid #e0e0e0;
-            border-bottom: none;
-            margin-bottom: 0.5rem;
+        border-right: 1px solid #e0e0e0;
+        border-bottom: none;
+        margin-bottom: 0.5rem;
         }
 
         .newsletter-btn {
-            justify-content: center;
-            padding: 0.8rem;
+        justify-content: center;
+        padding: 0.8rem;
         }
 
         }
@@ -728,35 +733,37 @@
     <div class="container">
         <h2 class="section-title">Latest Articles</h2>
         <div class="post-grid">
-            <!-- Post 4 -->
-            <article class="post-card post-title-link">
-                <div class="post-img-container">
-                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Code" class="post-img">
-                </div>
-                <div class="post-body">
-                    <span class="post-category">Programming</span>
-                    <h3 class="post-title">Clean Code Principles</h3>
-                    <p class="post-excerpt">Practical tips to write maintainable, efficient code that stands the test of time.</p>
-                    <a href="#" class="read-more">Read more</a>
-                </div>
-            </article>
+            @foreach (var post in Model.MostViewedPosts)
+            {
+                <!-- Post 4 -->
+                <article class="post-card post-title-link">
+                    <div class="post-img-container">
+                        <img src="@post.CoverImageUrl" alt="Code" class="post-img">
+                    </div>
+                    <div class="post-body">
+                        <span class="post-category">@post.Category.Name</span>
+                        <h3 class="post-title">@post.Title</h3>
+                        <p class="post-excerpt">@post.Subtitle</p>
+                        <a href="#" class="read-more">Read more</a>
+                    </div>
+                </article>
 
-            <!-- Post 5 -->
-            <article class="post-card post-title-link">
-                <div class="post-img-container">
-                    <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Mountains" class="post-img">
-                </div>
-                <div class="post-body">
-                    <span class="post-category">Lifestyle</span>
-                    <h3 class="post-title">Digital Minimalism</h3>
-                    <p class="post-excerpt">How reducing your digital footprint can lead to a more intentional and fulfilling life.</p>
-                    <a href="#" class="read-more">Read more</a>
-                </div>
-            </article>
+                @* <!-- Post 5 -->
+                <article class="post-card post-title-link">
+                    <div class="post-img-container">
+                        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Mountains" class="post-img">
+                    </div>
+                    <div class="post-body">
+                        <span class="post-category">Lifestyle</span>
+                        <h3 class="post-title">Digital Minimalism</h3>
+                        <p class="post-excerpt">How reducing your digital footprint can lead to a more intentional and fulfilling life.</p>
+                        <a href="#" class="read-more">Read more</a>
+                    </div>
+                </article>
 
-            <!-- Post 6 -->
-            <article class="post-card post-title-link">
-                <div class="post-img-container">
+                <!-- Post 6 -->
+                <article class="post-card post-title-link">
+                    <div class="post-img-container">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Meeting" class="post-img">
                 </div>
                 <div class="post-body">
@@ -765,7 +772,8 @@
                     <p class="post-excerpt">Building strong team dynamics and maintaining productivity in distributed teams.</p>
                     <a href="#" class="read-more">Read more</a>
                 </div>
-            </article>
+            </article> *@
+            }
         </div>
     </div>
 
@@ -1257,7 +1265,11 @@
             </div>
 
             <div class="tags-container">
-                <a href="#" class="tag">Technology</a>
+                @foreach (var tag in Model.PopularTags)
+                {
+                    <a href="#" class="tag">@tag.Name</a>
+                }
+                @* <a href="#" class="tag">Technology</a>
                 <a href="#" class="tag">Design</a>
                 <a href="#" class="tag">Minimalism</a>
                 <a href="#" class="tag">Web Development</a>
@@ -1268,7 +1280,7 @@
                 <a href="#" class="tag">Figma</a>
                 <a href="#" class="tag">React</a>
                 <a href="#" class="tag">CSS</a>
-                <a href="#" class="tag">Photography</a>
+                <a href="#" class="tag">Photography</a> *@
             </div>
         </div>
     </section>

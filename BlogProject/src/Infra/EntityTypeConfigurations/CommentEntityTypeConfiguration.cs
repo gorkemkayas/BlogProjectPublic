@@ -9,7 +9,7 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
         {
             // Title
             builder.Property(e => e.Title)
-                   .IsRequired()
+                   .IsRequired(false)
                    .HasMaxLength(50);
 
             // Content

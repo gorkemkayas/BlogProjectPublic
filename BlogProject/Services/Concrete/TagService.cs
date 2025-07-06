@@ -220,7 +220,7 @@ namespace BlogProject.Services.Concrete
         {
             try
             {
-                var selectListTags = _context.Tags.Where(a => a.IsDeleted == false).Select(t => new SelectListItem() { Text = t.Name, Value = t.Name });
+                var selectListTags = _context.Tags.Where(a => a.IsDeleted == false).Select(t => new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
                 var result = new ServiceResult<List<SelectListItem>>()
                 {
                     IsSuccess = true,
@@ -237,6 +237,17 @@ namespace BlogProject.Services.Concrete
                     Errors = new List<IdentityError>() { new IdentityError { Code = "GetAllTagSelectListError", Description = "An error occurred while retrieving the tag select list." } }
                 };
                 return result;
+            }
+        }
+        public async Task<List<TagEntity>> GetPopularTags(int count = 10)
+        {
+            try
+            {
+                return await _context.Tags.Where(t => t.IsDeleted == false).Take(count).OrderByDescending(v => v.UsageCount).ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw new Exception("An error occurred while retrieving all tags.");
             }
         }
     }

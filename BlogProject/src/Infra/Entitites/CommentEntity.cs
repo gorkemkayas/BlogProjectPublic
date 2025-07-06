@@ -4,7 +4,7 @@ namespace BlogProject.src.Infra.Entitites
 {
     public class CommentEntity : BaseEntity
     {
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public string Content { get; set; }
 
         public Guid PostId { get; set; }
