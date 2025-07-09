@@ -6,7 +6,16 @@ namespace BlogProject.Services.CustomMethods.Concrete
     {
         public static async Task<string> SaveUserImageAsync(IFormFile formFile, string postTitle)
         {
-            var safeTitle = Slugify(postTitle).Substring(0,50);
+            string? safeTitle = null;
+            if(postTitle.Length > 50)
+            {
+                var slug = Slugify(postTitle);
+                safeTitle = slug.Length > 50 ? slug.Substring(0, 50) : slug;
+            }
+            else
+            {
+                safeTitle = postTitle;
+            }
             string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "Posts", safeTitle);
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);

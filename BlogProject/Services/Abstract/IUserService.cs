@@ -13,6 +13,7 @@ namespace BlogProject.Services.Abstract
     {
 
         bool CheckEmailConfirmed(AppUser user);
+        Task<ServiceResult<AppUser>> SubscribeToNotificationsAsync(string email);
         Task<ExtendedProfileViewModel> ConfigurePictureAsync(ExtendedProfileViewModel newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type);
         Task<ServiceResult<AppUser>> SignUp(SignUpViewModel request);
         Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInViewModel request);

@@ -94,6 +94,34 @@ namespace BlogProject.Services.Concrete
             return user.EmailConfirmed;
         }
 
+        public async Task<ServiceResult<AppUser>> SubscribeToNotificationsAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "UserNotFound", Description = "User not found." } }
+                };
+            }
+            user.GeneralNotificationActive = true;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return new ServiceResult<AppUser>()
+                {
+                    IsSuccess = false,
+                    Errors = result.Errors.ToList()
+                };
+            }
+            return new ServiceResult<AppUser>()
+            {
+                IsSuccess = true,
+                Data = user
+            };
+        }
+
         public async Task<int> GetCommentCountByUserAsync(AppUser user)
         {
             var commentCount = await _blogdbContext.Comments.CountAsync(x => x.AuthorId == user.Id);
@@ -355,7 +383,12 @@ namespace BlogProject.Services.Concrete
                 errors.Add(new IdentityError() { Code = "EmailNotConfirmed", Description = "Your email is not confirmed." });
                 return (false, errors);
             }
-
+            var userClaims = await _userManager.GetClaimsAsync(hasUser);
+            var claims = new List<Claim>(userClaims)
+    {
+        new Claim("ProfilePictureUrl", $"{hasUser.ProfilePicture}")
+    };
+            _userManager.AddClaimsAsync(hasUser, claims).Wait(); // Add ProfilePictureUrl claim
             var signInResult = await _signInManager.PasswordSignInAsync(hasUser, request.Password, request.RememberMe, true);
 
             if (signInResult.Succeeded)

@@ -1,4 +1,15 @@
-﻿
+﻿@using BlogProject.src.Infra.Entitites
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<AppUser> userManager
+
+@{
+    ViewData["Title"] = "kayas.dev";
+    AppUser? currentUser = null;
+    if(User.Identity.IsAuthenticated)
+        currentUser = await userManager.FindByNameAsync(User.Identity.Name!);
+}
+
 @model IndexViewModel
 <!DOCTYPE html>
 <html lang="tr">
@@ -416,173 +427,6 @@
 
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-animation"></div>
-        <div class="container">
-            <h1 class="hero-title">Thoughts, Stories & Ideas</h1>
-            <p class="hero-subtitle">A minimalist blog about technology, design, and the intersection between them.</p>
-            <a href="#" class="hero-cta">Start Reading</a>
-        </div>
-    </section>
-
-    <style>
-        .hero {
-        background-color: #f5f5f5;
-        text-align: center;
-        padding: 6rem 1rem;
-        margin-bottom: 4rem;
-        position: relative;
-        overflow: hidden;
-        }
-
-        .hero-animation {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.03) 100%);
-        animation: shimmer 8s infinite linear;
-        z-index: 0;
-        }
-
-        .hero .container {
-        position: relative;
-        z-index: 1;
-        }
-
-        .hero-title {
-        font-size: 3rem;
-        font-weight: 800;
-        color: #000;
-        margin-bottom: 1.5rem;
-        line-height: 1.2;
-        }
-
-        .hero-subtitle {
-        font-size: 1.25rem;
-        color: #333;
-        max-width: 700px;
-        margin: 0 auto 2.5rem;
-        opacity: 0.9;
-        }
-
-        .hero-cta {
-        display: inline-block;
-        padding: 0.9rem 2.5rem;
-        background-color: #000;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 4px;
-        font-weight: 600;
-        transition: all 0.3s;
-        border: 1px solid #000;
-        }
-
-        .hero-cta:hover {
-        background-color: transparent;
-        color: #000;
-        }
-
-        @@keyframes shimmer {
-        0%
-
-        {
-        transform: translateX(-100%);
-        }
-
-        100% {
-        transform: translateX(100%);
-        }
-
-        }
-
-        /* Responsive */
-        @@media (max-width: 768px) {
-        .hero-title
-
-        {
-        font-size: 2.2rem;
-        }
-
-        .hero-subtitle {
-        font-size: 1.1rem;
-        }
-
-        }
-    </style>
-
-    <!-- Featured Posts -->
-    <div class="container">
-        <h2 class="section-title">Featured Articles</h2>
-        <div class="post-grid">
-            @foreach(var post in Model.LatestPosts)
-            {
-                <!-- Post 1 -->
-                <article class="post-card post-title-link ">
-                    <div class="post-img-container">
-                        <img src="@post.CoverImageUrl" alt="Coding" class="post-img">
-                    </div>
-                    <div class="post-body">
-                        <span class="post-category">@post.Category.Name</span>
-                        <h3 class="post-title">@post.Title</h3>
-                        <p class="post-excerpt">@post.Subtitle</p>
-                        <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id.ToString()" class="read-more">Read more</a>
-                    </div>
-                </article>
-
-                @*    <!-- Post 2 -->
-            <article class="post-card post-title-link">
-                <div class="post-img-container">
-                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Design" class="post-img">
-                </div>
-                <div class="post-body">
-                    <span class="post-category">Design</span>
-                    <h3 class="post-title">Minimalism in UI Design</h3>
-                    <p class="post-excerpt">How removing elements can lead to more powerful user experiences and cleaner interfaces.</p>
-                    <a href="#" class="read-more">Read more</a>
-                </div>
-            </article>
-
-            <!-- Post 3 -->
-            <article class="post-card post-title-link">
-                <div class="post-img-container">
-                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Productivity" class="post-img">
-                </div>
-                <div class="post-body">
-                    <span class="post-category">Productivity</span>
-                    <h3 class="post-title">Deep Work in the Age of Distraction</h3>
-                    <p class="post-excerpt">Strategies to maintain focus and produce meaningful work in our increasingly connected world.</p>
-                    <a href="#" class="read-more">Read more</a>
-                </div>
-            </article> *@
-            }
-        </div>
-    </div>
-
-    <!-- Newsletter -->
-    <section class="newsletter">
-        <div class="newsletter-pattern"></div>
-        <div class="container">
-            <h2 class="newsletter-title">Stay Updated</h2>
-            <p class="newsletter-subtitle">Subscribe to our newsletter to receive the latest articles and news directly to your inbox.</p>
-            <form class="newsletter-form">
-                <div class="input-group">
-                    <input type="email" placeholder="Your email address" class="newsletter-input" required>
-                    <button type="submit" class="newsletter-btn">
-                        Subscribe
-                        <span class="arrow-icon">→</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </section>
-
     <style>
         .newsletter {
         background-color: #fff;
@@ -680,22 +524,17 @@
         }
 
         @@keyframes patternMove {
-        from
-
-        {
+        from {
         background-position: 0 0;
         }
 
         to {
         background-position: 40px 40px;
         }
-
         }
 
         @@keyframes fadeInUp {
-        from
-
-        {
+        from {
         opacity: 0;
         transform: translateY(20px);
         }
@@ -704,13 +543,10 @@
         opacity: 1;
         transform: translateY(0);
         }
-
         }
 
         @@media (max-width: 768px) {
-        .input-group
-
-        {
+        .input-group {
         flex-direction: column;
         box-shadow: none;
         }
@@ -725,9 +561,199 @@
         justify-content: center;
         padding: 0.8rem;
         }
+        }
+    </style>
+    <style>
+        .hero {
+        background-color: #f5f5f5;
+        text-align: center;
+        padding: 6rem 1rem;
+        margin-bottom: 4rem;
+        position: relative;
+        overflow: hidden;
+        }
+
+        .hero-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.03) 100%);
+        animation: shimmer 8s infinite linear;
+        z-index: 0;
+        }
+
+        .hero .container {
+        position: relative;
+        z-index: 1;
+        }
+
+        .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #000;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+        }
+
+        .hero-subtitle {
+        font-size: 1.25rem;
+        color: #333;
+        max-width: 700px;
+        margin: 0 auto 2.5rem;
+        opacity: 0.9;
+        }
+
+        .hero-cta {
+        display: inline-block;
+        padding: 0.9rem 2.5rem;
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: 1px solid #000;
+        }
+
+        .hero-cta:hover {
+        background-color: transparent;
+        color: #000;
+        }
+
+        @@keyframes shimmer {
+        0%
+
+        {
+        transform: translateX(-100%);
+        }
+
+        100% {
+        transform: translateX(100%);
+        }
+
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+        .hero-title
+
+        {
+        font-size: 2.2rem;
+        }
+
+        .hero-subtitle {
+        font-size: 1.1rem;
+        }
 
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-animation"></div>
+        <div class="container">
+            <h1 class="hero-title">Thoughts, Stories & Ideas</h1>
+            <p class="hero-subtitle">A minimalist blog about technology, design, and the intersection between them.</p>
+            <a href="#" class="hero-cta">Start Reading</a>
+        </div>
+    </section>
+
+
+    <!-- Featured Posts -->
+    <div class="container">
+        <h2 class="section-title">Featured Articles</h2>
+        <div class="post-grid">
+            @foreach(var post in Model.LatestPosts)
+            {
+                <!-- Post 1 -->
+                <article class="post-card post-title-link ">
+                    <div class="post-img-container">
+                        <img src="@post.CoverImageUrl" alt="Coding" class="post-img">
+                    </div>
+                    <div class="post-body">
+                        <span class="post-category">@post.Category.Name</span>
+                        <h3 class="post-title">@post.Title</h3>
+                        <p class="post-excerpt">@post.Subtitle</p>
+                        <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id.ToString()" class="read-more">Read more</a>
+                    </div>
+                </article>
+
+                @*    <!-- Post 2 -->
+            <article class="post-card post-title-link">
+                <div class="post-img-container">
+                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Design" class="post-img">
+                </div>
+                <div class="post-body">
+                    <span class="post-category">Design</span>
+                    <h3 class="post-title">Minimalism in UI Design</h3>
+                    <p class="post-excerpt">How removing elements can lead to more powerful user experiences and cleaner interfaces.</p>
+                    <a href="#" class="read-more">Read more</a>
+                </div>
+            </article>
+
+            <!-- Post 3 -->
+            <article class="post-card post-title-link">
+                <div class="post-img-container">
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Productivity" class="post-img">
+                </div>
+                <div class="post-body">
+                    <span class="post-category">Productivity</span>
+                    <h3 class="post-title">Deep Work in the Age of Distraction</h3>
+                    <p class="post-excerpt">Strategies to maintain focus and produce meaningful work in our increasingly connected world.</p>
+                    <a href="#" class="read-more">Read more</a>
+                </div>
+            </article> *@
+            }
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="newsletter-pattern"></div>
+        <div class="container">
+            <h2 class="newsletter-title">Stay Updated</h2>
+            <p class="newsletter-subtitle">Subscribe to our newsletter to receive the latest articles and news directly to your inbox.</p>
+            @if(User.Identity.IsAuthenticated)
+            {
+                if(currentUser!.GeneralNotificationActive)
+                {
+                    <p class="text-dark">You have subscribed our newslatter! <i class="bi bi-check-circle-fill text-success"></i></p>
+                }
+                else
+                {
+                    <form asp-controller="User" asp-action="NotificationSubscribe" method="post" class="newsletter-form">
+                        <div class="input-group">
+                            <input name="email" type="email" placeholder="Your email address" class="newsletter-input" required>
+                            <button type="submit" class="newsletter-btn">
+                                Subscribe
+                                <span class="arrow-icon">→</span>
+                            </button>
+                        </div>
+                    </form>
+                }
+
+            }
+            else
+            {
+                <form asp-controller="User" asp-action="NotificationSubscribe" class="newsletter-form">
+                    <div class="input-group">
+                        <input type="email" placeholder="Your email address" class="newsletter-input" required>
+                        <button type="submit" class="newsletter-btn">
+                            Subscribe
+                            <span class="arrow-icon">→</span>
+                        </button>
+                    </div>
+                </form>    
+            }
+        </div>
+    </section>
+
+
 
     <!-- More Articles -->
     <div class="container">
@@ -744,7 +770,7 @@
                         <span class="post-category">@post.Category.Name</span>
                         <h3 class="post-title">@post.Title</h3>
                         <p class="post-excerpt">@post.Subtitle</p>
-                        <a href="#" class="read-more">Read more</a>
+                        <a asp-controller="Post" asp-action="PostDetails" asp-route-id="@post.Id" class="read-more">Read more</a>
                     </div>
                 </article>
 
@@ -784,212 +810,181 @@
                 <h2 class="section-title">Featured Writers</h2>
                 <p class="section-subtitle">The minds behind our best content</p>
             </div>
-
             <div class="authors-grid">
-                <!-- Author 1 -->
-                <div class="author-card">
-                    <div class="author-img-container">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
-                             alt="Sarah Johnson" class="author-img">
-                    </div>
-                    <div class="author-info">
-                        <h3 class="author-name">Sarah Johnson</h3>
-                        <p class="author-expertise">Tech Writer</p>
-                        <div class="author-stats">
-                            <span class="stat">42 Articles</span>
-                            <span class="stat">28K Followers</span>
+                @foreach(var contributor in Model.MostContributors)
+                {
+                    <!-- Author 1 -->
+                    <div class="author-card">
+                        <div class="author-img-container">
+                            <img src="/img/userPhotos/@contributor.UserName/@contributor.ProfilePicture"
+                            alt="@contributor.FullName" class="author-img">
                         </div>
-                    </div>
-                    <a href="#" class="author-view">View</a>
-                </div>
-
-                <!-- Author 2 -->
-                <div class="author-card">
-                    <div class="author-img-container">
-                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
-                             alt="Michael Chen" class="author-img">
-                    </div>
-                    <div class="author-info">
-                        <h3 class="author-name">Michael Chen</h3>
-                        <p class="author-expertise">Design Director</p>
-                        <div class="author-stats">
-                            <span class="stat">36 Articles</span>
-                            <span class="stat">34K Followers</span>
+                        <div class="author-info">
+                            <h3 class="author-name">@contributor.FullName</h3>
+                            <p class="author-expertise">@contributor.Title</p>
+                            <div class="author-stats">
+                                <span class="stat">@(contributor.Posts is null ? "0" : $"{contributor.Posts.Count}") Articles</span>
+                                <span class="stat">@(contributor.Followers is null ? "0" : $"{contributor.Followers.Count} ") Followers</span>
+                            </div>
                         </div>
+                        <a asp-controller="User" asp-action="Profile" asp-route-userName="@contributor.UserName" class="author-view">View</a>
                     </div>
-                    <a href="#" class="author-view">View</a>
-                </div>
-
-                <!-- Author 3 -->
-                <div class="author-card">
-                    <div class="author-img-container">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80"
-                             alt="David Rodriguez" class="author-img">
-                    </div>
-                    <div class="author-info">
-                        <h3 class="author-name">David Rodriguez</h3>
-                        <p class="author-expertise">Product Expert</p>
-                        <div class="author-stats">
-                            <span class="stat">58 Articles</span>
-                            <span class="stat">42K Followers</span>
-                        </div>
-                    </div>
-                    <a href="#" class="author-view">View</a>
-                </div>
+                }
             </div>
+
         </div>
     </section>
 
     <style>
         /* Compact Premium Authors */
         .compact-authors {
-            background-color: #fff;
-            padding: 2rem 0;
-            padding-top: 4rem;
-            border-top: 1px solid #f5f5f5;
+        background-color: #fff;
+        padding: 2rem 0;
+        padding-top: 4rem;
+        border-top: 1px solid #f5f5f5;
         }
 
         .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
+        text-align: center;
+        margin-bottom: 3rem;
         }
 
         .section-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
         }
 
         .section-subtitle {
-            font-size: 0.95rem;
-            color: #888;
-            max-width: 500px;
-            margin: 0 auto;
+        font-size: 0.95rem;
+        color: #888;
+        max-width: 500px;
+        margin: 0 auto;
         }
 
         .authors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            max-width: 1000px;
-            margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        max-width: 1000px;
+        margin: 0 auto;
         }
 
         .author-card {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         }
 
-            .author-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-                border-color: #e0e0e0;
-            }
+        .author-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border-color: #e0e0e0;
+        }
 
         .author-img-container {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-bottom: 1.2rem;
-            border: 3px solid #f5f5f5;
-            transition: all 0.3s ease;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-bottom: 1.2rem;
+        border: 3px solid #f5f5f5;
+        transition: all 0.3s ease;
         }
 
         .author-card:hover .author-img-container {
-            border-color: #e0e0e0;
+        border-color: #e0e0e0;
         }
 
         .author-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         }
 
         .author-info {
-            margin-bottom: 1.2rem;
-            flex-grow: 1;
+        margin-bottom: 1.2rem;
+        flex-grow: 1;
         }
 
         .author-name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 0.3rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 0.3rem;
         }
 
         .author-expertise {
-            font-size: 0.85rem;
-            color: #777;
-            margin-bottom: 1rem;
+        font-size: 0.85rem;
+        color: #777;
+        margin-bottom: 1rem;
         }
 
         .author-stats {
-            display: flex;
-            justify-content: center;
-            gap: 1.2rem;
-            margin-top: 0.8rem;
-            font-size: 0.8rem;
-            color: #666;
+        display: flex;
+        justify-content: center;
+        gap: 1.2rem;
+        margin-top: 0.8rem;
+        font-size: 0.8rem;
+        color: #666;
         }
 
         .stat {
-            position: relative;
+        position: relative;
         }
 
-            .stat:not(:last-child):after {
-                content: "•";
-                position: absolute;
-                right: -0.8rem;
-                color: #ddd;
-            }
+        .stat:not(:last-child):after {
+        content: "•";
+        position: absolute;
+        right: -0.8rem;
+        color: #ddd;
+        }
 
         .author-view {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.8rem;
-            border-radius: 20px;
-            transition: all 0.3s;
-            margin-top: 0.5rem;
-            letter-spacing: 0.5px;
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.8rem;
+        border-radius: 20px;
+        transition: all 0.3s;
+        margin-top: 0.5rem;
+        letter-spacing: 0.5px;
         }
 
-            .author-view:hover {
-                background: #333;
-                transform: translateY(-2px);
-            }
+        .author-view:hover {
+        background: #333;
+        transform: translateY(-2px);
+        }
 
         @@media (max-width: 768px) {
-            .compact-authors
+        .compact-authors
 
         {
-            padding: 3rem 1rem;
+        padding: 3rem 1rem;
         }
 
         .section-title {
-            font-size: 1.5rem;
+        font-size: 1.5rem;
         }
 
         .authors-grid {
-            grid-template-columns: 1fr;
-            max-width: 350px;
+        grid-template-columns: 1fr;
+        max-width: 350px;
         }
 
         .author-card {
-            padding: 1.2rem;
+        padding: 1.2rem;
         }
 
         }
@@ -1006,77 +1001,29 @@
             </div>
 
             <div class="posts-ranking">
-                <!-- Post 1 -->
-                <a href="#" class="post-item post-title-link">
-                    <div class="post-rank-wrapper">
-                        <span class="post-rank">1</span>
-                        <div class="rank-underline"></div>
-                    </div>
-                    <div class="post-content ">
-                        <h3 class="post-title">The Future of Web Development in 2024</h3>
-                        <div class="post-meta">
-                            <span class="post-category">Technology</span>
-                            <span class="post-views">24K views</span>
-                        </div>
-                    </div>
-                    <div class="post-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </a>
-
-                <!-- Post 2 -->
-                <a href="#" class="post-item post-title-link">
-                    <div class="post-rank-wrapper">
-                        <span class="post-rank">2</span>
-                        <div class="rank-underline"></div>
-                    </div>
-                    <div class="post-content">
-                        <h3 class="post-title">Minimalist Design Principles for Modern Websites</h3>
-                        <div class="post-meta">
-                            <span class="post-category">Design</span>
-                            <span class="post-views">18K views</span>
-                        </div>
-                    </div>
-                    <div class="post-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </a>
-
-                <!-- Post 3 -->
-                <a href="#" class="post-item post-title-link">
-                    <div class="post-rank-wrapper">
-                        <span class="post-rank">3</span>
-                        <div class="rank-underline"></div>
-                    </div>
-                    <div class="post-content">
-                        <h3 class="post-title">How to Improve Your Productivity as a Developer</h3>
-                        <div class="post-meta">
-                            <span class="post-category">Productivity</span>
-                            <span class="post-views">15K views</span>
-                        </div>
-                    </div>
-                    <div class="post-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </a>
-
-                <!-- Post 4 -->
-                <a href="#" class="post-item post-title-link">
-                    <div class="post-rank-wrapper">
-                        <span class="post-rank">4</span>
-                        <div class="rank-underline"></div>
-                    </div>
-                    <div class="post-content">
-                        <h3 class="post-title">The Psychology Behind Effective UI/UX</h3>
-                        <div class="post-meta">
-                            <span class="post-category">Psychology</span>
-                            <span class="post-views">12K views</span>
-                        </div>
-                    </div>
-                    <div class="post-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </a>
+            @{var counter = 1;
+                @foreach (var post in Model.MostReadPostsThisWeek)
+                {
+                        <a asp-controller="Post" asp-action="PostDetails" asp-route-id="@post.Id" class="post-item post-title-link">
+                            <div class="post-rank-wrapper">
+                                <span class="post-rank">@counter</span>
+                                <div class="rank-underline"></div>
+                            </div>
+                            <div class="post-content ">
+                                <h3 class="post-title">@post.Title</h3>
+                                <div class="post-meta">
+                                    <span class="post-category">@post.Category.Name</span>
+                                    <span class="post-views">@post.ViewCount views</span>
+                                </div>
+                            </div>
+                            <div class="post-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
+                        counter++;
+                }
+                }
+                
             </div>
         </div>
     </section>

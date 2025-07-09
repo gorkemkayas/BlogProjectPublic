@@ -116,6 +116,9 @@ namespace BlogProject.Migrations
                     b.Property<int>("FollowingCount")
                         .HasColumnType("int");
 
+                    b.Property<bool>("GeneralNotificationActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("GithubAddress")
                         .HasColumnType("nvarchar(max)");
 
@@ -678,6 +681,30 @@ namespace BlogProject.Migrations
                     b.ToTable("Notifications", "ef");
                 });
 
+            modelBuilder.Entity("BlogProject.src.Infra.Entitites.NotificationSubscribeEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SubscriberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NotificationSubscribes", "ef");
+                });
+
             modelBuilder.Entity("BlogProject.src.Infra.Entitites.PaymentMethodEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -729,7 +756,7 @@ namespace BlogProject.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(5000)
+                        .HasMaxLength(20000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoverImageUrl")
@@ -758,13 +785,13 @@ namespace BlogProject.Migrations
 
                     b.Property<string>("Subtitle")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ViewCount")
                         .ValueGeneratedOnAdd()

@@ -11,17 +11,17 @@ namespace BlogProject.src.Infra.EntityTypeConfigurations
             // Title
             builder.Property(e => e.Title)
                    .IsRequired()
-                   .HasMaxLength(100);
+                   .HasMaxLength(200);
 
             // Subtitle
             builder.Property(e => e.Subtitle)
                    .IsRequired()
-                   .HasMaxLength(100);
+                   .HasMaxLength(500);
 
             // Content
             builder.Property(e => e.Content)
                    .IsRequired()
-                   .HasMaxLength(5000);
+                   .HasMaxLength(20000);
 
             // CoverImageUrl
             

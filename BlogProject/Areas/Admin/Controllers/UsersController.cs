@@ -9,7 +9,7 @@ using static BlogProject.Utilities.RoleService;
 
 namespace BlogProject.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
+    //[Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
     [Area("Admin")]
     [IgnoreAntiforgeryToken]
     public class UsersController : Controller
@@ -21,7 +21,7 @@ namespace BlogProject.Areas.Admin.Controllers
             _userService = userService;
         }
 
-        [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
+        //[Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
         public async Task<IActionResult> UserList(int page = 1, int pageSize = 4, bool includeDeleted = false)
         {
             var users = await _userService.GetPagedUsersAsync(page, pageSize, includeDeleted);
@@ -32,7 +32,7 @@ namespace BlogProject.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         public async Task<IActionResult> SuspendUser(SuspendUserViewModel request)
         {
             if (!ModelState.IsValid)
@@ -77,7 +77,7 @@ namespace BlogProject.Areas.Admin.Controllers
 
 
         [HttpPost("Users/UserActivate/{id}")]
-        [Authorize(Roles = "Manager,Bölge Sorumlusu,Takım Lideri")]
+        //[Authorize(Roles = "Manager,Bölge Sorumlusu,Takım Lideri")]
         public async Task<IActionResult> UserActivate(string id)
         {
             var activatorUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

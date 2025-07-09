@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BlogProject.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
-    [Authorize(Roles ="Manager,Takım Lideri,Bölge Sorumlusu")]
+    //[Authorize(Roles ="Manager,Takım Lideri,Bölge Sorumlusu")]
     public class HomeController : Controller
     {
         UserManager<AppUser> _userManager;

@@ -3,6 +3,7 @@
 @model PostDetailsViewModel
 @{
     Layout = "_Layout";
+    ViewData["Title"] = $"{Model.Post.Title}";
 }
 <script>
     const currentUserId = "@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value";
@@ -785,12 +786,12 @@
                 <h3 class="comments-title">Comments <span class="comment-count">@Model.Comments.Count</span></h3>
             </div>
 
+                <div class="comment-form">
             @if (User.Identity.IsAuthenticated)
             {
                 <!-- Comment Form -->
-                <div class="comment-form">
                     <div class="commentor-avatar">
-                        <img src="/img/userPhotos/gorkemkayas5269/WhatsApp_Image_2025-06-11_at_21.30.19_c95a0f93.jpg" />
+                        <img src="/img/userPhotos/@(User.Identity.Name)/@(User.FindFirst("ProfilePictureUrl")?.Value)" />
                         <span>Y</span>
                     </div>
                     <form class="comment-input main-comment-form" id="commentForm">
@@ -917,7 +918,6 @@
                         }
                     </script>
 
-                </div>
             }
             else
             {
@@ -929,6 +929,7 @@
                 </div>
                 <hr />
             }
+                </div>
             <!-- Comment List -->
             <div class="comment-list commentList">
                 @* <!-- Main Comment -->
@@ -985,7 +986,7 @@
                         <!-- Another Comment -->
                         <div class="comment">
                             <div class="commentor-avatar">
-                                <img src="/img/userPhotos/gorkemkayas5269/WhatsApp_Image_2025-06-11_at_21.30.19_c95a0f93.jpg" />
+                                <img src="/img/userPhotos/@comment.Author.UserName/@comment.Author.ProfilePicture" />
                                 <span>Y</span>
                             </div>
                             <div class="comment-body">
@@ -1277,7 +1278,7 @@
                         <img src="@recommendedPost.CoverImageUrl" alt="@recommendedPost.Category.Name" class="related-post-img">
                         <div class="related-post-body">
                             <h3 class="related-post-title">@recommendedPost.Title</h3>
-                            <a href="#" class="related-post-link">Read article</a>
+                            <a asp-controller="Post" asp-action="PostDetails" asp-route-id="@recommendedPost.Id" class="related-post-link">Read article</a>
                         </div>
                     </article>
                 }

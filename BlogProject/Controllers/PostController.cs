@@ -14,15 +14,18 @@ namespace BlogProject.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ICommentService _commentService;
         private readonly BlogDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public PostController(IPostService postService, BlogDbContext context, ITagService tagService, ICategoryService categoryService, ICommentService commentService)
+        public PostController(IPostService postService, BlogDbContext context, ITagService tagService, ICategoryService categoryService, ICommentService commentService, IWebHostEnvironment env)
         {
             _postService = postService;
             _context = context;
             _tagService = tagService;
             _categoryService = categoryService;
             _commentService = commentService;
+            _env = env;
         }
+
 
         public IActionResult Index()
         {
@@ -74,7 +77,7 @@ namespace BlogProject.Controllers
         [HttpGet("Post/{id}")]
         public async Task<IActionResult> PostDetails(string id)
         {
-            var post = await _postService.GetPostByIdAsync(Guid.Parse(id));
+            var post = await _postService.GetPostByIdAsync(Guid.Parse(id),true);
             var recommendedPost = await _postService.GetLatestPostsWithCount(3);
             if (post == null)
             {

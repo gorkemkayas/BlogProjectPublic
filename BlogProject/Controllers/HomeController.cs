@@ -11,26 +11,33 @@ namespace BlogProject.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IPostService _postService;
         private readonly ITagService _tagService;
+        private readonly IUserService _userService;
 
 
-        public HomeController(ILogger<HomeController> logger, IPostService postService, ITagService tagService)
+        public HomeController(ILogger<HomeController> logger, IPostService postService, ITagService tagService, IUserService userService)
         {
             _logger = logger;
             _postService = postService;
             _tagService = tagService;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index()
         {
             var mostViewedPosts = await _postService.GetMostViewedPostsWithCount();
-            var LeastPosts = await _postService.GetLatestPostsWithCount();
+            var LatestPosts = await _postService.GetLatestPostsWithCount();
             var popularTags = await _tagService.GetPopularTags(15);
+            var mostContributors = await _userService.MostContributors(3);
+            var mostReadPostsThisWeek = await _postService.GetMostViewedPostsWithCount(5, true);
 
             var model = new IndexViewModel
             {
                 MostViewedPosts = mostViewedPosts,
-                LatestPosts = LeastPosts,
-                PopularTags = popularTags
+                LatestPosts = LatestPosts,
+                PopularTags = popularTags,
+                MostContributors = mostContributors,
+                MostReadPostsThisWeek = mostReadPostsThisWeek
+
             };
             return View(model);
         }

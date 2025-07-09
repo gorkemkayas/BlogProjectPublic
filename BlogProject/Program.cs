@@ -8,6 +8,7 @@ using BlogProject.Services.DTOs.MappingProfile;
 using BlogProject.src.Infra.Context;
 using BlogProject.src.Infra.Entitites;
 using BlogProject.src.Infra.Interceptors;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -50,6 +51,15 @@ builder.Services.ConfigureApplicationCookie(opt =>
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddServicesWithLifeTimes();
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 50 * 1024 * 1024; // 50 MB
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB
+});
 
 
 var app = builder.Build();
@@ -104,6 +114,5 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
 app.Run();

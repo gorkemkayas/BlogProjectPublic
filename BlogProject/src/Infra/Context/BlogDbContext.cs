@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Data.Common;
 using System.Diagnostics;
 
 namespace BlogProject.src.Infra.Context
@@ -31,6 +32,8 @@ namespace BlogProject.src.Infra.Context
         public DbSet<SubscriptionEntity> Subscriptions { get; set; }
         public DbSet<TagEntity> Tags { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
+
+        public DbSet<NotificationSubscribeEntity> NotificationSubscribes { get; set; }
 
         // Identity kendi içinde 'Users' tablosu içeriyor.
         //public DbSet<AppUser> Users { get; set; }

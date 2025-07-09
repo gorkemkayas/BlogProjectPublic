@@ -342,5 +342,29 @@ namespace BlogProject.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> NotificationSubscribe(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["Failed"] = "Email is required.";
+                return RedirectToAction("Index", "Home");
+            }
+            var result = await _userService.SubscribeToNotificationsAsync(email);
+            if (result.IsSuccess)
+            {
+                await _emailService.SendEmailNotificationNewsletterEmailAsync(email);
+
+                TempData["Succeed"] = "You have successfully subscribed to notifications.";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["Failed"] = "An error occurred while subscribing to notifications.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
     }
 }

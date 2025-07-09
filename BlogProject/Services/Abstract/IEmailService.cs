@@ -8,5 +8,7 @@
         Task SendEmailConfirmationEmailAsync(string receiverEmail, string confirmationLink);
 
         Task SendSuspensionNotificationEmailAsync(string receiverEmail, string confirmationLink, bool suspendedRemoved = false);
+
+        Task SendEmailNotificationNewsletterEmailAsync(string receiverEmail);
     }
 }

@@ -16,12 +16,12 @@ namespace BlogProject.Services.Abstract
         public Task AddPostAsync(CreatePostDto createPostDto);
         public Task UpdatePostAsync(Guid postId, UpdatePostDto updatePostDto);
         Task<ICollection<PostEntity>> GetLatestPostsWithCount(int count = 3);
-        Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3);
+        Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3, bool currentWeek = false);
         Task<ServiceResult<object>> CreatePostAsync(CreatePostViewModel model);
 
         public Task SoftDeletePostAsync(Guid postId);
         public Task<UpdatePostDto> GetPostInfoForUpdate(Guid postId);
-        public Task<PostEntity> GetPostByIdAsync(Guid postId);
+        public Task<PostEntity> GetPostByIdAsync(Guid postId, bool updateReadCount = false);
         public Task<ICollection<PostEntity>> GetPostsByCategoryAsync(string categoryName, bool isDescending);
         public Task<ICollection<PostEntity>> GetPostsByTitleAsync(string title, bool isDescending);
         public Task<ICollection<PostEntity>> GetPostsByAuthorIdAsync(Guid AuthorId, bool isDescending);

@@ -18,6 +18,7 @@ namespace BlogProject.src.Infra.Entitites
 
         //public string? LivesIn { get; set; }
 
+        public bool GeneralNotificationActive { get; set; } = false;
         public string? Country { get; set; }
 
         // yeni eklediklerim

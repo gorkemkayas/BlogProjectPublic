@@ -415,7 +415,7 @@
                         <!-- Alt İçerik -->
                         <div class="mb-5">
                             <label asp-for="SubContent" class="form-label fw-bold mb-2 d-block">Summary Content (Optional)</label>
-                            <textarea asp-for="SubContent" class="form-control"  rows="5"></textarea>
+                            <textarea asp-for="SubContent" class="form-control" rows="5"></textarea>
                             <span asp-validation-for="SubContent" class="text-danger small d-block mt-2"></span>
                         </div>
 
@@ -540,6 +540,10 @@
                         ],
                         shouldNotGroupWhenFull: true
                     },
+                 // ✅ BURASI EKLENDİ
+                //              ckfinder: {
+                //     uploadUrl: '/upload/image'  // Upload endpoint'in burası
+                // },
                     list: {
                         properties: {
                             styles: true,
@@ -604,7 +608,7 @@
                     },
                     removePlugins: [
                         'CKBox',
-                        'CKFinder',
+                        // 'CKFinder',
                         'EasyImage',
                         'RealTimeCollaborativeComments',
                         'RealTimeCollaborativeTrackChanges',

@@ -16,7 +16,7 @@ using static BlogProject.Utilities.RoleService;
 namespace BlogProject.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
-    [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
+    //[Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
     [IgnoreAntiforgeryToken]
     public class RolesController : Controller
     {
@@ -39,7 +39,7 @@ namespace BlogProject.Areas.Admin.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Manager,Bölge Sorumlusu")]
+        //[Authorize(Roles = "Manager,Bölge Sorumlusu")]
         public IActionResult RoleAdd()
         {
             return View();
@@ -60,7 +60,7 @@ namespace BlogProject.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Manager,Bölge Sorumlusu")]
+        //[Authorize(Roles = "Manager,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleEdit(string id)
         {
             var role = await _roleService.GetRoleByIdAsync(id);
@@ -73,7 +73,7 @@ namespace BlogProject.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Manager,Bölge Sorumlusu")]
+        //[Authorize(Roles = "Manager,Bölge Sorumlusu")]
 
         public async Task<IActionResult> RoleEdit(RoleEditViewModel request)
         {
@@ -92,7 +92,7 @@ namespace BlogProject.Areas.Admin.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Manager,Bölge Sorumlusu,Takım Lideri")]
+        //[Authorize(Roles = "Manager,Bölge Sorumlusu,Takım Lideri")]
         public async Task<IActionResult> RoleList(int page = 1, int pageSize = 4, bool includeDeleted = false)
         {
             var pagedRoles = await _roleService.GetPagedRolesAsync(page, pageSize, includeDeleted);
@@ -104,7 +104,7 @@ namespace BlogProject.Areas.Admin.Controllers
 
 
         [HttpPost("Roles/RoleDelete/{id}")]
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         public async Task<IActionResult> RoleDelete(string id)
         {
             var deleterUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -128,7 +128,7 @@ namespace BlogProject.Areas.Admin.Controllers
         }
 
         [HttpPost("Roles/RoleActivate/{id}")]
-        [Authorize(Roles = "Manager,Bölge Sorumlusu,Takım Lideri")]
+        //[Authorize(Roles = "Manager,Bölge Sorumlusu,Takım Lideri")]
         public async Task<IActionResult> RoleActivate(string id)
         {
             var activatorUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -148,7 +148,7 @@ namespace BlogProject.Areas.Admin.Controllers
             return Json(new { status = true, redirectUrl = Url.Action(nameof(RoleList)) });
         }
 
-        [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
+        //[Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleAssign(string userName)
         {
             var currentUser = await _userManager.FindByNameAsync(userName);
@@ -184,7 +184,7 @@ namespace BlogProject.Areas.Admin.Controllers
             return View(userModel);
         }
 
-        [Authorize(Roles = "Manager,Bölge Sorumlusu")]
+        //[Authorize(Roles = "Manager,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleAssignToUser(string userName,string roleId)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -220,7 +220,7 @@ namespace BlogProject.Areas.Admin.Controllers
         }
 
         [HttpPost]  
-        [Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
+        //[Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
         public async Task<IActionResult> RoleRemoveFromUser(string userName, string roleId, bool fromRoleUsers = false)
         {
             var user = await _userManager.FindByNameAsync(userName);

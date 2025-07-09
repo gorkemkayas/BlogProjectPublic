@@ -24,11 +24,18 @@ namespace BlogProject.Services.Concrete
             _mapper = mapper;
         }
 
-        public async Task<PostEntity> GetPostByIdAsync(Guid postId)
+        public async Task<PostEntity> GetPostByIdAsync(Guid postId, bool updateReadCount = false)
         {
             if (postId == Guid.Empty)
             {
                 throw new ArgumentNullException(nameof(postId));
+            }
+            if(updateReadCount)
+            {
+                var post = await _blogDbContext.Posts.FindAsync(postId) ?? throw new KeyNotFoundException("Belirtilen Id ile ilişkili post bulunamadı.");
+                post.ViewCount++;
+                _blogDbContext.Update(post);
+                await _blogDbContext.SaveChangesAsync();
             }
             return await _blogDbContext.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Id == postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
         }
@@ -328,21 +335,34 @@ namespace BlogProject.Services.Concrete
                 throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
             }
             return await _blogDbContext.Posts
-                .Take(count)
                 .OrderByDescending(p => p.CreatedTime)
+                .Take(count)
                 .Include(p =>p.Category)
                 .ToListAsync(); 
         }
-        public async Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3)
+        public async Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3,bool currentWeek = false)
         {
             if (count <= 0)
             {
                 throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
             }
+            if(currentWeek)
+            {
+                var startsFrom = DateTime.Now.Date.AddDays(-7);
+                return await _blogDbContext.Posts
+                    .Where(p => p.CreatedTime >= startsFrom)
+                    .OrderByDescending(p => p.ViewCount)
+                    .ThenByDescending(p => p.CreatedTime)
+                    .Take(count)
+                    .ToListAsync();
+            }
+
             return await _blogDbContext.Posts
-                .OrderByDescending(p => p.ViewCount)
+                .OrderByDescending(p => p.ViewCount).
+                ThenByDescending(p => p.CreatedTime)
                 .Take(count)
                 .ToListAsync();
         }
+
     }
 }

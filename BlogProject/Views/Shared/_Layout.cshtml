@@ -32,12 +32,58 @@
 
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
+    <style>
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: transparent;
+            z-index: 9999;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #ff3c3c, #ff7b7b); /* zarif kırmızı tonları */
+            border-radius: 2px;
+            box-shadow: 0 0 6px rgba(255, 60, 60, 0.4);
+            transition: width 0.15s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .progress-bar::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -40%;
+                width: 40%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.15);
+                transform: skewX(-25deg);
+                animation: shimmer 2.5s infinite;
+            }
+
+        @@keyframes shimmer {
+            0%
+
+        {
+            left: -40%;
+        }
+
+        100% {
+            left: 100%;
+        }
+
+        }
+    </style>
 
 
-   
 
-</head>
-@* scroll bar animation start *@
+
+
 <style>
 
     /* Header */
@@ -236,36 +282,136 @@
 </style>
 
 <style>
-    .progress-container {
+    .ad-left, .ad-right {
         position: fixed;
-        top: 0;
+        top: 100px; /* İstersen yukarıdan boşluk bırakabilirsin */
+        width: 160px;
+        height: 600px; /* Reklam yüksekliği */
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+        border-radius: 8px;
+        padding: 10px;
+        z-index: 9999; /* Üstte görünür olsun */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .ad-left {
         left: 0;
+        margin-left: 20px; /* Sol reklam için boşluk */
+    }
+
+    .ad-right {
+        right: 0;
+        margin-right: 20px; /* Sağ reklam için boşluk */
+    }
+
+    /* İçerik kısmını daraltmak için (örnek) */
+    .main-content {
+        margin-left: 180px; /* sol reklam genişliği + boşluk */
+        margin-right: 180px; /* sağ reklam genişliği + boşluk */
+    }
+
+    /* Mobilde reklamları gizle */
+    @@media (max-width: 992px) {
+        .ad-left, .ad-right
+
+    {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    }
+</style>
+<style>
+    /* Reklam alanları */
+    .ad-left, .ad-right {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 160px;
+        height: 600px;
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        padding: 0px;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        color: #555;
+    }
+
+    /* Sol reklam sayfanın sol kenarında */
+    .ad-left {
+        left: 0;
+    }
+
+    /* Sağ reklam sayfanın sağ kenarında */
+    .ad-right {
+        right: 0;
+    }
+
+    /* Sayfa içeriğine reklamların genişliği kadar margin veriyoruz ki üzerine binmesin */
+    .main-content {
+        margin-left: 180px; /* 160px reklam genişliği + 20px boşluk */
+        margin-right: 180px;
+    }
+
+    /* Mobilde reklamları gizle */
+    @@media (max-width: 992px) {
+        .ad-left, .ad-right
+
+    {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    }
+
+    .ad-box, .ad-box video {
         width: 100%;
-        height: 3px;
-        background: rgba(0,0,0,0.05);
-        z-index: 1000;
-    }
-
-    .progress-bar {
         height: 100%;
-        background: var(--special-red-color);
-        width: 0%;
-        transition: width 0.1s ease-out;
-        position: relative;
     }
 
-        .progress-bar:after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: -3px;
-            width: 12px;
-            height: 12px;
-            background: var(--special-red-color);
-            border-radius: 50%;
+        .ad-box video {
+            object-fit: fill; /* Video içeriği alanı tamamen doldurur, en-boy oranı bozulabilir */
+            display: block;
         }
+
 </style>
 
+   
+
+</head>
+@if (TempData["Succeed"] != null)
+{
+    <div id="successAlert" class="custom-alert alert-success">
+        <i class="fa-solid fa-check"></i>
+        @TempData["Succeed"]!.ToString()
+    </div>
+}
+else if (TempData["Failed"] != null)
+{
+    <div id="errorAlert" class="custom-alert alert-danger">
+        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
+    </div>
+}
+@* scroll bar animation start *@
 <div class="progress-container">
     <div class="progress-bar" id="progressBar"></div>
 </div>
@@ -279,6 +425,11 @@
     });
 </script>
 @* scroll bar animation end *@
+@* <div class="ad-left">
+    <div class="ad-box">
+        <video src="/img/AdLeft.webm" autoplay></video>
+    </div>
+</div> *@
 <body>
     @*  <!-- Left Ad Container -->
     <div class="ad-container ad-left d-none d-xl-block">
@@ -407,6 +558,7 @@
 
     <main class="flex-grow-1">
         <div class="container">
+
             @RenderBody()
         </div>
     </main>
@@ -682,8 +834,39 @@
             });
         });
     </script>
+    <script>
+         // Alert animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const successAlert = document.getElementById('successAlert');
+            const errorAlert = document.getElementById('errorAlert');
 
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.classList.add('show-alert');
+                }, 100);
+
+                setTimeout(() => {
+                    successAlert.classList.remove('show-alert');
+                }, 5000);
+            }
+
+            if (errorAlert) {
+                setTimeout(() => {
+                    errorAlert.classList.add('show-alert');
+                }, 100);
+
+                setTimeout(() => {
+                    errorAlert.classList.remove('show-alert');
+                }, 5000);
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
+@* <div class="ad-right">
+    <div class="ad-box">
+        <video src="/img/AdLeft.webm" autoplay></video>
+    </div>
+</div> *@
 </html>
