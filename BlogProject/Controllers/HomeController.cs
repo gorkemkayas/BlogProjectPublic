@@ -1,7 +1,6 @@
 using System.Diagnostics;
-using BlogProject.Models;
-using BlogProject.Models.ViewModels;
-using BlogProject.Services.Abstract;
+using BlogProject.Application.Interfaces;
+using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProject.Controllers

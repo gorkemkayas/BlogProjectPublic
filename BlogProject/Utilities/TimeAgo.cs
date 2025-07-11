@@ -1,4 +1,4 @@
-﻿namespace BlogProject.Utilities
+﻿namespace BlogProject.Web.Utilities
 {
     public static class TimeDifference
     {

@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
+using BlogProject.Application.DTOs;
+using BlogProject.Application.Enums;
+using BlogProject.Application.Interfaces;
+using BlogProject.Application.Models;
 using BlogProject.Areas.Admin.Models;
-using BlogProject.Services.Abstract;
-using BlogProject.Services.Concrete;
-using BlogProject.src.Infra.Context;
-using BlogProject.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using static BlogProject.Utilities.RoleService;
 
 namespace BlogProject.Areas.Admin.Controllers
 {
@@ -41,6 +39,7 @@ namespace BlogProject.Areas.Admin.Controllers
             categories.ControllerName = "Category";
             categories.ActionName = "CategoryList";
 
+            var mappedCategories = _mapper.Map<ItemPagination<CategoryViewModel>>(categories);
             return View(categories);
         }
 
@@ -62,7 +61,8 @@ namespace BlogProject.Areas.Admin.Controllers
                 // Redirect to a success page or back to the index
                 return View(model);
             }
-            var result = await _categoryService.AddCategoryAsync(model);
+            var dtoModel = _mapper.Map<CategoryAddDto>(model);
+            var result = await _categoryService.AddCategoryAsync(dtoModel);
             if (!result.IsSuccess)
             {
                 TempData["Failed"] = "Category could not be added. Please try again.";
@@ -101,7 +101,8 @@ namespace BlogProject.Areas.Admin.Controllers
             {
                 return View(model);
             }
-            var result = await _categoryService.UpdateCategoryAsync(model);
+            var dtoModel = _mapper.Map<CategoryUpdateDto>(model);
+            var result = await _categoryService.UpdateCategoryAsync(dtoModel);
             if (!result.IsSuccess)
             {
                 TempData["Failed"] = "Category could not be updated. Please try again.";

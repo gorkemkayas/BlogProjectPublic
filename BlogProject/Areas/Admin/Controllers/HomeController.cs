@@ -1,22 +1,22 @@
 ﻿using AutoMapper;
+using BlogProject.Application.Interfaces;
 using BlogProject.Areas.Admin.Models;
-using BlogProject.Services.Abstract;
-using BlogProject.src.Infra.Entitites;
+using BlogProject.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms.Mapping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogProject.Areas.Admin.Controllers
+namespace BlogProject.Web.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
     //[Authorize(Roles ="Manager,Takım Lideri,Bölge Sorumlusu")]
     public class HomeController : Controller
     {
-        UserManager<AppUser> _userManager;
-        IUserService userService;
-        IMapper mapper;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IUserService userService;
+        private readonly IMapper mapper;
 
         public HomeController(UserManager<AppUser> userManager, IUserService userService, IMapper mapper)
         {

@@ -1,5 +1,5 @@
-﻿using BlogProject.src.Infra.Entitites;
-using BlogProject.Utilities;
+﻿using BlogProject.Domain.Entities;
+using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +29,7 @@ namespace BlogProject.ViewComponents
                 userPhotoLink = "/img/defaultProfilePhoto.jpg";
             }
 
-            var info = new UserProfileAndUserName() { UserName = user.UserName!, UserPhotoLink = userPhotoLink };
+            var info = new UserProfileAndUserNameViewModel() { UserName = user.UserName!, UserPhotoLink = userPhotoLink };
 
             return View("Default", info);
         }

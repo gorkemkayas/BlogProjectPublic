@@ -1,17 +1,9 @@
-﻿using BlogProject.Services.Abstract;
-using BlogProject.src.Infra.Context;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProject.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly BlogDbContext _context;
-
-        public CategoryController(BlogDbContext context)
-        {
-            _context = context;
-        }
 
         //[Route("{category:string}")]
         public IActionResult Index()

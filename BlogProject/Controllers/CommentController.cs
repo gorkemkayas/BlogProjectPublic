@@ -1,7 +1,5 @@
-﻿using BlogProject.Models.ViewModels;
-using BlogProject.Services.Abstract;
-using BlogProject.src.Infra.Context;
-using BlogProject.src.Infra.Entitites;
+﻿using BlogProject.Domain.Entities;
+using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;

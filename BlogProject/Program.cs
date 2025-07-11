@@ -1,20 +1,10 @@
 ﻿using BlogProject.Extensions;
-using BlogProject.Models;
-using BlogProject.Services.Abstract;
-using BlogProject.Services.Concrete;
-using BlogProject.Services.CustomMethods.Abstract;
-using BlogProject.Services.CustomMethods.Concrete;
-using BlogProject.Services.DTOs.MappingProfile;
-using BlogProject.src.Infra.Context;
-using BlogProject.src.Infra.Entitites;
-using BlogProject.src.Infra.Interceptors;
+using BlogProject.Web.Mapping;
+using BlogProject.Web.Utilities;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,19 +1,18 @@
-﻿using BlogProject.Areas.Admin.Models;
+﻿using AutoMapper;
+using BlogProject.Application.DTOs;
+using BlogProject.Application.Enums;
+using BlogProject.Application.Interfaces;
+using BlogProject.Application.Models;
+using BlogProject.Areas.Admin.Models;
+using BlogProject.Domain.Entities;
 using BlogProject.Extensions;
-using BlogProject.Services.Abstract;
-using BlogProject.Services.Concrete;
-using BlogProject.src.Infra.Entitites;
-using BlogProject.Utilities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
-using static BlogProject.Utilities.RoleService;
 
-namespace BlogProject.Areas.Admin.Controllers
+
+namespace BlogProject.Web.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
     //[Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
@@ -22,21 +21,20 @@ namespace BlogProject.Areas.Admin.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly IMapper _mapper;
 
         private readonly IRoleService _roleService;
-        public RolesController(UserManager<AppUser> userManager, IRoleService roleService, RoleManager<AppRole> roleManager)
+        public RolesController(UserManager<AppUser> userManager, IRoleService roleService, RoleManager<AppRole> roleManager, IMapper mapper)
         {
             _userManager = userManager;
             _roleService = roleService;
             _roleManager = roleManager;
+            _mapper = mapper;
         }
-
-
         public IActionResult Index()
         {
             return View();
         }
-
 
         [HttpGet]
         //[Authorize(Roles = "Manager,Bölge Sorumlusu")]
@@ -77,7 +75,8 @@ namespace BlogProject.Areas.Admin.Controllers
 
         public async Task<IActionResult> RoleEdit(RoleEditViewModel request)
         {
-            var result = await _roleService.UpdateRoleAsync(request);
+            var mappedRequest = _mapper.Map<RoleEditDto>(request);
+            var result = await _roleService.UpdateRoleAsync(mappedRequest);
 
             if (!result.IsSuccess)
             {
@@ -99,7 +98,9 @@ namespace BlogProject.Areas.Admin.Controllers
             pagedRoles.IncludeDeleted = includeDeleted;
             pagedRoles.ControllerName = "Roles";
             pagedRoles.ActionName = "RoleList";
-            return View(pagedRoles);
+
+            var mappedRoles = _mapper.Map<ItemPagination<RoleViewModel>>(pagedRoles);
+            return View(mappedRoles);
         }
 
 
@@ -262,7 +263,8 @@ namespace BlogProject.Areas.Admin.Controllers
         {
             var roleWithUsers = await _roleService.GetRolesWithUsers(roleName);
 
-            return View(roleWithUsers);
+            var mappedRoles = _mapper.Map<RoleUsersViewModel>(roleWithUsers);
+            return View(mappedRoles);
         }
 
     }

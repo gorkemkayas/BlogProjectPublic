@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
+using BlogProject.Application.DTOs;
+using BlogProject.Application.Enums;
+using BlogProject.Application.Interfaces;
+using BlogProject.Application.Models;
 using BlogProject.Areas.Admin.Models;
 using BlogProject.Extensions;
-using BlogProject.Services.Abstract;
-using BlogProject.Services.Concrete;
-using BlogProject.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using static BlogProject.Utilities.RoleService;
 using System.Security.Claims;
 
-namespace BlogProject.Areas.Admin.Controllers
+namespace BlogProject.Web.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
     [IgnoreAntiforgeryToken]
@@ -55,7 +54,8 @@ namespace BlogProject.Areas.Admin.Controllers
                 TempData["Failed"] = "An error ocured while attempting update tag.";
                 return View(model);
             }
-            var result = await _tagService.UpdateTagAsync(model);
+            var mappedModel = _mapper.Map<TagUpdateDto>(model);
+            var result = await _tagService.UpdateTagAsync(mappedModel);
 
             if (!result.IsSuccess)
             {
@@ -100,8 +100,8 @@ namespace BlogProject.Areas.Admin.Controllers
                 // Handle invalid model state
                 return View(model);
             }
-            
-            var result = await _tagService.AddTagAsync(model);
+            var mappedModel = _mapper.Map<TagAddDto>(model);
+            var result = await _tagService.AddTagAsync(mappedModel);
 
             if(!result.IsSuccess)
             {

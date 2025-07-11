@@ -1,6 +1,4 @@
-﻿using BlogProject.src.Infra.Context;
-using BlogProject.src.Infra.Entitites;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProject.ViewComponents

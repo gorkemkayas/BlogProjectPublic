@@ -1,14 +1,14 @@
-﻿using BlogProject.Areas.Admin.Models;
+﻿using AutoMapper;
+using BlogProject.Application.CustomMethods.Interfaces;
+using BlogProject.Application.DTOs;
+using BlogProject.Application.Interfaces;
+using BlogProject.Areas.Admin.Models;
+using BlogProject.Domain.Entities;
 using BlogProject.Extensions;
-using BlogProject.Models.ViewModels;
-using BlogProject.Services.Abstract;
-using BlogProject.Services.CustomMethods.Abstract;
-using BlogProject.src.Infra.Entitites;
+using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Reflection.Metadata;
 
 namespace BlogProject.Controllers
 {
@@ -20,13 +20,16 @@ namespace BlogProject.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IUrlGenerator _urlGenerator;
 
-        public UserController(IUserService userService, IEmailService emailService, UserManager<AppUser> userManager, ICommentService commentService, IUrlGenerator urlGenerator)
+        private readonly IMapper _mapper;
+
+        public UserController(IUserService userService, IEmailService emailService, UserManager<AppUser> userManager, ICommentService commentService, IUrlGenerator urlGenerator, IMapper mapper)
         {
             _userService = userService;
             _userManager = userManager;
             _commentService = commentService;
             _emailService = emailService;
             _urlGenerator = urlGenerator;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -43,7 +46,8 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInViewModel request, string? returnUrl = null)
         {
-            var result = await _userService.SignInAsync(request);
+            var mappedRequest = _mapper.Map<SignInDto>(request);
+            var result = await _userService.SignInAsync(mappedRequest);
 
             if (!result.Item1)
             {
@@ -116,7 +120,8 @@ namespace BlogProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmEmail(ConfirmEmailViewModel request)
         {
-            var result = await _userService.ConfirmEmailAsync(request);
+            var mappedRequest = _mapper.Map<ConfirmEmailDto>(request);
+            var result = await _userService.ConfirmEmailAsync(mappedRequest);
             if (!result.IsSuccess)
             {
                 ModelState.AddModelErrorList(result.Errors!);
@@ -146,7 +151,8 @@ namespace BlogProject.Controllers
                 return View(request);
             }
 
-            var result = await _userService.SignUp(request);
+            var mappedRequest = _mapper.Map<SignUpDto>(request);
+            var result = await _userService.SignUp(mappedRequest);
 
             if (result.IsSuccess)
             {
@@ -188,7 +194,12 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel request)
         {
-            (bool isOk, IEnumerable<IdentityError>? errors) = await _userService.ResetPasswordLinkAsync(request);
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+            var mappedRequest = _mapper.Map<ForgetPasswordDto>(request);
+            (bool isOk, IEnumerable<IdentityError>? errors) = await _userService.ResetPasswordLinkAsync(mappedRequest);
 
             if (!isOk)
             {
@@ -216,7 +227,8 @@ namespace BlogProject.Controllers
             var userId = TempData["userId"];
             var token = TempData["Token"];
 
-            var isOk = await _userService.ResetPasswordAsync(request, userId?.ToString(), token?.ToString());
+            var mappedRequest = _mapper.Map<ResetPasswordDto>(request);
+            var isOk = await _userService.ResetPasswordAsync(mappedRequest, userId?.ToString(), token?.ToString());
 
             if (isOk.Item1)
             {
@@ -251,8 +263,8 @@ namespace BlogProject.Controllers
             {
                 return View(request);
             }
-            
-            var result = await _userService.ChangePasswordAsync(request, User);
+            var mappedRequest = _mapper.Map<PasswordChangeDto>(request);
+            var result = await _userService.ChangePasswordAsync(mappedRequest, User);
             if(!result.Item1)
             {
                 ModelState.AddModelErrorList(result.Item2!.ToList());
@@ -294,13 +306,15 @@ namespace BlogProject.Controllers
 
                 var extendedProfileInfo = await _userService.GetExtendedProfileInformationAsync(currentUser);
 
-                return View(extendedProfileInfo);
+                var mappedProfileInfo2 = _mapper.Map<ExtendedProfileViewModel>(extendedProfileInfo);
+                return View(mappedProfileInfo2);
             }
 
             var visitorProfileInfo = _userService.GetVisitorProfileInformation(visitedUser);
+            var mappedProfileInfo = _mapper.Map<ExtendedProfileViewModel>(visitorProfileInfo);
 
 
-            return View(visitorProfileInfo);
+            return View(mappedProfileInfo);
         }
       
         [HttpPost]
@@ -310,8 +324,8 @@ namespace BlogProject.Controllers
             {
                 return View();
             }
-
-            var result = await _userService.UpdateProfileAsync((await _userManager.GetUserAsync(User!))!, request, fileInputProfile, coverInputProfile, IconInputWorkingAt);
+            var mappedRequest = _mapper.Map<ExtendedProfileDto>(request);
+            var result = await _userService.UpdateProfileAsync((await _userManager.GetUserAsync(User!))!, mappedRequest, fileInputProfile, coverInputProfile, IconInputWorkingAt);
 
             if (!result.Item1)
             {

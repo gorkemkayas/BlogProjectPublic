@@ -1,8 +1,8 @@
-﻿using BlogProject.Models.ViewModels;
-using BlogProject.Services.Abstract;
-using BlogProject.src.Infra.Context;
+﻿using AutoMapper;
+using BlogProject.Application.DTOs;
+using BlogProject.Application.Interfaces;
+using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Controllers
@@ -16,7 +16,9 @@ namespace BlogProject.Controllers
         private readonly BlogDbContext _context;
         private readonly IWebHostEnvironment _env;
 
-        public PostController(IPostService postService, BlogDbContext context, ITagService tagService, ICategoryService categoryService, ICommentService commentService, IWebHostEnvironment env)
+        private readonly IMapper _mapper;
+
+        public PostController(IPostService postService, BlogDbContext context, ITagService tagService, ICategoryService categoryService, ICommentService commentService, IWebHostEnvironment env, IMapper mapper)
         {
             _postService = postService;
             _context = context;
@@ -24,6 +26,7 @@ namespace BlogProject.Controllers
             _categoryService = categoryService;
             _commentService = commentService;
             _env = env;
+            _mapper = mapper;
         }
 
 
@@ -54,8 +57,9 @@ namespace BlogProject.Controllers
         {
             if (ModelState.IsValid)
             {
+                var mappedResult = _mapper.Map<CreatePostDto>(model);
                 // Post ekleme işlemi
-                var result = await _postService.CreatePostAsync(model);
+                var result = await _postService.CreatePostAsync(mappedResult);
                 if (result.IsSuccess)
                 {
                     return RedirectToAction("Index", "Home");

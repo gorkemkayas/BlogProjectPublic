@@ -1,11 +1,6 @@
-﻿using BlogProject.CustomValidators;
+﻿using BlogProject.Application.CustomMethods.Interfaces;
+using BlogProject.Application.Interfaces;
 using BlogProject.Localizations;
-using BlogProject.Services.Abstract;
-using BlogProject.Services.Concrete;
-using BlogProject.Services.CustomMethods.Abstract;
-using BlogProject.Services.CustomMethods.Concrete;
-using BlogProject.src.Infra.Context;
-using BlogProject.src.Infra.Entitites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;

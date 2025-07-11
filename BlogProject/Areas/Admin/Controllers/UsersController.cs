@@ -1,13 +1,13 @@
-﻿using BlogProject.Areas.Admin.Models;
-using BlogProject.Services.Abstract;
-using BlogProject.Services.Concrete;
-using BlogProject.Utilities;
-using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using BlogProject.Application.DTOs;
+using BlogProject.Application.Enums;
+using BlogProject.Application.Interfaces;
+using BlogProject.Application.Models;
+using BlogProject.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static BlogProject.Utilities.RoleService;
 
-namespace BlogProject.Areas.Admin.Controllers
+namespace BlogProject.Web.Areas.Admin.Controllers
 {
     //[Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
     [Area("Admin")]
@@ -15,10 +15,12 @@ namespace BlogProject.Areas.Admin.Controllers
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         //[Authorize(Roles = "Manager,Takım Lideri,Bölge Sorumlusu")]
@@ -28,7 +30,9 @@ namespace BlogProject.Areas.Admin.Controllers
             users.IncludeDeleted = includeDeleted;
             users.ControllerName = "Users";
             users.ActionName = "UserList";
-            return View(users);
+
+            var mappedUsers = _mapper.Map<ItemPagination<UserViewModel>>(users);
+            return View(mappedUsers);
         }
 
         [HttpPost]
@@ -40,8 +44,8 @@ namespace BlogProject.Areas.Admin.Controllers
                 TempData["Failed"] = "Error in suspension model!";
                 return RedirectToAction("UserList", "Users");
             }
-
-            await _userService.SuspendUser(request);
+            var mappedRequest = _mapper.Map<SuspendUserDto>(request);
+            await _userService.SuspendUser(mappedRequest);
 
             if(request.SuspensionMinutes == 0)
             {
