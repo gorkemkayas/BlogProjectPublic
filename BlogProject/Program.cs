@@ -64,7 +64,7 @@ builder.Services.Configure<FormOptions>(options =>
 
 var app = builder.Build();
 
-
+app.ConfigureExceptionHandler();
 
 //bekleyen migrationları otomatik veritabanına göndermek için.
 using (var scope = app.Services.CreateScope())

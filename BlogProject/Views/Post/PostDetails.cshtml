@@ -17,121 +17,121 @@
 
         /* Header */
         .header {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--medium-gray);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        background-color: var(--white);
+        border-bottom: 1px solid var(--medium-gray);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
         }
 
 
 
         /* Navbar */
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
         }
 
 
 
         .brand-logo {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--black);
-            text-decoration: none;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--black);
+        text-decoration: none;
         }
 
-            .brand-logo .dot {
-                color: var(--primary);
-            }
+        .brand-logo .dot {
+        color: var(--primary);
+        }
 
         .user-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
         }
 
         .btn-signin, .btn-signup {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s;
         }
 
         .btn-signin {
-            border: 1px solid var(--medium-gray);
-            color: var(--dark-gray);
-            background: transparent;
+        border: 1px solid var(--medium-gray);
+        color: var(--dark-gray);
+        background: transparent;
         }
 
-            .btn-signin:hover {
-                background-color: var(--light-gray);
-            }
+        .btn-signin:hover {
+        background-color: var(--light-gray);
+        }
 
         .btn-signup {
-            border: 1px solid var(--primary);
-            background-color: var(--primary);
-            color: var(--white);
+        border: 1px solid var(--primary);
+        background-color: var(--primary);
+        color: var(--white);
         }
 
-            .btn-signup:hover {
-                background-color: #1d4ed8;
-            }
+        .btn-signup:hover {
+        background-color: #1d4ed8;
+        }
 
         .user-dropdown {
-            display: flex;
-            align-items: center;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--dark-gray);
-            font-weight: 500;
+        display: flex;
+        align-items: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--dark-gray);
+        font-weight: 500;
         }
 
         .user-dropdown-toggle {
-            display: flex;
-            align-items: center;
+        display: flex;
+        align-items: center;
         }
 
         .profile-photo {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
         }
 
         .notification-badge {
-            width: 8px;
-            height: 8px;
-            background-color: var(--danger);
-            border-radius: 50%;
-            position: absolute;
-            top: 0;
-            right: 0;
+        width: 8px;
+        height: 8px;
+        background-color: var(--danger);
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        right: 0;
         }
 
         .dropdown-menu {
-            border: 1px solid var(--medium-gray);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--medium-gray);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .dropdown-item {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
         }
 
-            .dropdown-item i {
-                width: 20px;
-                text-align: center;
-                margin-right: 0.5rem;
-            }
+        .dropdown-item i {
+        width: 20px;
+        text-align: center;
+        margin-right: 0.5rem;
+        }
 
         :root {
         --black: #1a1a1a;
@@ -350,21 +350,35 @@
         }
 
         .social-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--gray-100);
-        color: var(--gray-600);
-        transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            color: var(--gray-600); /* varsayılan yazı rengi */
+            transition: background 0.2s, color 0.2s;
         }
 
-        .social-link:hover {
-        background: var(--primary-light);
-        color: var(--white);
-        }
+            /* Hover durumunda yazı rengi beyaz olur */
+            .social-link:hover {
+                background: black;
+                color: white;
+            }
+
+            /* İkonlar yazı rengini miras alır, geçiş efektli olur */
+            .social-link .fa-brands,
+            .social-link .fa-solid {
+                color: inherit;
+                transition: color 0.2s;
+            }
+
+
+        
+
+
+
 
         /* Comments */
         .comments {
@@ -683,6 +697,37 @@
         .post-reply-btn-alt2:hover::before {
         left: 100%;
         }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            transition: background 0.2s, color 0.2s;
+        }
+
+            .social-link:hover {
+                background: black;
+                color: white !important;
+            }
+
+            /* İkonlar varsayılan olarak linkin rengini miras alır */
+            .social-link .fa-brands,
+            .social-link .fa-solid {
+                color: inherit !important;
+                transition: color 0.2s;
+            }
+
+            /* Hover durumunda ikonlar beyaz olur */
+            .social-link:hover .fa-brands,
+            .social-link:hover .fa-solid {
+                color: white !important;
+            }
+
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -758,14 +803,51 @@
                 <div>
                     <span class="author-by">Article by</span>
                     <h3 class="author-name"><a asp-controller="User" asp-action="Profile" asp-route-userName="@Model.Post.Author.UserName" class="text-decoration-none blacktograydark">@Model.Post.Author.FullName</a></h3>
-                    <p class="author-bio">Senior Developer | Tech Writer | Open Source Contributor</p>
+                    <p class="author-bio">@(Model.Post.Author.Title is null ? "" : Model.Post.Author.Title ) @(Model.Post.Author.CurrentPosition is null ? "" : Model.Post.Author.CurrentPosition + " |") @(Model.Post.Author.UniversityName is null ? "" : Model.Post.Author.UniversityName)</p>
                     <div class="author-social">
-                        <a href="#" class="social-link" aria-label="Twitter">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z" />
-                            </svg>
+                        @if(Model.Post.Author.XAddress != null)
+                        {
+                        <a href="@Model.Post.Author.XAddress" target="_blank" class="social-link " aria-label="Twitter">
+                                <i class="fa-brands fa-x-twitter text-dark "></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="GitHub">
+                            
+                        }
+                        @if(Model.Post.Author.LinkedinAddress != null)
+                        {
+                            <a href="@Model.Post.Author.LinkedinAddress" class="social-link" target="_blank" aria-label="Twitter">
+                                <i class="fa-brands fa-linkedin-in text-dark"></i>
+                        </a>
+                            
+                        }
+                        @if(Model.Post.Author.GithubAddress != null)
+                        {
+                            <a href="@Model.Post.Author.GithubAddress" class="social-link" target="_blank" aria-label="Twitter">
+                                <i class="fa-brands fa-github text-dark"></i>
+                        </a>
+                            
+                        }
+                        @if (Model.Post.Author.MediumAddress != null)
+                        {
+                            <a href="@Model.Post.Author.MediumAddress" class="social-link" target="_blank" aria-label="Twitter">
+                                <i class="fa-brands fa-medium text-dark"></i>
+                            </a>
+
+                        }
+                        @if (Model.Post.Author.YoutubeAddress != null)
+                        {
+                            <a href="@Model.Post.Author.YoutubeAddress" class="social-link" target="_blank" aria-label="Twitter">
+                                <i class="fa-solid fa-youtube text-dark"></i>
+                            </a>
+
+                        }
+                        @if (Model.Post.Author.PersonalWebAddress != null)
+                        {
+                            <a href="@Model.Post.Author.PersonalWebAddress" class="social-link" target="_blank" aria-label="Twitter">
+                                <i class="fa-solid fa-earth-americas text-dark"></i>
+                            </a>
+
+                        }
+                        @* <a href="#" class="social-link" aria-label="GitHub">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
                             </svg>
@@ -774,7 +856,7 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                             </svg>
-                        </a>
+                        </a> *@
                     </div>
                 </div>
             </div>
@@ -924,7 +1006,7 @@
                 <div class="d-flex justify-content-center mb-4">
                     <div class="d-flex flex-column justify-content-center">
                         <p class="text-black-50">You cannot comment because you are not logged in.</p><br />
-                        <a class="text-center" href="/Account/Login">Log in to comment.</a>
+                        <a class="text-center" asp-controller="user" asp-action="SignIn">Log in to comment.</a>
                     </div>
                 </div>
                 <hr />
