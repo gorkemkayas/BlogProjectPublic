@@ -1,0 +1,925 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategori: Teknoloji | Premium Tech Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #111111;
+            --white: #ffffff;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --gray-300: #e0e0e0;
+            --gray-600: #757575;
+            --gray-700: #616161;
+            --gray-800: #424242;
+            --primary: #111111;
+            --transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--black);
+            color: var(--white);
+            padding: 140px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .header::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+        .header-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-title {
+            font-size: 3.5rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .category-description {
+            font-size: 1.125rem;
+            opacity: 0.8;
+            font-weight: 400;
+            line-height: 1.7;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .post-count {
+            margin-top: 40px;
+            font-size: 0.75rem;
+            opacity: 0.6;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 0;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 100px 0;
+            border: none;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+            .section-title::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--gray-200);
+                margin-left: 24px;
+            }
+
+        /* Featured Posts */
+        .featured-section {
+            margin-bottom: 100px;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+
+        .featured-post {
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            border-radius: 8px;
+            background: var(--white);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--gray-200);
+        }
+
+            .featured-post:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
+                border-color: var(--gray-300);
+            }
+
+            .featured-post.large {
+                grid-column: span 8;
+                height: 500px;
+            }
+
+            .featured-post.small {
+                grid-column: span 4;
+                height: 240px;
+            }
+
+            .featured-post.medium {
+                grid-column: span 6;
+                height: 240px;
+            }
+
+        .post-image {
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-content {
+            padding: 32px;
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+            .post-meta span {
+                position: relative;
+            }
+
+                .post-meta span:not(:last-child)::after {
+                    content: '•';
+                    position: absolute;
+                    right: -8px;
+                    color: var(--gray-300);
+                }
+
+        .post-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--black);
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+        }
+
+        .featured-post.large .post-title {
+            font-size: 2rem;
+            line-height: 1.3;
+        }
+
+        .featured-post.small .post-title {
+            font-size: 1.25rem;
+        }
+
+        .post-excerpt {
+            color: var(--gray-700);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 16px;
+            font-size: 0.8125rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+
+            .read-more svg {
+                margin-left: 8px;
+                transition: var(--transition);
+            }
+
+            .read-more:hover {
+                color: var(--gray-600);
+            }
+
+                .read-more:hover svg {
+                    transform: translateX(4px);
+                }
+
+        /* Grid Posts */
+        .grid-section {
+            margin-bottom: 100px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .grid-post {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--gray-200);
+        }
+
+            .grid-post:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
+                border-color: var(--gray-300);
+            }
+
+        .grid-post-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+        }
+
+        .grid-post-content {
+            padding: 24px;
+        }
+
+        .grid-post .post-title {
+            font-size: 1.125rem;
+            margin-bottom: 12px;
+        }
+
+        .grid-post .post-meta {
+            margin-bottom: 16px;
+        }
+
+        /* List Posts */
+        .list-section {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--gray-200);
+        }
+
+        .list-post {
+            display: flex;
+            align-items: center;
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--gray-200);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+            .list-post:last-child {
+                border-bottom: none;
+            }
+
+            .list-post:hover {
+                background: var(--gray-100);
+            }
+
+        .list-post-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            border-radius: 4px;
+            margin-right: 24px;
+            flex-shrink: 0;
+        }
+
+        .list-post-content {
+            flex: 1;
+        }
+
+        .list-post .post-title {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .list-post .post-meta {
+            margin-bottom: 0;
+            font-size: 0.75rem;
+        }
+
+        .list-post-date {
+            color: var(--gray-600);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            margin-left: 32px;
+            flex-shrink: 0;
+        }
+
+        /* Load More */
+        .load-more {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .load-more-btn {
+            display: inline-flex;
+            align-items: center;
+            background: var(--black);
+            color: var(--white);
+            padding: 16px 32px;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+            .load-more-btn svg {
+                margin-left: 12px;
+                transition: var(--transition);
+            }
+
+            .load-more-btn:hover {
+                background: var(--gray-800);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            }
+
+                .load-more-btn:hover svg {
+                    transform: translateX(4px);
+                }
+
+        /* Responsive */
+        @@media (max-width: 1024px) {
+            .featured-grid
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        .featured-post.large,
+        .featured-post.small,
+        .featured-post.medium {
+            grid-column: span 1;
+            height: auto;
+        }
+
+            .featured-post.large .post-image {
+                height: 300px;
+            }
+
+            .featured-post.small .post-image,
+            .featured-post.medium .post-image {
+                height: 200px;
+            }
+
+        .grid-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .container
+
+        {
+            padding: 0 24px;
+        }
+
+        .header {
+            padding: 100px 0 80px;
+        }
+
+        .category-title {
+            font-size: 2.5rem;
+        }
+
+        .grid-container {
+            grid-template-columns: 1fr;
+        }
+
+        .list-post {
+            padding: 20px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .list-post-image {
+            width: 100%;
+            height: 120px;
+            margin-right: 0;
+            margin-bottom: 16px;
+        }
+
+        .list-post-date {
+            margin-left: 0;
+            margin-top: 12px;
+            align-self: flex-end;
+        }
+
+        .main-content {
+            padding: 80px 0;
+        }
+
+        .section-divider {
+            margin: 80px 0;
+        }
+
+        }
+
+        @@media (max-width: 480px) {
+            .container
+
+        {
+            padding: 0 20px;
+        }
+
+        .header {
+            padding: 80px 0 60px;
+        }
+
+        .category-title {
+            font-size: 2rem;
+        }
+
+        .post-content {
+            padding: 24px;
+        }
+
+        .featured-post.large .post-title {
+            font-size: 1.5rem;
+        }
+
+        }
+
+        /* Animations */
+        @@keyframes fadeUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .animate-in {
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .featured-post,
+        .grid-post,
+        .list-post {
+            opacity: 0;
+        }
+
+            .featured-post.animate-in,
+            .grid-post.animate-in,
+            .list-post.animate-in {
+                opacity: 1;
+            }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="category-title">Teknoloji</h1>
+                <p class="category-description">
+                    Teknolojinin gelişen dünyasından son haberler, derinlemesine analizler ve uzman görüşleri.
+                    Dijital dönüşümün merkezinde kalın.
+                </p>
+                <div class="post-count">24 Makale</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <!-- Featured Posts -->
+            <div class="featured-section">
+                <h2 class="section-title">Öne Çıkanlar</h2>
+                <div class="featured-grid">
+                    <div class="featured-post large">
+                        <div class="post-image"></div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span>Ahmet Yılmaz</span>
+                                <span>15 Temmuz 2025</span>
+                            </div>
+                            <h2 class="post-title">Yapay Zeka ve İş Dünyasının Geleceği: Dönüşümün Eşiğindeyiz</h2>
+                            <p class="post-excerpt">
+                                Yapay zeka teknolojilerinin iş dünyasındaki rolü hızla gelişiyor.
+                                Şirketlerin bu dönüşüme nasıl adapte olduğunu ve gelecekte neler bekleyebileceğimizi inceliyoruz.
+                            </p>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="featured-post small">
+                        <div class="post-image"></div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span>Elif Kaya</span>
+                                <span>14 Temmuz 2025</span>
+                            </div>
+                            <h2 class="post-title">5G Teknolojisi: Bağlantıda Yeni Çağ</h2>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="featured-post medium">
+                        <div class="post-image"></div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span>Murat Demir</span>
+                                <span>13 Temmuz 2025</span>
+                            </div>
+                            <h2 class="post-title">Blockchain: Güvenin Yeniden Tanımlanması</h2>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="featured-post medium">
+                        <div class="post-image"></div>
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span>Zeynep Özkan</span>
+                                <span>12 Temmuz 2025</span>
+                            </div>
+                            <h2 class="post-title">Quantum Computing: Hesaplamanın Geleceği</h2>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Grid Posts -->
+            <div class="grid-section">
+                <h2 class="section-title">Son Makaleler</h2>
+                <div class="grid-container">
+                    <div class="grid-post">
+                        <div class="grid-post-image"></div>
+                        <div class="grid-post-content">
+                            <div class="post-meta">
+                                <span>Can Aksoy</span>
+                                <span>11 Temmuz 2025</span>
+                            </div>
+                            <h3 class="post-title">Metaverse ve Sanal Gerçeklik: Yeni Boyutlar</h3>
+                            <p class="post-excerpt">
+                                Metaverse konseptinin gelişimi ve VR teknolojilerinin günlük yaşama entegrasyonu üzerine detaylı bir analiz.
+                            </p>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="grid-post">
+                        <div class="grid-post-image"></div>
+                        <div class="grid-post-content">
+                            <div class="post-meta">
+                                <span>Ayşe Çelik</span>
+                                <span>10 Temmuz 2025</span>
+                            </div>
+                            <h3 class="post-title">IoT ve Akıllı Yaşam: Bağlı Gelecek</h3>
+                            <p class="post-excerpt">
+                                Nesnelerin interneti teknolojisiyle hayatımızı nasıl daha akıllı ve verimli hale getirebileceğimizi keşfedin.
+                            </p>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="grid-post">
+                        <div class="grid-post-image"></div>
+                        <div class="grid-post-content">
+                            <div class="post-meta">
+                                <span>Emre Yıldız</span>
+                                <span>9 Temmuz 2025</span>
+                            </div>
+                            <h3 class="post-title">Siber Güvenlik: Dijital Çağın Kalkanı</h3>
+                            <p class="post-excerpt">
+                                Dijital dönüşüm çağında siber güvenliğin önemi ve alınması gereken tedbirler hakkında kapsamlı rehber.
+                            </p>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="grid-post">
+                        <div class="grid-post-image"></div>
+                        <div class="grid-post-content">
+                            <div class="post-meta">
+                                <span>Fatma Şahin</span>
+                                <span>8 Temmuz 2025</span>
+                            </div>
+                            <h3 class="post-title">Robotik: Otomasyonun Yükselişi</h3>
+                            <p class="post-excerpt">
+                                Robotik teknolojilerinin endüstriyel ve günlük yaşamdaki uygulamaları ve gelecek öngörüleri.
+                            </p>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="grid-post">
+                        <div class="grid-post-image"></div>
+                        <div class="grid-post-content">
+                            <div class="post-meta">
+                                <span>Mehmet Özdemir</span>
+                                <span>7 Temmuz 2025</span>
+                            </div>
+                            <h3 class="post-title">Cloud Computing: Bulutta Dönüşüm</h3>
+                            <p class="post-excerpt">
+                                Bulut bilişimin iş dünyasına etkileri ve gelecekte bizi nelerin beklediğine dair uzman görüşleri.
+                            </p>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="grid-post">
+                        <div class="grid-post-image"></div>
+                        <div class="grid-post-content">
+                            <div class="post-meta">
+                                <span>Selin Karaca</span>
+                                <span>6 Temmuz 2025</span>
+                            </div>
+                            <h3 class="post-title">Augmented Reality: Gerçekliğin Genişletilmesi</h3>
+                            <p class="post-excerpt">
+                                Artırılmış gerçeklik teknolojilerinin tüketici deneyimlerini nasıl dönüştürdüğüne dair detaylı inceleme.
+                            </p>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- List Posts -->
+            <div class="list-section">
+                <div class="list-post">
+                    <div class="list-post-image"></div>
+                    <div class="list-post-content">
+                        <h3 class="post-title">Big Data: Veri Çağının Mimarları</h3>
+                        <div class="post-meta">
+                            <span>Berkay Aydın</span>
+                        </div>
+                    </div>
+                    <div class="list-post-date">5 Temmuz 2025</div>
+                </div>
+                <div class="list-post">
+                    <div class="list-post-image"></div>
+                    <div class="list-post-content">
+                        <h3 class="post-title">Machine Learning: Öğrenen Makineler</h3>
+                        <div class="post-meta">
+                            <span>Deniz Kaya</span>
+                        </div>
+                    </div>
+                    <div class="list-post-date">4 Temmuz 2025</div>
+                </div>
+                <div class="list-post">
+                    <div class="list-post-image"></div>
+                    <div class="list-post-content">
+                        <h3 class="post-title">DevOps: Geliştirme ve Operasyonun Birleşimi</h3>
+                        <div class="post-meta">
+                            <span>Kaan Yılmaz</span>
+                        </div>
+                    </div>
+                    <div class="list-post-date">3 Temmuz 2025</div>
+                </div>
+                <div class="list-post">
+                    <div class="list-post-image"></div>
+                    <div class="list-post-content">
+                        <h3 class="post-title">Dijital Pazarlama: Yeni Nesil Stratejiler</h3>
+                        <div class="post-meta">
+                            <span>Ece Demir</span>
+                        </div>
+                    </div>
+                    <div class="list-post-date">2 Temmuz 2025</div>
+                </div>
+                <div class="list-post">
+                    <div class="list-post-image"></div>
+                    <div class="list-post-content">
+                        <h3 class="post-title">UX Tasarımı: Kullanıcı Deneyiminin Önemi</h3>
+                        <div class="post-meta">
+                            <span>Arda Kılıç</span>
+                        </div>
+                    </div>
+                    <div class="list-post-date">1 Temmuz 2025</div>
+                </div>
+            </div>
+
+            <div class="load-more">
+                <button class="load-more-btn">
+                    Daha Fazla Makale Yükle
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 5v14M19 12l-7 7-7-7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all posts with staggered delay
+        document.querySelectorAll('.featured-post, .grid-post, .list-post').forEach((post, index) => {
+            observer.observe(post);
+            post.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Load more functionality
+        const loadMoreBtn = document.querySelector('.load-more-btn');
+        loadMoreBtn.addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            this.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                </svg>
+                Yükleniyor...
+            `;
+            this.disabled = true;
+
+            // Simulate loading
+            setTimeout(() => {
+                // Create new posts
+                const gridContainer = document.querySelector('.grid-container');
+                const newPosts = [
+                    {
+                        author: "Cem Yıldırım",
+                        date: "30 Haziran 2025",
+                        title: "Edge Computing: Verinin Yeni Adresi",
+                        excerpt: "Edge computing teknolojisinin veri işleme süreçlerini nasıl dönüştürdüğüne dair detaylar."
+                    },
+                    {
+                        author: "Sibel Arslan",
+                        date: "29 Haziran 2025",
+                        title: "Dijital İkizler: Sanal Kopyaların Gücü",
+                        excerpt: "Dijital ikiz teknolojisinin endüstrilerdeki uygulamaları ve gelecek potansiyeli."
+                    },
+                    {
+                        author: "Onur Şahin",
+                        date: "28 Haziran 2025",
+                        title: "API Ekonomisi: Dijital Bağlantılar",
+                        excerpt: "API'ların modern yazılım geliştirmedeki rolü ve ekonomik etkileri."
+                    }
+                ];
+
+                newPosts.forEach(post => {
+                    const newPost = document.createElement('div');
+                    newPost.className = 'grid-post';
+                    newPost.innerHTML = `
+                        <div class="grid-post-image"></div>
+                        <div class="grid-post-content">
+                            <div class="post-meta">
+                                <span>${post.author}</span>
+                                <span>${post.date}</span>
+                            </div>
+                            <h3 class="post-title">${post.title}</h3>
+                            <p class="post-excerpt">${post.excerpt}</p>
+                            <a href="#" class="read-more">
+                                Devamını Oku
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    `;
+                    gridContainer.appendChild(newPost);
+                    observer.observe(newPost);
+                });
+
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }, 1500);
+        });
+
+        // Add spin animation for loading icon
+        const style = document.createElement('style');
+        style.textContent = `
+        @@keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            .animate-spin {
+                animation: spin 1s linear infinite;
+                margin-right: 8px;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

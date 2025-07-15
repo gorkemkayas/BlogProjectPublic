@@ -5,6 +5,10 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = $"{Model.Post.Title}";
+    foreach (var item in User.Claims)
+    {
+        Console.WriteLine(item.Value);
+    }
 }
 <script>
     const currentUserId = "@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value";
@@ -773,10 +777,10 @@
                 @Html.Raw(Model.Post.Content)
             </div>
 
-            <hr class="my-2">
+            <hr class="my-2 mt-5">
 
-            <div class="d-flex justify-content-center">
-                <div class="d-flex flex-column justify-content-center align-items-center">
+            <div class="d-flex justify-content-center align-content-center">
+                @* <div class="d-flex flex-column justify-content-center align-items-center">
                     <a class="bi bi-bookmark-plus-fill mx-3 fs-5 blacktogray" href="#"></a>
                     <small>23</small>
 
@@ -792,7 +796,8 @@
                 <div class="d-flex flex-column justify-content-center align-items-center">
                     <a class="bi bi-share-fill mx-3 fs-5 blacktogray" href="#"></a>
                     <small>15</small>
-                </div>
+                </div> *@
+                <p class="text-gradient d-flex align-content-center mb-0">This post has been viewed @Model.Post.ViewCount times!</p>
             </div>
             <hr class="my-2">
 
@@ -874,7 +879,7 @@
             {
                 <!-- Comment Form -->
                     <div class="commentor-avatar">
-                        <img src="/img/userPhotos/@(User.Identity.Name)/@(User.FindFirst("ProfilePictureUrl")?.Value)" />
+                        <img src="/img/userPhotos/@(User.Identity.Name)/@User.FindFirst("ProfilePictureUrl")?.Value" />
                         <span>Y</span>
                     </div>
                     <form class="comment-input main-comment-form" id="commentForm">
@@ -1354,7 +1359,7 @@
         <!-- Related Posts -->
         <section class="related-posts">
             <h2 class="related-title">You Might Also Like</h2>
-            <div class="related-grid d-flex justify-content-between">
+            <div class="related-grid d-flex @(Model.RecommendedPosts.Count == 1 ? "justify-content-center" : "justify-content-between") ">
                 @foreach (var recommendedPost in Model.RecommendedPosts)
                 {
                     <article class="related-post">

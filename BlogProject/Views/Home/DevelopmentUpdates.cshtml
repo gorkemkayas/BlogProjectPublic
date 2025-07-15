@@ -1,0 +1,481 @@
+﻿@{
+    ViewData["Title"] = "Development Updates";
+}
+
+<style>
+    .updates-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .updates-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .updates-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        margin-bottom: 1rem;
+        color: #000;
+    }
+
+    .updates-subtitle {
+        font-size: 1.1rem;
+        color: rgba(0, 0, 0, 0.7);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .update-timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+        .update-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 7px;
+            width: 2px;
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+    .update-item {
+        position: relative;
+        padding: 2rem 0 2rem 2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+        .update-item:last-child {
+            border-bottom: none;
+        }
+
+        .update-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 2.5rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #000;
+            transform: translateX(-50%);
+        }
+
+    .update-date {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.6);
+        margin-bottom: 0.5rem;
+    }
+
+    .update-version {
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.05);
+        color: #000;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .update-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #000;
+    }
+
+    .update-content {
+        color: rgba(0, 0, 0, 0.8);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+    }
+
+    .update-features {
+        margin: 1.5rem 0;
+    }
+
+    .update-feature {
+        display: flex;
+        margin-bottom: 0.75rem;
+    }
+
+    .update-feature-bullet {
+        width: 6px;
+        height: 6px;
+        background: #000;
+        border-radius: 50%;
+        margin-top: 0.5rem;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    .update-feature-text {
+        flex: 1;
+        color: rgba(0, 0, 0, 0.8);
+    }
+
+    .update-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .status-planned {
+        background: rgba(0, 0, 0, 0.05);
+        color: rgba(0, 0, 0, 0.7);
+    }
+
+    .status-in-progress {
+        background: rgba(0, 123, 255, 0.1);
+        color: #007bff;
+    }
+
+    .status-completed {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+    .update-footer {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .update-link {
+        display: inline-flex;
+        align-items: center;
+        color: #000;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+        .update-link svg {
+            width: 16px;
+            height: 16px;
+            margin-left: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .update-link:hover svg {
+            transform: translateX(3px);
+        }
+
+    @@media (max-width: 768px) {
+        .updates-title {
+            font-size: 2rem;
+        }
+
+        .update-item {
+            padding: 1.5rem 0 1.5rem 1.5rem;
+        }
+
+        .update-title {
+            font-size: 1.3rem;
+        }
+    }
+    /* Önceki CSS tanımlarını aynen tutuyoruz, sadece status-completed class'ını güncelliyoruz */
+    .status-completed {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        content: "Completed";
+    }
+
+        /* Durum metinlerini Türkçe yapmak için ek CSS */
+        .status-completed::before {
+            content: "Completed";
+        }
+
+    .status-in-progress::before {
+        content: "In-process";
+    }
+
+    .status-planned::before {
+        content: "Planned";
+    }
+</style>
+<div class="updates-container">
+    <div class="updates-header">
+        <h1 class="updates-title">Development Updates</h1>
+        <p class="updates-subtitle">
+            Latest improvements, bug fixes and new features on our platform.
+            This page is regularly updated.
+        </p>
+    </div>
+
+    <div class="update-timeline">
+        <!-- New Update 1 -->
+        <div class="update-item">
+            <div class="update-date">July 10, 2023</div>
+            <h2 class="update-title">
+                Project Migrated to Layered Architecture
+                <span class="update-version">v1.1.0</span>
+            </h2>
+            <div class="update-content">
+                The project architecture has been migrated to a layered structure for better sustainability and modularity.
+                This change makes maintenance and adding new features easier.
+            </div>
+
+            <div class="update-features">
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Data access layer separated and optimized
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Business logic layer created
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Presentation layer made more lightweight
+                    </div>
+                </div>
+            </div>
+
+            <div class="update-footer">
+                <span class="update-status status-completed"></span>
+                @* <a href="#" class="update-link">
+                    View details
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a> *@
+            </div>
+        </div>
+
+        <!-- New Update 2 -->
+        <div class="update-item">
+            <div class="update-date">July 5, 2023</div>
+            <h2 class="update-title">
+                User Information Page Added
+                <span class="update-version">v1.0.5</span>
+            </h2>
+            <div class="update-content">
+                A new information page has been added to help users better understand platform features.
+            </div>
+
+            <div class="update-features">
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Platform usage guide added
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        FAQ section created
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Quick start guide for beginners prepared
+                    </div>
+                </div>
+            </div>
+
+            <div class="update-footer">
+                <span class="update-status status-completed"></span>
+                @* <a href="#" class="update-link">
+                    Visit page
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a> *@
+            </div>
+        </div>
+
+        <!-- New Update 3 -->
+        <div class="update-item">
+            <div class="update-date">June 28, 2023</div>
+            <h2 class="update-title">
+                Post Sharing Issues Fixed
+                <span class="update-version">v1.0.3</span>
+            </h2>
+            <div class="update-content">
+                Several issues users encountered while sharing posts have been identified and resolved.
+            </div>
+
+            <div class="update-features">
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Formatting issue with long posts fixed
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Timeout problem during media upload resolved
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Issue with post titles containing special characters fixed
+                    </div>
+                </div>
+            </div>
+
+            <div class="update-footer">
+                <span class="update-status status-completed"></span>
+                @* <a href="#" class="update-link">
+                    Issue details
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a> *@
+            </div>
+        </div>
+
+        <!-- New Update 4 -->
+        <div class="update-item">
+            <div class="update-date">July 15, 2023</div>
+            <h2 class="update-title">
+                Post Filtering by Categories and Tags
+                <span class="update-version">v1.2.0</span>
+            </h2>
+            <div class="update-content">
+                We're working on a new feature that will allow users to filter posts by categories and tags.
+            </div>
+
+            <div class="update-features">
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Category-based filtering will be added
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Tag cloud view will be created
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Filtering with multiple tag selection will be possible
+                    </div>
+                </div>
+            </div>
+
+            <div class="update-footer">
+                <span class="update-status status-in-progress"></span>
+                @* <a href="#" class="update-link">
+                    View progress
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a> *@
+            </div>
+        </div>
+
+        <!-- New Update 5 -->
+        <div class="update-item">
+            <div class="update-date">Planned</div>
+            <h2 class="update-title">
+                User Following System
+                <span class="update-version">v1.3.0</span>
+            </h2>
+            <div class="update-content">
+                A new social feature is planned where users can follow each other and see posts from users they follow.
+            </div>
+
+            <div class="update-features">
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Follower/following system will be added
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Personalized following feed will be created
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Follow suggestions will be provided
+                    </div>
+                </div>
+            </div>
+
+            <div class="update-footer">
+                <span class="update-status status-planned"></span>
+                @* <a href="#" class="update-link">
+                    Request feature
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a> *@
+            </div>
+        </div>
+
+        <!-- New Update 6 -->
+        <div class="update-item">
+            <div class="update-date">Planned</div>
+            <h2 class="update-title">
+                Third-Party Login Integration
+                <span class="update-version">v1.4.0</span>
+            </h2>
+            <div class="update-content">
+                Integrations are planned to allow users to login with social accounts like Google and Facebook.
+            </div>
+
+            <div class="update-features">
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Google account login will be added
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Facebook integration will be implemented
+                    </div>
+                </div>
+                <div class="update-feature">
+                    <div class="update-feature-bullet"></div>
+                    <div class="update-feature-text">
+                        Infrastructure for Twitter login will be prepared
+                    </div>
+                </div>
+            </div>
+
+            <div class="update-footer">
+                <span class="update-status status-planned"></span>
+                @* <a href="#" class="update-link">
+                    Participate in voting
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a> *@
+            </div>
+        </div>
+
+        <!-- Previous updates can be kept here -->
+    </div>
+</div>
+

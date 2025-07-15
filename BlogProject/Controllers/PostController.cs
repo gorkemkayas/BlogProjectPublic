@@ -113,6 +113,9 @@ namespace BlogProject.Controllers
         [HttpGet("Post/{id}")]
         public async Task<IActionResult> PostDetails(string id)
         {
+            var profilePicClaim = HttpContext.User.FindFirst("ProfilePictureUrl")?.Value;
+            Console.WriteLine("Controller claim: " + (profilePicClaim ?? "Claim yok"));
+
             var post = await _postService.GetPostByIdAsync(Guid.Parse(id),true);
             var recommendedPost = await _postService.GetLatestPostsWithCount(3);
             if (post == null)
@@ -128,6 +131,12 @@ namespace BlogProject.Controllers
                 CurrentUser = await _userService.FindByUsername(User.Identity.Name)
             };
             return View(model);
+        }
+
+        [HttpGet("Post/ListByCategory")]
+        public IActionResult ListByCategory()
+        {
+            return View();
         }
     }
 }

@@ -23,6 +23,16 @@ namespace BlogProject.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("FirstVisit") == null)
+            {
+                ViewBag.ShowWelcomeMessage = true;
+                HttpContext.Session.SetString("FirstVisit", "true");
+            }
+            else
+            {
+                ViewBag.ShowWelcomeMessage = false;
+            }
+
             var mostViewedPosts = await _postService.GetMostViewedPostsWithCount();
             var LatestPosts = await _postService.GetLatestPostsWithCount();
             var popularTags = await _tagService.GetPopularTags(15);
@@ -41,6 +51,11 @@ namespace BlogProject.Controllers
             return View(model);
         }
 
+        [Route("/development-updates")]
+        public async Task<IActionResult> DevelopmentUpdates()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();

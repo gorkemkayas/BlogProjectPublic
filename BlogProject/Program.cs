@@ -1,8 +1,11 @@
-﻿using BlogProject.Extensions;
+﻿using BlogProject.Application.Claims;
+using BlogProject.Domain.Entities;
+using BlogProject.Extensions;
 using BlogProject.Infrastructure.Configurations;
 using BlogProject.Infrastructure.Persistence;
 using BlogProject.Web.Mapping;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,6 +56,19 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB
 });
 
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomClaimsPrincipalFactory>();
+
+// İlk girişte kullanıcıya 'yapım aşamasında' bilgisini tek seferlik vermek için session kullanacağım.
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // 30 dakika timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.Name = "BlogSession";
+});
+
+
+
 var config = builder.Configuration;
 Console.WriteLine("SMTP Host: " + config["EmailSettings:Host"]);
 
@@ -98,6 +114,8 @@ app.UseHttpsRedirection(); // eğer http:local... li istek gelirse https:local..
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession(); // Session'ı kullanabilmek için ekledik.
 
 app.UseAuthentication();
 app.UseAuthorization();

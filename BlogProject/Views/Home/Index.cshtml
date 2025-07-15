@@ -650,6 +650,306 @@
 
         }
     </style>
+    <style>
+        /* Core Styles */
+        .dev-notice-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(20px) saturate(180%);
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+            .dev-notice-overlay.active {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+        /* Compact Card Container */
+        .dev-notice-card {
+            width: min(100%, 480px);
+            max-height: 90vh;
+            background: #fff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08), 0 48px 96px rgba(0, 0, 0, 0.24);
+            transform: translateY(8%) scale(0.98);
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: transform;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            overflow-y: auto;
+        }
+
+        .dev-notice-overlay.active .dev-notice-card {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Compact Header */
+        .dev-notice-header {
+            padding: 1.75rem 2rem 1.5rem;
+            background: #000;
+            color: #fff;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+            .dev-notice-header::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 2rem;
+                right: 2rem;
+                height: 1px;
+                background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0) 100%);
+            }
+
+        .dev-notice-title-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dev-notice-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .dev-notice-title-group {
+            flex: 1;
+        }
+
+        .dev-notice-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        .dev-notice-subtitle {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            font-weight: 450;
+            margin-top: 0.4rem;
+            line-height: 1.5;
+        }
+
+        /* Compact Body */
+        .dev-notice-body {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+        }
+
+        .dev-notice-message {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: rgba(0, 0, 0, 0.88);
+            font-weight: 450;
+        }
+
+        .dev-notice-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .dev-notice-feature {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .dev-notice-feature-icon {
+            width: 20px;
+            height: 20px;
+            background: #000;
+            border-radius: 5px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+            .dev-notice-feature-icon svg {
+                width: 12px;
+                height: 12px;
+                color: #fff;
+            }
+
+        .dev-notice-feature-content {
+            flex: 1;
+        }
+
+        .dev-notice-feature-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.4rem;
+        }
+
+        .dev-notice-feature-desc {
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Status Bar */
+        .dev-notice-status {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .dev-notice-progress-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .dev-notice-progress-bar {
+            height: 100%;
+            width: 65%;
+            background: #000;
+            border-radius: 3px;
+            animation: progressPulse 2.5s ease-in-out infinite;
+        }
+
+        .dev-notice-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Compact Footer */
+        .dev-notice-footer {
+            padding: 1.5rem 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dev-notice-disclaimer {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .dev-notice-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .dev-notice-button {
+            padding: 0.9rem 1.75rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.2px;
+        }
+
+        .dev-notice-button-primary {
+            background: #000;
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+            .dev-notice-button-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+            }
+
+        .dev-notice-button-secondary {
+            background: transparent;
+            color: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+            .dev-notice-button-secondary:hover {
+                background: rgba(0, 0, 0, 0.03);
+                border-color: rgba(0, 0, 0, 0.2);
+            }
+
+        /* Animations */
+        @@keyframes progressPulse {
+            0%
+
+        {
+            opacity: 0.9;
+        }
+
+        50% {
+            opacity: 0.6;
+        }
+
+        100% {
+            opacity: 0.9;
+        }
+
+        }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 640px) {
+            .dev-notice-overlay
+
+        {
+            padding: 0.75rem;
+        }
+
+        .dev-notice-card {
+            width: min(95%, 400px);
+        }
+
+        .dev-notice-header {
+            padding: 1.5rem 1.25rem;
+        }
+
+        .dev-notice-body {
+            padding: 1.5rem 1.25rem;
+            gap: 1.5rem;
+        }
+
+        .dev-notice-footer {
+            padding: 1.25rem 1.5rem 1.5rem;
+        }
+
+        .dev-notice-title {
+            font-size: 1.5rem;
+        }
+
+        .dev-notice-button {
+            padding: 0.8rem 1.5rem;
+        }
+
+        }
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -1484,3 +1784,109 @@
     </script>
 </body>
 </html>
+
+
+@if (ViewBag.ShowWelcomeMessage == true)
+{
+    <div class="dev-notice-overlay" id="devNotice">
+        <div class="dev-notice-card">
+            <div class="dev-notice-header">
+                <div class="dev-notice-title-container">
+                    <div class="dev-notice-icon">!</div>
+                    <div class="dev-notice-title-group">
+                        <h2 class="dev-notice-title">Development Preview</h2>
+                        <p class="dev-notice-subtitle">Beta Release • Version 0.8.2</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dev-notice-body">
+                <p class="dev-notice-message">
+                    You're accessing an early development build. Some features may be unfinished
+                    and performance may vary from the final release.
+                </p>
+
+                <div class="dev-notice-features">
+                    <div class="dev-notice-feature">
+                        <div class="dev-notice-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="dev-notice-feature-content">
+                            <h3 class="dev-notice-feature-title">Work in Progress</h3>
+                            <p class="dev-notice-feature-desc">
+                                Some components are under active development and may change unexpectedly.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="dev-notice-feature">
+                        <div class="dev-notice-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="dev-notice-feature-content">
+                            <h3 class="dev-notice-feature-title">Temporary Data</h3>
+                            <p class="dev-notice-feature-desc">
+                                Database may be reset during updates. Don't store critical information.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dev-notice-status">
+                    <div class="dev-notice-progress-container">
+                        <div class="dev-notice-progress-bar"></div>
+                    </div>
+                    <div class="dev-notice-meta">
+                        <span>Development Progress</span>
+                        <span>65% Complete</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dev-notice-footer">
+                <p class="dev-notice-disclaimer">
+                    This preview is for testing purposes only. Features may change without notice.
+                </p>
+
+                <div class="dev-notice-actions">
+                    <button class="dev-notice-button dev-notice-button-primary" id="devNoticeAccept">
+                        Accept & Continue
+                    </button>
+                    <button class="dev-notice-button dev-notice-button-secondary" id="devNoticeLearnMore">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notice = document.getElementById('devNotice');
+            const acceptBtn = document.getElementById('devNoticeAccept');
+            const learnBtn = document.getElementById('devNoticeLearnMore');
+
+            setTimeout(() => {
+                notice.classList.add('active');
+                document.documentElement.style.overflow = 'hidden';
+            }, 300);
+
+            acceptBtn.addEventListener('click', () => {
+                notice.classList.remove('active');
+                setTimeout(() => {
+                    notice.style.display = 'none';
+                    document.documentElement.style.overflow = '';
+                }, 600);
+                document.cookie = "devNoticeAccepted=true; max-age=604800; path=/";
+            });
+
+            learnBtn.addEventListener('click', () => {
+                window.open('/development-updates', '_blank');
+            });
+        });
+    </script>
+}

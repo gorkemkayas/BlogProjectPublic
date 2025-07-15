@@ -459,16 +459,21 @@ namespace BlogProject.Infrastructure.Services
                 errors.Add(new IdentityError() { Code = "EmailNotConfirmed", Description = "Your email is not confirmed." });
                 return (false, errors);
             }
-            var userClaims = await _userManager.GetClaimsAsync(hasUser);
-            var claims = new List<Claim>(userClaims)
-    {
-        new Claim("ProfilePictureUrl", $"{hasUser.ProfilePicture}")
-    };
-            _userManager.AddClaimsAsync(hasUser, claims).Wait(); // Add ProfilePictureUrl claim
+            var existingClaims = await _userManager.GetClaimsAsync(hasUser);
+            var existingProfileClaim = existingClaims.FirstOrDefault(c => c.Type == "ProfilePictureUrl");
+
+            if (existingProfileClaim != null)
+            {
+                await _userManager.RemoveClaimAsync(hasUser, existingProfileClaim);
+            }
+            await _userManager.AddClaimAsync(hasUser, new Claim("ProfilePictureUrl", hasUser.ProfilePicture ?? ""));
+            await _signInManager.SignOutAsync();
+
             var signInResult = await _signInManager.PasswordSignInAsync(hasUser, request.Password, request.RememberMe, true);
 
             if (signInResult.Succeeded)
             {
+
                 hasUser.SuspendedTo = null!;
                 hasUser.SuspensionReasonCategory = null!;
                 hasUser.SuspensionReasonDetail = null!;
