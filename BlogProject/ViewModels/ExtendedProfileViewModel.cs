@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BlogProject.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlogProject.Web.ViewModels
 {
@@ -34,12 +35,5 @@ namespace BlogProject.Web.ViewModels
             }
         }
         
-    }
-
-    public enum PhotoType
-    {
-        ProfilePicture = 0,
-        CoverImagePicture = 1,
-        WorkingAtLogo = 2
     }
 }

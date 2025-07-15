@@ -31,8 +31,17 @@ namespace BlogProject.Web.Areas.Admin.Controllers
             users.ControllerName = "Users";
             users.ActionName = "UserList";
 
-            var mappedUsers = _mapper.Map<ItemPagination<UserViewModel>>(users);
-            return View(mappedUsers);
+            var itemPagination = new ItemPagination<UserViewModel>()
+            {
+                TotalCount = users.TotalCount,
+                PageSize = pageSize,
+                CurrentPage = page,
+                IncludeDeleted = includeDeleted,
+                ControllerName = "Users",
+                ActionName = "UserList",
+                Items = _mapper.Map<List<UserViewModel>>(users.Items)
+            };
+            return View(itemPagination);
         }
 
         [HttpPost]

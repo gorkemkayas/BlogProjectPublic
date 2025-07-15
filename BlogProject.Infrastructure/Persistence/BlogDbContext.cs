@@ -54,7 +54,7 @@ namespace BlogProject.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("ef");
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BlogDbContext).Assembly, predicate => predicate.Namespace == "BlogProject.src.Infra.EntityTypeConfigurations");
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BlogDbContext).Assembly, predicate => predicate.Namespace == "BlogProject.Infrastructure.Persistence.Configurations");
 
 
             // Daha sonra global query filter in tüm entityler için olan hali eklenecek.
@@ -86,7 +86,7 @@ public class DbContextFactory : IDesignTimeDbContextFactory<BlogDbContext>
 {
     public BlogDbContext CreateDbContext(string[] args)
     {
-        var configuration = new ConfigurationBuilder().SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../BlogProject.Web")).AddJsonFile("appsettings.json").Build();
+        var configuration = new ConfigurationBuilder().SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../BlogProject")).AddJsonFile("appsettings.json").Build();
         var connString = configuration.GetConnectionString("SqlServer");
 
         var optionsBuilder = new DbContextOptionsBuilder<BlogDbContext>();

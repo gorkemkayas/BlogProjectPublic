@@ -7,7 +7,7 @@ using BlogProject.Domain.Entities;
 using BlogProject.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Web.Mvc;
+//using System.Web.Mvc;
 
 namespace BlogProject.Infrastructure.Services
 {
@@ -222,12 +222,12 @@ namespace BlogProject.Infrastructure.Services
             }
         }
 
-        public ServiceResult<List<SelectListItem>> GetAllCategorySelectList()
+        public ServiceResult<List<SelectItemDto>> GetAllCategorySelectList()
         {
             try
             {
-                var selectListCategories = _context.Categories.Where(a => a.IsDeleted == false).Select(t => new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
-                var result = new ServiceResult<List<SelectListItem>>()
+                var selectListCategories = _context.Categories.Where(a => a.IsDeleted == false).Select(t => new SelectItemDto() { Text = t.Name, Value = t.Id.ToString() });
+                var result = new ServiceResult<List<SelectItemDto>>()
                 {
                     IsSuccess = true,
                     Data = selectListCategories.ToList()
@@ -237,7 +237,7 @@ namespace BlogProject.Infrastructure.Services
             }
             catch (Exception)
             {
-                var result = new ServiceResult<List<SelectListItem>>()
+                var result = new ServiceResult<List<SelectItemDto>>()
                 {
                     IsSuccess = false,
                     Errors = new List<IdentityError>() { new IdentityError { Code = "GetAllCategoriesSelectListError", Description = "An error occurred while retrieving the category select list." } }

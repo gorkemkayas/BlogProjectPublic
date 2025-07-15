@@ -1045,77 +1045,9 @@ else if (TempData["Failed"] != null)
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 
+
 </body>
 
-<footer class="footer mt-4">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>My Blog</h3>
-                <p>We share quality content about technology, lifestyle and personal development. We're here to create an inspiring community that shares your thoughts.</p>
-            </div>
-
-            <div class="footer-section">
-                <h3>Categories</h3>
-                <ul>
-                    <li><a href="#">Technology</a></li>
-                    <li><a href="#">Lifestyle</a></li>
-                    <li><a href="#">Personal Development</a></li>
-                    <li><a href="#">Entrepreneurship</a></li>
-                    <li><a href="#">Design</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Archive</a></li>
-                    <li><a href="#">RSS</a></li>
-                    <li><a href="#">Sitemap</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Newsletter</h3>
-                <p>Subscribe to our newsletter to stay updated with our latest articles.</p>
-                <div class="newsletter my-0 py-2">
-                    <div class="newsletter-form">
-                        @if(User.Identity.IsAuthenticated)
-                        {
-                            if (currentUserLayout!.GeneralNotificationActive)
-                            {
-                                <p class="text-dark mt-2">You have subscribed our newslatter! <i class="bi bi-check-circle-fill text-success"></i></p>
-                            }
-                        }
-                        else
-                        {
-                            <form asp-controller="User" asp-action="NotificationSubscribe" method="post" class="newsletter-form">
-                                <div class="input-group">
-                                    <input name="email" type="email" placeholder="Your email address" class="newsletter-input" required>
-                                    <button type="submit" class="newsletter-btn">
-                                        Subscribe
-                                        <span class="arrow-icon">→</span>
-                                    </button>
-                                </div>
-                            </form>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom mt-4">
-            <p>&copy; 2025 My Blog. All rights reserved.</p>
-            <div class="footer-bottom-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Cookie Policy</a>
-            </div>
-        </div>
-    </div>
-</footer>
 @* <div class="ad-right">
     <div class="ad-box">
         <video src="/img/AdLeft.webm" autoplay></video>

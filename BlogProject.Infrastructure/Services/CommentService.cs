@@ -1,4 +1,5 @@
-﻿using BlogProject.Application.Interfaces;
+﻿using BlogProject.Application.Common;
+using BlogProject.Application.Interfaces;
 using BlogProject.Domain.Entities;
 using BlogProject.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,28 @@ namespace BlogProject.Infrastructure.Services
             }
             Console.WriteLine("Comments loaded.");
             return comments;
+        }
+
+        public async Task<ServiceResult<CommentEntity>> AddCommentAsync(CommentEntity entity)
+        {
+            if (entity == null)
+                throw new Exception("Comment entity cannot be null.");
+
+            if (entity.AuthorId == Guid.Empty)
+                throw new ArgumentException("Author ID cannot be empty.", nameof(entity.AuthorId));
+
+            try
+            {
+            var addedComment = await _blogDbContext.Comments.AddAsync(entity);
+            await _blogDbContext.SaveChangesAsync();
+                return new ServiceResult<CommentEntity>() { IsSuccess = true };
+            }
+            catch (Exception)
+            {
+
+                return new ServiceResult<CommentEntity>() { IsSuccess = false };
+            }
+
         }
     }
 }

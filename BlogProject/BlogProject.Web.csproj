@@ -16,13 +16,14 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="popper.js" Version="1.16.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BlogProject.Application\BlogProject.Application.csproj" />
+    <ProjectReference Include="..\BlogProject.Infrastructure\BlogProject.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

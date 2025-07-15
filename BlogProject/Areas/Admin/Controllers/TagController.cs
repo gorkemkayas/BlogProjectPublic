@@ -83,7 +83,17 @@ namespace BlogProject.Web.Areas.Admin.Controllers
             tags.ControllerName = "Tag";
             tags.ActionName = "TagList";
 
-            return View(tags);
+            var itemPagination = new ItemPagination<TagViewModel>()
+            {
+                TotalCount = tags.TotalCount,
+                PageSize = pageSize,
+                CurrentPage = page,
+                IncludeDeleted = includeDeleted,
+                ControllerName = "Tags",
+                ActionName = "TagList",
+                Items = _mapper.Map<List<TagViewModel>>(tags.Items)
+            };
+            return View(itemPagination);
         }
 
         [HttpGet]

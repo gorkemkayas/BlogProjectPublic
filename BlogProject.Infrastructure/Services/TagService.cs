@@ -7,7 +7,6 @@ using BlogProject.Domain.Entities;
 using BlogProject.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Web.Mvc;
 
 namespace BlogProject.Infrastructure.Services
 {
@@ -227,12 +226,12 @@ namespace BlogProject.Infrastructure.Services
             }
         }
 
-        public ServiceResult<List<SelectListItem>> GetAllTagSelectList()
+        public ServiceResult<List<SelectItemDto>> GetAllTagSelectList()
         {
             try
             {
-                var selectListTags = _context.Tags.Where(a => a.IsDeleted == false).Select(t => new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
-                var result = new ServiceResult<List<SelectListItem>>()
+                var selectListTags = _context.Tags.Where(a => a.IsDeleted == false).Select(t => new SelectItemDto() { Text = t.Name, Value = t.Id.ToString() });
+                var result = new ServiceResult<List<SelectItemDto>>()
                 {
                     IsSuccess = true,
                     Data = selectListTags.ToList()
@@ -242,7 +241,7 @@ namespace BlogProject.Infrastructure.Services
             }
             catch (Exception)
             {
-                var result = new ServiceResult<List<SelectListItem>>()
+                var result = new ServiceResult<List<SelectItemDto>>()
                 {
                     IsSuccess = false,
                     Errors = new List<IdentityError>() { new IdentityError { Code = "GetAllTagSelectListError", Description = "An error occurred while retrieving the tag select list." } }

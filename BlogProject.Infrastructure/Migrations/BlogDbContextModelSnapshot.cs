@@ -23,7 +23,7 @@ namespace BlogProject.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.AppRole", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +66,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("AspNetRoles", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.AppUser", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.AppUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,7 +250,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.AuditLogEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.AuditLogEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -287,7 +287,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("AuditLogs", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.BadgeEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.BadgeEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -313,7 +313,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Badges", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.BadgeUserEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.BadgeUserEntity", b =>
                 {
                     b.Property<Guid>("BadgeId")
                         .HasColumnType("uniqueidentifier");
@@ -338,7 +338,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("BadgeUsers", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.CategoryEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.CategoryEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -389,7 +389,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Categories", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.CommentEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.CommentEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -437,7 +437,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Comments", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.DonationEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.DonationEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -483,7 +483,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Donations", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.FollowEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.FollowEntity", b =>
                 {
                     b.Property<Guid>("FollowerId")
                         .HasColumnType("uniqueidentifier");
@@ -508,7 +508,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Follows", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.LikeEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.LikeEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -547,7 +547,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Likes", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.MemberShipTypeEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.MemberShipTypeEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -598,7 +598,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("MemberShipTypes", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.MessageEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.MessageEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -639,7 +639,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Messages", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.NotificationEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.NotificationEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -681,7 +681,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Notifications", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.NotificationSubscribeEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.NotificationSubscribeEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -705,7 +705,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("NotificationSubscribes", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.PaymentMethodEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.PaymentMethodEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -739,7 +739,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("PaymentMethods", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.PostEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.PostEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -809,7 +809,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Posts", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.PostTagEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.PostTagEntity", b =>
                 {
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
@@ -834,7 +834,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("PostTags", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.ReportEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.ReportEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -880,7 +880,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Reports", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.SavedPostEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.SavedPostEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -906,7 +906,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("SavedPosts", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.SettingsEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.SettingsEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -942,7 +942,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Settings", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.ShareEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.ShareEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -983,7 +983,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Shares", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.SubscriptionEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.SubscriptionEntity", b =>
                 {
                     b.Property<Guid>("FollowerId")
                         .HasColumnType("uniqueidentifier");
@@ -1016,7 +1016,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Subscriptions", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.TagEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.TagEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1068,7 +1068,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Tags", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.TransactionEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.TransactionEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1109,7 +1109,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("Transactions", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.UserMemberShipEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.UserMemberShipEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1145,7 +1145,7 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("UserMemberShips", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.WalletEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.WalletEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1296,15 +1296,15 @@ namespace BlogProject.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", "ef");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.BadgeUserEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.BadgeUserEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.BadgeEntity", "Badge")
+                    b.HasOne("BlogProject.Domain.Entities.BadgeEntity", "Badge")
                         .WithMany("BadgeUsers")
                         .HasForeignKey("BadgeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "User")
                         .WithMany("BadgeUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1315,20 +1315,20 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.CommentEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.CommentEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Author")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Author")
                         .WithMany("Comments")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.CommentEntity", "ParentComment")
+                    b.HasOne("BlogProject.Domain.Entities.CommentEntity", "ParentComment")
                         .WithMany("Replies")
                         .HasForeignKey("ParentCommentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.PostEntity", "Post")
+                    b.HasOne("BlogProject.Domain.Entities.PostEntity", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1341,14 +1341,14 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.DonationEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.DonationEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Receiver")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Receiver")
                         .WithMany("ReceivedDonations")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Sender")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Sender")
                         .WithMany("SendedDonations")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1358,15 +1358,15 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.FollowEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.FollowEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Follower")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Follower")
                         .WithMany("Followings")
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Following")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Following")
                         .WithMany("Followers")
                         .HasForeignKey("FollowingId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1377,19 +1377,19 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Following");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.LikeEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.LikeEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.CommentEntity", "Comment")
+                    b.HasOne("BlogProject.Domain.Entities.CommentEntity", "Comment")
                         .WithMany("Likes")
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.PostEntity", "Post")
+                    b.HasOne("BlogProject.Domain.Entities.PostEntity", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "User")
                         .WithMany("Likes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1402,9 +1402,9 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.MemberShipTypeEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.MemberShipTypeEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.UserMemberShipEntity", "UserMemberShipEntity")
+                    b.HasOne("BlogProject.Domain.Entities.UserMemberShipEntity", "UserMemberShipEntity")
                         .WithMany("MembershipTypes")
                         .HasForeignKey("UserMemberShipId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1413,14 +1413,14 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("UserMemberShipEntity");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.MessageEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.MessageEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Receiver")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Receiver")
                         .WithMany("ReceivedMessages")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Sender")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Sender")
                         .WithMany("SentMessages")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1430,9 +1430,9 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.NotificationEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.NotificationEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "User")
                         .WithMany("Notifications")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1441,9 +1441,9 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.PaymentMethodEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.PaymentMethodEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.DonationEntity", "Donation")
+                    b.HasOne("BlogProject.Domain.Entities.DonationEntity", "Donation")
                         .WithMany("PaymentMethods")
                         .HasForeignKey("DonationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1452,19 +1452,19 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Donation");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.PostEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.PostEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", null)
                         .WithMany("FeaturedPosts")
                         .HasForeignKey("AppUserId");
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Author")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.CategoryEntity", "Category")
+                    b.HasOne("BlogProject.Domain.Entities.CategoryEntity", "Category")
                         .WithMany("Posts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1475,15 +1475,15 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.PostTagEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.PostTagEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.PostEntity", "Post")
+                    b.HasOne("BlogProject.Domain.Entities.PostEntity", "Post")
                         .WithMany("TagPosts")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.TagEntity", "Tag")
+                    b.HasOne("BlogProject.Domain.Entities.TagEntity", "Tag")
                         .WithMany("TagPosts")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1494,19 +1494,19 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.ReportEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.ReportEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.PostEntity", "ReportedPost")
+                    b.HasOne("BlogProject.Domain.Entities.PostEntity", "ReportedPost")
                         .WithMany("Reports")
                         .HasForeignKey("ReportedPostId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "ReportedUser")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "ReportedUser")
                         .WithMany("ReceivedReports")
                         .HasForeignKey("ReporteduserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "ReporterUser")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "ReporterUser")
                         .WithMany("CreatedReports")
                         .HasForeignKey("ReporterId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1518,9 +1518,9 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("ReporterUser");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.SavedPostEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.SavedPostEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "User")
                         .WithMany("SavedPosts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1529,24 +1529,24 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.SettingsEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.SettingsEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "User")
                         .WithOne("Settings")
-                        .HasForeignKey("BlogProject.src.Infra.Entitites.SettingsEntity", "UserId")
+                        .HasForeignKey("BlogProject.Domain.Entities.SettingsEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.ShareEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.ShareEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.PostEntity", "Post")
+                    b.HasOne("BlogProject.Domain.Entities.PostEntity", "Post")
                         .WithMany("Shares")
                         .HasForeignKey("PostId");
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "User")
                         .WithMany("Shares")
                         .HasForeignKey("UserId");
 
@@ -1555,15 +1555,15 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.SubscriptionEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.SubscriptionEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Follower")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Follower")
                         .WithMany("Subscribers")
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "Following")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "Following")
                         .WithMany("Subscriptions")
                         .HasForeignKey("FollowingId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1574,9 +1574,9 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Following");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.TransactionEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.TransactionEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.WalletEntity", "Wallet")
+                    b.HasOne("BlogProject.Domain.Entities.WalletEntity", "Wallet")
                         .WithMany("TransactionEntities")
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1585,20 +1585,20 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.UserMemberShipEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.UserMemberShipEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "User")
                         .WithOne("UserMemberShipEntity")
-                        .HasForeignKey("BlogProject.src.Infra.Entitites.UserMemberShipEntity", "UserId")
+                        .HasForeignKey("BlogProject.Domain.Entities.UserMemberShipEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.WalletEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.WalletEntity", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", "User")
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", "User")
                         .WithMany("Wallets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1609,7 +1609,7 @@ namespace BlogProject.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppRole", null)
+                    b.HasOne("BlogProject.Domain.Entities.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1618,7 +1618,7 @@ namespace BlogProject.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1627,7 +1627,7 @@ namespace BlogProject.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1636,13 +1636,13 @@ namespace BlogProject.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppRole", null)
+                    b.HasOne("BlogProject.Domain.Entities.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1651,14 +1651,14 @@ namespace BlogProject.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("BlogProject.src.Infra.Entitites.AppUser", null)
+                    b.HasOne("BlogProject.Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.AppUser", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("BadgeUsers");
 
@@ -1703,29 +1703,29 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("Wallets");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.BadgeEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.BadgeEntity", b =>
                 {
                     b.Navigation("BadgeUsers");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.CategoryEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.CategoryEntity", b =>
                 {
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.CommentEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.CommentEntity", b =>
                 {
                     b.Navigation("Likes");
 
                     b.Navigation("Replies");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.DonationEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.DonationEntity", b =>
                 {
                     b.Navigation("PaymentMethods");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.PostEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.PostEntity", b =>
                 {
                     b.Navigation("Comments");
 
@@ -1738,17 +1738,17 @@ namespace BlogProject.Infrastructure.Migrations
                     b.Navigation("TagPosts");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.TagEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.TagEntity", b =>
                 {
                     b.Navigation("TagPosts");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.UserMemberShipEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.UserMemberShipEntity", b =>
                 {
                     b.Navigation("MembershipTypes");
                 });
 
-            modelBuilder.Entity("BlogProject.src.Infra.Entitites.WalletEntity", b =>
+            modelBuilder.Entity("BlogProject.Domain.Entities.WalletEntity", b =>
                 {
                     b.Navigation("TransactionEntities");
                 });

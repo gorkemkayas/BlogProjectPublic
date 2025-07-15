@@ -3,30 +3,31 @@ using BlogProject.Application.DTOs;
 using BlogProject.Application.Interfaces;
 using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Controllers
 {
     public class PostController : Controller
     {
+        private readonly IUserService _userService;
         private readonly IPostService _postService;
         private readonly ITagService _tagService;
         private readonly ICategoryService _categoryService;
         private readonly ICommentService _commentService;
-        private readonly BlogDbContext _context;
         private readonly IWebHostEnvironment _env;
 
         private readonly IMapper _mapper;
 
-        public PostController(IPostService postService, BlogDbContext context, ITagService tagService, ICategoryService categoryService, ICommentService commentService, IWebHostEnvironment env, IMapper mapper)
+        public PostController(IPostService postService, ITagService tagService, ICategoryService categoryService, ICommentService commentService, IWebHostEnvironment env, IMapper mapper, IUserService userService)
         {
             _postService = postService;
-            _context = context;
             _tagService = tagService;
             _categoryService = categoryService;
             _commentService = commentService;
             _env = env;
             _mapper = mapper;
+            _userService = userService;
         }
 
 
@@ -39,13 +40,27 @@ namespace BlogProject.Controllers
         [HttpGet("Post/NewPost")]
         public async Task<IActionResult> NewPost()
         {
+            var availableCategories = _categoryService.GetAllCategorySelectList();
+            var availableTags = _tagService.GetAllTagSelectList();
+            List<SelectListItem>? selectCategoriesList = availableCategories.Data?.Select(x => new SelectListItem
+            {
+                Text = x.Text,
+                Value = x.Value,
+                Selected = x.Selected
+            }).ToList();
+            List<SelectListItem>? selectTagsList = availableTags.Data?.Select(x => new SelectListItem
+            {
+                Text = x.Text,
+                Value = x.Value,
+                Selected = x.Selected
+            }).ToList();
             var model = new CreatePostViewModel
             {
                 // Kategorileri veritabanından veya servisten doldurun
-                AvailableCategories = _categoryService.GetAllCategorySelectList().Data!,
+                AvailableCategories = (selectCategoriesList is null) ? new List<SelectListItem>() : selectCategoriesList,
 
                 // Etiketleri veritabanından veya servisten doldurun
-                AvailableTags = _tagService.GetAllTagSelectList().Data!
+                AvailableTags = (selectTagsList is null) ? new List<SelectListItem>() : selectTagsList
             };
 
             return View(model);
@@ -72,9 +87,26 @@ namespace BlogProject.Controllers
                     }
                 }
             }
+
+
+            var availableCategories = _categoryService.GetAllCategorySelectList();
+            var availableTags = _tagService.GetAllTagSelectList();
+            List<SelectListItem>? selectCategoriesList = availableCategories.Data?.Select(x => new SelectListItem
+            {
+                Text = x.Text,
+                Value = x.Value,
+                Selected = x.Selected
+            }).ToList();
+            List<SelectListItem>? selectTagsList = availableTags.Data?.Select(x => new SelectListItem
+            {
+                Text = x.Text,
+                Value = x.Value,
+                Selected = x.Selected
+            }).ToList();
+
             // Kategorileri ve etiketleri tekrar doldurun
-            model.AvailableCategories = _categoryService.GetAllCategorySelectList().Data!;
-            model.AvailableTags = _tagService.GetAllTagSelectList().Data!;
+            model.AvailableCategories = (selectCategoriesList is null) ? new List<SelectListItem>() : selectCategoriesList;
+            model.AvailableTags = (selectTagsList is null) ? new List<SelectListItem>() : selectTagsList;
             return View(model);
         }
 
@@ -93,8 +125,7 @@ namespace BlogProject.Controllers
                 Post = post,
                 RecommendedPosts = recommendedPost,
                 Comments = comments,
-                CurrentUser = User.Identity.IsAuthenticated ? await _context.Users
-                    .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name) : null
+                CurrentUser = await _userService.FindByUsername(User.Identity.Name)
             };
             return View(model);
         }

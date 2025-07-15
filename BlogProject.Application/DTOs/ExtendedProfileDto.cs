@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BlogProject.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using static BlogProject.Domain.Entities.AppUser;
 
 namespace BlogProject.Application.DTOs

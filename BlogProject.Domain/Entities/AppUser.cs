@@ -117,11 +117,12 @@ namespace BlogProject.Domain.Entities
             }
         }
 
-        public enum PhotoType
+        
+    }
+    public enum PhotoType
         {
             ProfilePicture = 0,
             CoverImagePicture = 1,
             WorkingAtLogo = 2
         }
-    }
 }

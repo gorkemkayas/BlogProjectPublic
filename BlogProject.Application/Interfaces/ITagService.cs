@@ -3,7 +3,6 @@ using BlogProject.Application.DTOs;
 using BlogProject.Application.Enums;
 using BlogProject.Application.Models;
 using BlogProject.Domain.Entities;
-using System.Web.Mvc;
 
 namespace BlogProject.Application.Interfaces
 {
@@ -15,7 +14,7 @@ namespace BlogProject.Application.Interfaces
         Task<ServiceResult<TagEntity>> UpdateTagAsync(TagUpdateDto model);
         Task<ServiceResult<TagEntity>> ActivateTagById(string tagId);
         Task<ServiceResult<TagEntity>> DeleteTagByTypeAsync(string id, DeleteType deleteType, string deleterId);
-        ServiceResult<List<SelectListItem>> GetAllTagSelectList();
+        ServiceResult<List<SelectItemDto>> GetAllTagSelectList();
         Task<List<TagEntity>> GetPopularTags(int count = 10);
     }
 }

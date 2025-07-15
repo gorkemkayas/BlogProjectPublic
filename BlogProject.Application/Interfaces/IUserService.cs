@@ -12,8 +12,10 @@ namespace BlogProject.Application.Interfaces
 {
     public interface IUserService
     {
-
+        Task SaveChangesAsync();
         bool CheckEmailConfirmed(AppUser user);
+        Task<AppUser?> FindByUsername(string? userName);
+        Task<List<AppUser>> GetUsersByCount(int countUser);
         Task<ServiceResult<AppUser>> SubscribeToNotificationsAsync(string email);
         Task<ExtendedProfileDto> ConfigurePictureAsync(ExtendedProfileDto newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type);
         Task<ServiceResult<AppUser>> SignUp(SignUpDto request);

@@ -99,8 +99,19 @@ namespace BlogProject.Web.Areas.Admin.Controllers
             pagedRoles.ControllerName = "Roles";
             pagedRoles.ActionName = "RoleList";
 
-            var mappedRoles = _mapper.Map<ItemPagination<RoleViewModel>>(pagedRoles);
-            return View(mappedRoles);
+
+
+            var itemPagination = new ItemPagination<RoleViewModel>()
+            {
+                TotalCount = pagedRoles.TotalCount,
+                PageSize = pageSize,
+                CurrentPage = page,
+                IncludeDeleted = includeDeleted,
+                ControllerName = "Roles",
+                ActionName = "RoleList",
+                Items = _mapper.Map<List<RoleViewModel>>(pagedRoles.Items)
+            };
+            return View(itemPagination);
         }
 
 

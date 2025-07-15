@@ -9,6 +9,8 @@ using BlogProject.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using static BlogProject.Domain.Entities.AppUser;
 
@@ -76,12 +78,14 @@ namespace BlogProject.Infrastructure.Services
             };
         }
 
-
         public bool CheckEmailConfirmed(AppUser user)
         {
             return user.EmailConfirmed;
         }
-
+        public async Task SaveChangesAsync()
+        {
+            await _blogdbContext.SaveChangesAsync();
+        }
         public async Task<ServiceResult<AppUser>> SubscribeToNotificationsAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -487,6 +491,20 @@ namespace BlogProject.Infrastructure.Services
 
         }
 
+        public async Task<AppUser?> FindByUsername(string? userName)
+        {
+            if(userName == null)
+            {
+                return null;
+            }
+            return await _blogdbContext.Users
+                    .FirstOrDefaultAsync(u => u.UserName == userName);
+        }
+        public async Task<List<AppUser>> GetUsersByCount(int countUser)
+        {
+            var users = await _userManager.Users.Take(countUser).ToListAsync();
+            return users;
+        }
         public async Task SuspendUser(SuspendUserDto request)
         {
 

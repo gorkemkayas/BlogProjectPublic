@@ -17,7 +17,7 @@ namespace BlogProject.Application.Interfaces
         Task<ServiceResult<CategoryEntity>> DeleteCategoryByTypeAsync(string id, DeleteType deleteType, string deleterId);
         Task<ServiceResult<CategoryEntity>> ActivateCategoryById(string categoryId);
 
-        ServiceResult<List<SelectListItem>> GetAllCategorySelectList();
+        ServiceResult<List<SelectItemDto>> GetAllCategorySelectList();
 
 
 

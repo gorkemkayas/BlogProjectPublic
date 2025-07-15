@@ -6,6 +6,7 @@ using BlogProject.Areas.Admin.Models;
 using BlogProject.Domain.Entities;
 using BlogProject.Extensions;
 using BlogProject.Web.ViewModels;
+using BlogProject.Web.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -51,17 +52,17 @@ namespace BlogProject.Controllers
 
             if (!result.Item1)
             {
-                if(result.Item2!.Any(err => err.Code == "SuspendedAccount"))
+                if (result.Item2!.Any(err => err.Code == "SuspendedAccount"))
                 {
                     var description = result.Item2!.Where(error => error.Code == "SuspendedAccount").FirstOrDefault()!.Description;
                     TempData["SuspensionMessage"] = description;
                     TempData["SuspensionCategory"] = result.Item2!.Where(error => error.Code == "SuspendedAccountCategory").FirstOrDefault()!.Description;
                     TempData["SuspensionDetail"] = result.Item2!.Where(error => error.Code == "SuspendedAccountReason").FirstOrDefault()!.Description;
                     TempData["SuspendedUserId"] = await _userManager.FindByEmailAsync(request.Email);
-                    ModelState.AddModelError(string.Empty, description );
+                    ModelState.AddModelError(string.Empty, description);
                     return View();
                 }
-                if(result.Item2!.Any(err => err.Code == "EmailNotConfirmed"))
+                if (result.Item2!.Any(err => err.Code == "EmailNotConfirmed"))
                 {
                     TempData["Error"] = "Please confirm your email address!";
                     TempData["EmailNotConfirmed"] = true;
@@ -74,7 +75,7 @@ namespace BlogProject.Controllers
             }
 
             returnUrl = returnUrl ?? Url.Action("Index", "Home");
-            
+
             TempData["Succeed"] = "You have logged in successfully.";
 
             if (!Url.IsLocalUrl(returnUrl))
@@ -242,7 +243,7 @@ namespace BlogProject.Controllers
                 return RedirectToAction("resetpassword", "user");
             }
 
-           
+
             ModelState.AddModelErrorList(isOk.Item2!.ToList());
 
             return View();
@@ -259,13 +260,13 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(PasswordChangeViewModel request)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(request);
             }
             var mappedRequest = _mapper.Map<PasswordChangeDto>(request);
             var result = await _userService.ChangePasswordAsync(mappedRequest, User);
-            if(!result.Item1)
+            if (!result.Item1)
             {
                 ModelState.AddModelErrorList(result.Item2!.ToList());
                 return View();
@@ -275,21 +276,21 @@ namespace BlogProject.Controllers
             var userEmail = user!.Email;
 
             TempData["Succeed"] = "Password changed successfully.";
-            await _emailService.SendPasswordChangedNotificationAsync("You changed your password",userEmail!);
+            await _emailService.SendPasswordChangedNotificationAsync("You changed your password", userEmail!);
 
-            return RedirectToAction(nameof(Profile), "User", new { userName = User.Identity!.Name});
+            return RedirectToAction(nameof(Profile), "User", new { userName = User.Identity!.Name });
         }
 
         public async Task<IActionResult> Profile(string? userName)
         {
-            if(userName == null)
+            if (userName == null)
             {
                 return RedirectToAction("Index", "Home");
             }
 
             var visitedUser = await _userManager.FindByNameAsync(userName);
-            
-            if(visitedUser == null)
+
+            if (visitedUser == null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -316,38 +317,91 @@ namespace BlogProject.Controllers
 
             return View(mappedProfileInfo);
         }
-      
+
         [HttpPost]
         public async Task<IActionResult> EditProfile(ExtendedProfileViewModel request, IFormFile? fileInputProfile, IFormFile? coverInputProfile, IFormFile? IconInputWorkingAt)
         {
-            if(!ModelState.IsValid)
+            Console.WriteLine("Modelstate girisi");
+            if (!ModelState.IsValid)
             {
                 return View();
             }
-            var mappedRequest = _mapper.Map<ExtendedProfileDto>(request);
-            var result = await _userService.UpdateProfileAsync((await _userManager.GetUserAsync(User!))!, mappedRequest, fileInputProfile, coverInputProfile, IconInputWorkingAt);
+            Console.WriteLine("Modelstate valid");
 
-            if (!result.Item1)
+            var oldUserInfo = _userManager.FindByIdAsync(request.Id).Result;
+
+            var step1 = await PhotoSaver.ConfigurePictureAsync(request, oldUserInfo!, fileInputProfile, PhotoType.ProfilePicture);
+            var step2 = await PhotoSaver.ConfigurePictureAsync(step1, oldUserInfo!, coverInputProfile, PhotoType.CoverImagePicture);
+            var step3 = await PhotoSaver.ConfigurePictureAsync(step2, oldUserInfo!, IconInputWorkingAt, PhotoType.WorkingAtLogo);
+
+            //var mappedRequest = _mapper.Map(step3, oldUserInfo);
+
+            //From ExtendedProfileDto
+            oldUserInfo.Id = Guid.Parse(step3.Id);
+            oldUserInfo.PhoneNumber = step3.PhoneNumber;
+            oldUserInfo.Email = step3.EmailAddress;
+            oldUserInfo.EmailConfirmed = step3.EmailConfirmed;
+            oldUserInfo.TwoFactorEnabled = step3.TwoFactorEnabled;
+            oldUserInfo.LockoutEnabled = step3.LockoutEnabled;
+            oldUserInfo.SecurityStamp = step3.SecurityStamp;
+            oldUserInfo.ConcurrencyStamp = step3.ConcurrencyStamp;
+
+            //From VisitorProfileDto - which base of ExtendedProfileDto
+            oldUserInfo.UserName = step3.UserName;
+            oldUserInfo.Name = step3.Name;
+            oldUserInfo.Surname = step3.Surname;
+            oldUserInfo.Title = step3.Title;
+            oldUserInfo.Bio = step3.Bio;
+            oldUserInfo.WorkingAt = step3.WorkingAt;
+            oldUserInfo.Country = step3.Country;
+            oldUserInfo.FollowersCount = step3.FollowersCount;
+            oldUserInfo.FollowingCount = step3.FollowingCount;
+            oldUserInfo.Posts = oldUserInfo.Posts;
+            oldUserInfo.Comments = oldUserInfo.Comments;
+            oldUserInfo.Likes = oldUserInfo.Likes;
+            oldUserInfo.CurrentPosition = step3.CurrentPosition;
+            oldUserInfo.City = step3.City;
+            oldUserInfo.Address = step3.Address;
+            oldUserInfo.XAddress = step3.XAddress;
+            oldUserInfo.LinkedinAddress = step3.LinkedinAddress;
+            oldUserInfo.GithubAddress = step3.GithubAddress;
+            oldUserInfo.MediumAddress = step3.MediumAddress;
+            oldUserInfo.YoutubeAddress = step3.YoutubeAddress;
+            oldUserInfo.PersonalWebAddress = step3.PersonalWebAddress;
+            oldUserInfo.HighSchoolName = step3.HighSchoolName;
+            oldUserInfo.HighSchoolStartYear = step3.HighSchoolStartYear;
+            oldUserInfo.HighSchoolGraduationYear = step3.HighSchoolGraduationYear;
+            oldUserInfo.UniversityName = step3.UniversityName;
+            oldUserInfo.UniversityStartYear = step3.UniversityStartYear;
+            oldUserInfo.UniversityGraduationYear = step3.UniversityGraduationYear;
+            oldUserInfo.BirthDate = step3.BirthDate;
+            oldUserInfo.ProfilePicture = step3.ProfilePicture;
+            oldUserInfo.CoverImagePicture = step3.CoverImagePicture;
+            oldUserInfo.WorkingAtLogo = step3.WorkingAtLogo;
+
+            await _userManager.UpdateAsync(oldUserInfo);
+            await _userService.SaveChangesAsync();
+
+            try
             {
-                ModelState.AddModelErrorList(result.Item2!.ToList());
+                if (request.EmailAddress != oldUserInfo.Email)
+                {
+                    await _userService.LogoutAsync();
+                    await _userService.LogInAsync((await _userManager.FindByIdAsync(request.Id))!);
 
-                TempData["Failed"] = "An error occurred while updating the profile.";
-                return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
-            }
+                    TempData["Succeed"] = "Profile updated successfully.";
 
-            if (result.Item3)
-            {   
-                await _userService.LogoutAsync();
-                await _userService.LogInAsync((await _userManager.FindByIdAsync(request.Id))!);
-
+                    return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
+                }
                 TempData["Succeed"] = "Profile updated successfully.";
 
                 return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
             }
-
-            TempData["Succeed"] = "Profile updated successfully.";
-
-            return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
+            catch (Exception)
+            {
+                TempData["Failed"] = "An error occurred while updating the profile.";
+                return RedirectToAction(nameof(Profile), new { userName = User.Identity!.Name });
+            }
         }
 
         public IActionResult AccessDenied()

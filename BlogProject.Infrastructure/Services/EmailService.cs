@@ -1,9 +1,11 @@
 ﻿
 using BlogProject.Application.Interfaces;
 using BlogProject.Infrastructure.Configurations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
+using System.Web.Helpers;
 
 namespace BlogProject.Infrastructure.Services
 {
@@ -14,12 +16,12 @@ namespace BlogProject.Infrastructure.Services
         public EmailService(IOptions<EmailSettings> emailSettings)
         {
             _emailSettings = emailSettings.Value;
-        }
+            Console.WriteLine($"EmailService Consturctorundaki veriler : Email: {_emailSettings.Email} \n Host: {_emailSettings.Host} \n Port: {_emailSettings.Port} \n Password: {_emailSettings.Password} ");
 
+        }
         public async Task SendEmailConfirmationEmailAsync(string receiverEmail, string confirmationLink)
         {
             var smtp = new SmtpClient();
-
             smtp.Host = _emailSettings.Host;
             smtp.Port = _emailSettings.Port;
             smtp.Credentials = new NetworkCredential(_emailSettings.Email, _emailSettings.Password);

@@ -1,8 +1,10 @@
 ﻿using BlogProject.Extensions;
+using BlogProject.Infrastructure.Configurations;
+using BlogProject.Infrastructure.Persistence;
 using BlogProject.Web.Mapping;
-using BlogProject.Web.Utilities;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -50,6 +52,10 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB
 });
+
+var config = builder.Configuration;
+Console.WriteLine("SMTP Host: " + config["EmailSettings:Host"]);
+
 
 
 var app = builder.Build();

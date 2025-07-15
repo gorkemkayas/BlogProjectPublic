@@ -1,20 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BlogProject.Application.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProject.ViewComponents
 {
     public class SuggestedUsersViewComponent : ViewComponent
     {
-        public readonly BlogDbContext _blogDbContext;
+        public readonly IUserService _userService;
 
-        public SuggestedUsersViewComponent(BlogDbContext blogDbContext)
+        public SuggestedUsersViewComponent(IUserService userService)
         {
-            _blogDbContext = blogDbContext;
+            _userService = userService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var users = _blogDbContext.Users.Take(3).ToList();
+            var users = await _userService.GetUsersByCount(3);
             return View(users);
         }
     }

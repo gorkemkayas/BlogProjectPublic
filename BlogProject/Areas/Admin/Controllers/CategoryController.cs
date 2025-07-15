@@ -5,6 +5,7 @@ using BlogProject.Application.Interfaces;
 using BlogProject.Application.Models;
 using BlogProject.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 using System.Security.Claims;
 
 namespace BlogProject.Areas.Admin.Controllers
@@ -39,8 +40,17 @@ namespace BlogProject.Areas.Admin.Controllers
             categories.ControllerName = "Category";
             categories.ActionName = "CategoryList";
 
-            var mappedCategories = _mapper.Map<ItemPagination<CategoryViewModel>>(categories);
-            return View(categories);
+            var itemPagination = new ItemPagination<CategoryViewModel>()
+            {
+                TotalCount = categories.TotalCount,
+                PageSize = pageSize,
+                CurrentPage = page,
+                IncludeDeleted = includeDeleted,
+                ControllerName = "Category",
+                ActionName = "CategoryList",
+                Items = _mapper.Map<List<CategoryViewModel>>(categories.Items)
+            };
+            return View(itemPagination);
         }
 
         [HttpGet]
@@ -73,7 +83,7 @@ namespace BlogProject.Areas.Admin.Controllers
                 return View(model);
             }
             TempData["Success"] = "Category added successfully!";
-            return View();
+            return RedirectToAction(nameof(CategoryList));
         }
 
         [HttpGet]

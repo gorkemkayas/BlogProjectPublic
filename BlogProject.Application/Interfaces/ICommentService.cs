@@ -1,4 +1,5 @@
-﻿using BlogProject.Domain.Entities;
+﻿using BlogProject.Application.Common;
+using BlogProject.Domain.Entities;
 
 namespace BlogProject.Application.Interfaces
 {
@@ -6,5 +7,6 @@ namespace BlogProject.Application.Interfaces
     {
         Task<int> GetCommentCountByUserAsync(AppUser user);
         Task<List<CommentEntity>> GetCommentsByPostIdAsync(string postId);
+        Task<ServiceResult<CommentEntity>> AddCommentAsync(CommentEntity entity);
     }
 }

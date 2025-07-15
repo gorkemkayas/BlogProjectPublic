@@ -1,5 +1,6 @@
 ﻿
 using BlogProject.Domain.Entities;
+using BlogProject.Infrastructure.CustomMethods;
 
 namespace BlogProject.Web.ViewModels
 {
