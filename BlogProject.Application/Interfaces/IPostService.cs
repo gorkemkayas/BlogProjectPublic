@@ -11,10 +11,12 @@ namespace BlogProject.Application.Interfaces
 
 
         // CreatePostDto ile UpdatePostDto ları baştan yapıcam şuanda boş, hata vermesin diye.
+        Task<List<PostEntity>> GetByCategoryIdAsync(string categoryId);
         Task<ICollection<PostEntity>> GetLatestPostsWithCount(int count = 3);
         Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3, bool currentWeek = false);
         Task<ServiceResult<object>> CreatePostAsync(CreatePostDto model);
-
+        Task<int> GetPostCountByUserAsync(AppUser user);
+        Task<bool> IsPostLikedByCurrentUserAsync(string userId, string PostId);
         public Task SoftDeletePostAsync(Guid postId);
         public Task<PostEntity> GetPostByIdAsync(Guid postId, bool updateReadCount = false);
         public Task<ICollection<PostEntity>> GetPostsByCategoryAsync(string categoryName, bool isDescending);

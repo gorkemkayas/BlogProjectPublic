@@ -5,6 +5,7 @@
 @inject UserManager<AppUser> userManager
 
 @{
+    var categoryId = ViewBag.CategoryId;
     ViewData["Title"] = Model.Category.Name + " - kayas.dev";
     AppUser? currentUser = null;
     if (User.Identity.IsAuthenticated)
@@ -38,8 +39,8 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
+            /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; */
+            /* line-height: 1.6; */
             color: var(--dark-gray);
             background-color: var(--white);
         }
@@ -102,24 +103,130 @@
 
         /* Category Hero */
         .category-hero {
-            background: linear-gradient(135deg, var(--black) 0%, var(--dark-gray) 100%);
-            color: var(--white);
-            padding: 4rem 0;
+            background: linear-gradient(145deg, #fafafa 0%, #ffffff 100%);
+            color: #222;
+            padding: 4rem 2rem;
             text-align: center;
             position: relative;
             overflow: hidden;
+            isolation: isolate;
         }
 
+            /* Dinamik Arkaplan Animasyonu */
             .category-hero::before {
                 content: '';
                 position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="50" cy="10" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="20" cy="80" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="80" cy="30" r="1" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-                opacity: 0.3;
+                inset: 0;
+                background: radial-gradient(circle at 75% 30%, rgba(255, 0, 0, 0.03) 0%, transparent 30%), radial-gradient(circle at 25% 70%, rgba(255, 0, 0, 0.03) 0%, transparent 30%);
+                animation: pulse 15s infinite alternate;
+                z-index: -1;
             }
+
+            /* Subtle Grid Pattern */
+            .category-hero::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background-image: linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+                background-size: 40px 40px;
+                z-index: -1;
+                opacity: 0.7;
+            }
+
+        /* Animasyonlar */
+        @@keyframes pulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.02);
+            }
+
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+        }
+
+        @@keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Tipografi */
+        .category-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            position: relative;
+            display: inline-block;
+            animation: float 6s ease-in-out infinite;
+        }
+
+            .category-hero h1 span {
+                color: #ff0000;
+                position: relative;
+            }
+
+                .category-hero h1 span::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -5px;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background: currentColor;
+                    transform: scaleX(0);
+                    transform-origin: right;
+                    transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+                }
+
+        .category-hero:hover h1 span::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .category-hero p {
+            max-width: 650px;
+            margin: 0 auto 2rem;
+            color: #555;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        /* Floating Elements */
+        .floating-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            filter: blur(1px);
+            opacity: 0.5;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .category-hero {
+                padding: 5rem 1.5rem;
+            }
+
+                .category-hero h1 {
+                    font-size: 2.5rem;
+                    animation: none;
+                }
+        }
 
         .category-hero-content {
             position: relative;
@@ -489,117 +596,80 @@
 
         /* Responsive */
         @@media (max-width: 768px) {
-            .container
+            .container {
+                padding: 0 1rem;
+            }
 
-        {
-            padding: 0 1rem;
-        }
+            .category-title {
+                font-size: 2rem;
+            }
 
-        .category-title {
-            font-size: 2rem;
-        }
-
-        .category-stats {
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .filter-controls {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .filter-left {
-            justify-content: space-between;
-        }
-
-        .posts-grid {
-            grid-template-columns: 1fr;
-        }
-
-            .posts-grid.list-view .post-card {
+            .category-stats {
                 flex-direction: column;
+                gap: 1rem;
             }
 
-            .posts-grid.list-view .post-img-container {
-                width: 100%;
-                height: 200px;
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-        .pagination {
-            flex-wrap: wrap;
-        }
+            .filter-left {
+                justify-content: space-between;
+            }
 
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+
+                .posts-grid.list-view .post-card {
+                    flex-direction: column;
+                }
+
+                .posts-grid.list-view .post-img-container {
+                    width: 100%;
+                    height: 200px;
+                }
+
+            .pagination {
+                flex-wrap: wrap;
+            }
         }</style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <a href="/" class="brand-logo">kayas<span class="dot">.</span>dev</a>
-                <a href="/" class="back-button">
-                    <i class="fas fa-arrow-left"></i>
-                    Ana Sayfa
-                </a>
-            </nav>
-        </div>
-    </header>
+
+
 
     <!-- Category Hero -->
     <section class="category-hero">
+        <div class="floating-dot" style="top:20%; left:15%; animation-delay:0s;"></div>
+        <div class="floating-dot" style="top:70%; right:10%; animation-delay:2s;"></div>
+        <div class="floating-dot" style="top:10%; left:75%; animation-delay:1s;"></div>
+        <div class="floating-dot" style="top:80%; right:80%; animation-delay:0s;"></div>
         <div class="container">
             <div class="category-hero-content">
                 <div class="category-icon">
-                    <i class="fas fa-@(GetCategoryIcon(Model.Category.Name))"></i>
+                    <i class="@(GetCategoryIcon(Model.Category.Name)) fs-1"></i>
                 </div>
                 <h1 class="category-title">@Model.Category.Name</h1>
                 <p class="category-description">@Model.Category.Description</p>
                 <div class="category-stats">
                     <div class="stat-item">
                         <span class="stat-number">@Model.Posts.Count</span>
-                        <span class="stat-label">Yazı</span>
+                        <span class="stat-label">Posts</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">@Model.TotalViews</span>
-                        <span class="stat-label">Görüntülenme</span>
+                        <span class="stat-label">Views</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">@Model.AuthorCount</span>
-                        <span class="stat-label">Yazar</span>
+                        <span class="stat-label">Author</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Filter Bar -->
-    <section class="filter-bar">
-        <div class="container">
-            <div class="filter-controls">
-                <div class="filter-left">
-                    <select class="sort-dropdown" id="sortSelect">
-                        <option value="newest">En Yeni</option>
-                        <option value="oldest">En Eski</option>
-                        <option value="popular">En Popüler</option>
-                        <option value="mostRead">En Çok Okunan</option>
-                    </select>
-                    <div class="view-toggle">
-                        <button class="active" data-view="grid">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button data-view="list">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="posts-count">
-                    <strong>@Model.Posts.Count</strong> yazı bulundu
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Posts Section -->
     <section class="posts-section">
         <div class="container">
@@ -608,36 +678,38 @@
                 <div class="posts-grid" id="postsGrid">
                     @foreach (var post in Model.Posts)
                     {
-                        <article class="post-card">
-                            <div class="post-img-container">
-                                <img src="@post.CoverImageUrl" alt="@post.Title" class="post-img">
-                            </div>
-                            <div class="post-body">
-                                <div class="post-meta">
-                                    <span class="post-category">@post.Category.Name</span>
-                                    <span class="post-date">
-                                        <i class="fas fa-calendar-alt"></i>
-                                        @post.CreatedTime.ToString("dd MMM yyyy")
-                                    </span>
+                        <article class="post-card post-title-link">
+                            <a class="text-decoration-none" asp-controller="post" asp-action="postdetails" asp-route-id="@post.Id">
+                                <div class="post-img-container">
+                                    <img src="@post.CoverImageUrl" alt="@post.Title" class="post-img">
                                 </div>
-                                <h3 class="post-title">@post.Title</h3>
-                                <p class="post-excerpt">@post.Subtitle</p>
-                                <div class="post-footer">
-                                    <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id" class="read-more">
-                                        Devamını Oku
-                                    </a>
-                                    <div class="post-stats">
-                                        <span>
-                                            <i class="fas fa-eye"></i>
-                                            @post.ViewCount
-                                        </span>
-                                        <span>
-                                            <i class="fas fa-clock"></i>
-                                            
+                                <div class="post-body">
+                                    <div class="post-meta">
+                                        <span class="post-category">@post.Category.Name</span>
+                                        <span class="post-date">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            @post.CreatedTime.ToString("dd MMM yyyy")
                                         </span>
                                     </div>
+                                    <h3 class="post-title">@post.Title</h3>
+                                    <p class="post-excerpt">@post.Subtitle</p>
+                                    <div class="post-footer">
+                                        <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id" class="read-more">
+                                            Devamını Oku
+                                        </a>
+                                        <div class="post-stats">
+                                            <span>
+                                                <i class="fas fa-eye"></i>
+                                                @post.ViewCount
+                                            </span>
+                                            <span>
+                                                <i class="fas fa-clock"></i>
+
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </article>
                     }
                 </div>
@@ -655,9 +727,74 @@
             {
                 <div class="empty-state">
                     <i class="fas fa-folder-open"></i>
-                    <h3>Henüz yazı bulunmuyor</h3>
-                    <p>Bu kategoride henüz hiç yazı yayınlanmamış.</p>
-                    <a href="/" class="read-more">Ana Sayfaya Dön</a>
+                    <h3>There are no posts yet</h3>
+                    <p>There are no articles published in this category yet.</p>
+                    <a href="/" class="read-more">Return to Home Page</a>
+                </div>
+            }
+        </div>
+    </section>
+    <canvas id="postChart" width="800" height="200"></canvas>
+    <!-- Posts Section -->
+    <section class="posts-section">
+        <div class="container">
+            @if (Model.Posts.Any())
+            {
+                <div class="posts-grid list-view" id="postsGrid">
+                    @foreach (var post in Model.Posts)
+                    {
+                        <article class="post-card post-title-link">
+                            <a class="text-decoration-none" asp-controller="post" asp-action="postdetails" asp-route-id="@post.Id">
+                                <div class="post-img-container">
+                                    <img src="@post.CoverImageUrl" alt="@post.Title" class="post-img">
+                                </div>
+                                <div class="post-body">
+                                    <div class="post-meta">
+                                        <span class="post-category">@post.Category.Name</span>
+                                        <span class="post-date">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            @post.CreatedTime.ToString("dd MMM yyyy")
+                                        </span>
+                                    </div>
+                                    <h3 class="post-title">@post.Title</h3>
+                                    <p class="post-excerpt">@post.Subtitle</p>
+                                    <div class="post-footer">
+                                        <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id" class="read-more">
+                                            Devamını Oku
+                                        </a>
+                                        <div class="post-stats">
+                                            <span>
+                                                <i class="fas fa-eye"></i>
+                                                @post.ViewCount
+                                            </span>
+                                            <span>
+                                                <i class="fas fa-clock"></i>
+
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <span class="current">1</span>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">&raquo;</a>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>There are no posts yet</h3>
+                    <p>There are no articles published in this category yet.</p>
+                    <a href="/" class="read-more">Return to Home Page</a>
                 </div>
             }
         </div>
@@ -711,19 +848,124 @@
         {
             return categoryName.ToLower() switch
             {
-                "teknoloji" => "laptop-code",
-                "tasarım" => "palette",
+                "technology" => "fa-solid fa-microchip",
+                "design" => "fa-solid fa-pen-ruler",
                 "yazılım" => "code",
-                "mobile" => "mobile-alt",
-                "web" => "globe",
-                "ai" => "brain",
-                "blockchain" => "link",
-                "oyun" => "gamepad",
-                "güvenlik" => "shield-alt",
-                "veri" => "database",
+                "culture" => "fa-solid fa-users-rectangle",
+                "style" => "fa-solid fa-border-top-left",
+                "business" => "fa-solid fa-user-tie",
+                "politics" => "fa-solid fa-landmark",
+                "opinion" => "fa-solid fa-lightbulb",
+                "science" => "fa-solid fa-flask-vial",
+                "health" => "fa-solid fa-notes-medical",
+                "travel" => "fa-solid fa-mountain-sun",
+                "tr" => "fa-solid fa-flag",
+                "world" => "fa-solid fa-earth-europe",
                 _ => "folder"
             };
         }
     }
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        window.categoryId = '@ViewBag.CategoryId';
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const categoryId = window.categoryId || "1";
+
+            if (!categoryId) {
+                console.error("Kategori ID'si bulunamadı!");
+                return;
+            }
+
+            const jsonOutput = document.getElementById("jsonOutput");
+            const canvas = document.getElementById("postChart");
+
+            if (!canvas) {
+                console.error("Canvas elementi bulunamadı!");
+                return;
+            }
+
+            fetch(`/Category/GetPostCountsByDate?categoryId=${categoryId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (jsonOutput) {
+                        jsonOutput.innerText = JSON.stringify(data, null, 2);
+                    }
+
+                    const updatedData = {
+                        ...data,
+                        datasets: data.datasets.map(ds => ({
+                            ...ds,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)', // Daha hafif dolgu
+                            borderColor: 'rgba(255, 99, 132, 0.7)',     // İnce ama belirgin çizgi
+                            borderWidth: 1.2,                           // İnceltilmiş çizgi kalınlığı
+                            pointBackgroundColor: 'rgba(255, 99, 132, 0.8)',
+                            pointBorderColor: 'rgba(255, 99, 132, 1)',
+                            pointRadius: 3,                             // Daha küçük noktalar
+                            pointHoverRadius: 5,
+                            tension: 0.45                              // Daha yumuşak ve zarif eğri
+                        }))
+                    };
+
+                    const ctx = canvas.getContext('2d');
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: updatedData,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                        color: '#555'
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Daily distribution of posts in the category shared in the last 30 days',
+                                    color: '#333',
+                                    font: { size: 16, weight: '600' }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0,
+                                        color: '#666'
+                                    },
+                                    grid: {
+                                        color: 'rgba(0,0,0,0.05)'
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        color: '#666'
+                                    },
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Veri çekme hatası:", error);
+                    if (jsonOutput) {
+                        jsonOutput.innerText = `Veri çekme hatası: ${error.message}`;
+                    }
+                });
+        });
+    </script>
+
+
 </body>
 </html>

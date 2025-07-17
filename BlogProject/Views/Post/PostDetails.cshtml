@@ -10,6 +10,8 @@
         Console.WriteLine(item.Value);
     }
 }
+
+
 <script>
     const currentUserId = "@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value";
     const currentPostId = "@Model.Post.Id";
@@ -19,6 +21,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@Model.Post.Title</title>
     <style>
+        .like-button {
+            color: gray;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+            .like-button.liked {
+                color: greenyellow; /* Beğenildiğinde farklı renk */
+            }
 
         /* Header */
         .header {
@@ -587,6 +598,16 @@
         text-align: center;
         }
 
+        #sharePopup a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: block;
+            text-align: center;
+            font-weight: 600;
+        }
+
+
         .related-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -779,25 +800,34 @@
 
             <hr class="my-2 mt-5">
 
-            <div class="d-flex justify-content-center align-content-center">
-                @* <div class="d-flex flex-column justify-content-center align-items-center">
-                    <a class="bi bi-bookmark-plus-fill mx-3 fs-5 blacktogray" href="#"></a>
-                    <small>23</small>
+            <div class="d-flex justify-content-center align-content-start">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <i class="fa-solid fa-eye mb-1 text-dark 
+                        mx-3 fs-5">
+                    </i>
+                    <small>@(Model.Post.ViewCount == 0 ? 0 : Model.Post.ViewCount)</small>
 
                 </div>
                 <div class="d-flex flex-column justify-content-center align-items-center">
-                    <a class="bi bi-caret-up-fill mx-3 fs-5 blacktogray" href="#"></a>
-                    <small>108</small>
+                    <a href="#"
+                       class="like-button fa-solid mb-1 fa-hand-holding-heart
+                        mx-3 fs-5  @(Model.IsLikedFromCurrentUser ? "liked" : "")"
+                       data-post-id="@Model.Post.Id">
+                    </a>
+                    <small class="like-count">@(Model.Post.Likes is null ? 0 : Model.Post.Likes.Count())</small>
+
                 </div>
-                <div class="d-flex flex-column justify-content-center align-items-center">
-                    <a class="bi bi-caret-down-fill mx-3 fs-5 blacktogray" href="#"></a>
-                    <small>7</small>
+                <div class="d-flex flex-column justify-content-start align-items-start">
+                    <a id="shareBtn" class="bi bi-share-fill mx-3 mt-1 fs-5 blacktogray d-flex" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
                 </div>
-                <div class="d-flex flex-column justify-content-center align-items-center">
-                    <a class="bi bi-share-fill mx-3 fs-5 blacktogray" href="#"></a>
-                    <small>15</small>
-                </div> *@
-                <p class="text-gradient d-flex align-content-center mb-0">This post has been viewed @Model.Post.ViewCount times!</p>
+
+
+                <!-- Popup Modal -->
+                <div id="sharePopup" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:10px; border-radius:5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index:1000;">
+                    <a href="#" id="twitterShare" target="_blank" class="btn btn-sm btn-outline-dark mb-2" style="display:block; margin-bottom:5px;">Share with <i class="fa-brands fw-bold text-dark fa-x-twitter"></i></a>
+                    <a href="#" id="linkedInShare" target="_blank" class="btn btn-sm btn-outline-dark" style="display:block;">Share with <i class="fa-brands fw-bold fa-linkedin-in"></i></a>
+                </div>
+                @* <p class="text-gradient d-flex align-content-center mb-0">This post has been viewed @Model.Post.ViewCount times!</p> *@
             </div>
             <hr class="my-2">
 
@@ -874,7 +904,7 @@
                 <h3 class="comments-title">Comments <span class="comment-count">@Model.Comments.Count</span></h3>
             </div>
 
-                <div class="comment-form">
+                <div class="comment-form d-flex justify-content-center">
             @if (User.Identity.IsAuthenticated)
             {
                 <!-- Comment Form -->
@@ -1124,7 +1154,7 @@
                                         {
                                             <div class="comment-reply-sm">
                                                 <div class="commentor-avatar ms-2">
-                                                    <img src="/img/userPhotos/gorkemkayas5269/WhatsApp_Image_2025-06-11_at_21.30.19_c95a0f93.jpg" />
+                                                    <img src="/img/userPhotos/@reply.Author.UserName/@reply.Author.ProfilePicture" />
                                                     <span>Y</span>
                                                 </div>
                                                 <div class="comment-body">
@@ -1362,12 +1392,15 @@
             <div class="related-grid d-flex @(Model.RecommendedPosts.Count == 1 ? "justify-content-center" : "justify-content-between") ">
                 @foreach (var recommendedPost in Model.RecommendedPosts)
                 {
+
                     <article class="related-post">
+                    <a asp-controller="post" asp-action="postdetails" asp-area-id="@recommendedPost.Id" class="text-decoration-none">
                         <img src="@recommendedPost.CoverImageUrl" alt="@recommendedPost.Category.Name" class="related-post-img">
                         <div class="related-post-body">
                             <h3 class="related-post-title">@recommendedPost.Title</h3>
                             <a asp-controller="Post" asp-action="PostDetails" asp-route-id="@recommendedPost.Id" class="related-post-link">Read article</a>
                         </div>
+                    </a>
                     </article>
                 }
                 @*  <article class="related-post">
@@ -1396,4 +1429,90 @@
             </div>
         </section>
     </div>
+    <form method="post">
+        @Html.AntiForgeryToken()
+    </form>
+
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".like-button").forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                const postId = this.dataset.postId;
+                const button = this;
+                const countSpan = this.nextElementSibling; // <small> elementi
+
+                fetch('/Post/ToggleLike', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: JSON.stringify({ postId: postId })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("İstek başarısız.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.liked) {
+                        button.classList.add("liked");
+                    } else {
+                        button.classList.remove("liked");
+                    }
+
+                    // Sayıyı güncelle
+                    countSpan.textContent = data.likeCount;
+                })
+                .catch(err => {
+                    console.error("Hata:", err);
+                });
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const shareBtn = document.getElementById("shareBtn");
+        const sharePopup = document.getElementById("sharePopup");
+
+        // Post URL ve başlık (dinamik olarak backend'den alınabilir)
+        const postUrl = window.location.href; // Veya sabit: 'https://site.com/post/123'
+        const postTitle = document.title;     // İstersen başka bir başlık da verilebilir
+
+        // Paylaşım linkleri hazırla
+        const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle)}`;
+        const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`;
+
+        document.getElementById("twitterShare").href = twitterUrl;
+        document.getElementById("linkedInShare").href = linkedInUrl;
+
+        // Popup'u toggle et
+        shareBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            if (sharePopup.style.display === "none" || sharePopup.style.display === "") {
+                // Butonun hemen altına konumlandır
+                const rect = shareBtn.getBoundingClientRect();
+                sharePopup.style.top = (rect.bottom + window.scrollY + 5) + "px";
+                sharePopup.style.left = (rect.left + window.scrollX) + "px";
+                sharePopup.style.display = "block";
+            } else {
+                sharePopup.style.display = "none";
+            }
+        });
+
+        // Popup dışına tıklanınca kapanması için
+        document.addEventListener("click", function (e) {
+            if (!sharePopup.contains(e.target) && e.target !== shareBtn) {
+                sharePopup.style.display = "none";
+            }
+        });
+    });
+</script>

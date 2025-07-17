@@ -7,12 +7,6 @@
     if (User.Identity.IsAuthenticated)
         currentUserLayout = await userManager.FindByNameAsync(User.Identity.Name!);
 }
-@{
-    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
-    var currentId = ViewContext.RouteData.Values["id"]?.ToString();
-}
-
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -723,21 +717,22 @@ else if (TempData["Failed"] != null)
                 </div>
             </nav>
 
+
             <!-- Category Navigation -->
             <div class="main-nav">
                 <nav class="nav-links py-1 justify-content-evenly">
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "921dcf8e-2c12-49d1-e185-08ddc379d975" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="921dcf8e-2c12-49d1-e185-08ddc379d975">World</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "D18408EC-2244-43AC-C951-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="D18408EC-2244-43AC-C951-08DDC5282646">TR</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "707dd195-b50e-4294-1628-08ddc37b3572" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="707dd195-b50e-4294-1628-08ddc37b3572">Technology</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "D4B8CAB0-2637-4039-C952-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="D4B8CAB0-2637-4039-C952-08DDC5282646">Design</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "64D99652-9E85-452D-C953-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="64D99652-9E85-452D-C953-08DDC5282646">Culture</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "A460863B-3647-4B6E-C954-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="A460863B-3647-4B6E-C954-08DDC5282646">Business</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "09B68944-F2AD-4EB2-C955-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="09B68944-F2AD-4EB2-C955-08DDC5282646">Politics</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "685263CD-60E4-4DDD-C956-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="685263CD-60E4-4DDD-C956-08DDC5282646">Opinion</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "F8BA19B7-59A8-4A44-C957-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="F8BA19B7-59A8-4A44-C957-08DDC5282646">Science</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "B18E01F7-5A59-4C41-C958-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="B18E01F7-5A59-4C41-C958-08DDC5282646">Health</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "5AA995DC-C27C-4154-C959-08DDC5282646" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="5AA995DC-C27C-4154-C959-08DDC5282646">Style</a>
-                    <a class="nav-link-item text-dark text-decoration-none @(currentController == "Category" && currentAction == "Category" && currentId == "D5A9322B-29C9-424F-7AC4-08DDC37B6111" ? "active" : "")" asp-controller="Category" asp-action="Category" asp-route-id="D5A9322B-29C9-424F-7AC4-08DDC37B6111">Travel</a>
+                    <a class="nav-link-item text-dark text-decoration-none active" href="#">World</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">U.S.</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Technology</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Design</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Culture</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Business</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Politics</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Opinion</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Science</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Health</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Style</a>
+                    <a class="nav-link-item text-dark text-decoration-none" href="#">Travel</a>
                 </nav>
             </div>
         </div>
@@ -1012,7 +1007,7 @@ else if (TempData["Failed"] != null)
         // Smooth scroll for nav links
         document.querySelectorAll('.nav-link-item').forEach(link => {
         link.addEventListener('click', function(e) {
-        // e.preventDefault();
+        e.preventDefault();
         document.querySelectorAll('.nav-link-item').forEach(item => {
         item.classList.remove('active');
         });
@@ -1050,19 +1045,8 @@ else if (TempData["Failed"] != null)
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 
-    <footer class="footer mt-4"><div class="container"><div class="footer-content"><div class="footer-section"><h3>My Blog</h3><p>We share quality content about technology, lifestyle and personal development. We're here to create an inspiring community that shares your thoughts.</p></div><div class="footer-section"><h3>Categories</h3><ul><li><a href="#">Technology</a></li><li><a href="#">Lifestyle</a></li><li><a href="#">Personal Development</a></li><li><a href="#">Entrepreneurship</a></li><li><a href="#">Design</a></li></ul></div><div class="footer-section"><h3>Quick Links</h3><ul><li><a href="#">About Us</a></li><li><a href="#">Contact</a></li><li><a href="#">Archive</a></li><li><a href="#">RSS</a></li><li><a href="#">Sitemap</a></li></ul></div><div class="footer-section"><h3>Newsletter</h3><p>Subscribe to our newsletter to stay updated with our latest articles.</p><div class="newsletter my-0 py-2"><div class="newsletter-form">@if (User.Identity.IsAuthenticated)
-                            {
-                                if (currentUserLayout!.GeneralNotificationActive)
-                                {
-                                    <p class="text-dark mt-2">You have subscribed our newslatter! <i class="bi bi-check-circle-fill text-success"></i></p>
-                                }
-                            }
-                            else
-                            {
-                                <form asp-controller="User" asp-action="NotificationSubscribe" method="post" class="newsletter-form"><div class="input-group"><input name="email" type="email" placeholder="Your email address" class="newsletter-input" required><button type="submit" class="newsletter-btn">Subscribe<span class="arrow-icon">→</span></button></div></form>
-                            }</div></div></div></div><div class="footer-bottom mt-4"><p>&copy; 2025 My Blog. All rights reserved.</p><div class="footer-bottom-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></div></div></div></footer>
-</body>
 
+</body>
 
 @* <div class="ad-right">
     <div class="ad-box">

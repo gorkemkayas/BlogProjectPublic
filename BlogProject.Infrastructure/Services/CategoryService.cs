@@ -18,6 +18,38 @@ namespace BlogProject.Infrastructure.Services
         {
             _context = context;
         }
+        public async Task<List<CategoryEntity>> GetRelatedCategoriesAsync(string  categoryId)
+        {
+            if (string.IsNullOrEmpty(categoryId))
+            {
+                throw new ArgumentException("Category ID cannot be null or empty.", nameof(categoryId));
+            }
+            var categoryGuid = Guid.Parse(categoryId);
+            var category = await _context.Categories.FindAsync(categoryGuid);
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Category with ID {categoryId} not found.");
+            }
+            // Assuming related categories are those that are not the same as the current category
+            var relatedCategories = await _context.Categories
+                .Where(c => c.Id != categoryGuid && !c.IsDeleted)
+                .ToListAsync();
+            return relatedCategories;
+        }
+        public async Task<CategoryEntity> GetByIdAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentException("Category ID cannot be null or empty.", nameof(id));
+            }
+            var categoryId = Guid.Parse(id);
+            var category = await _context.Categories.FindAsync(categoryId);
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Category with ID {id} not found.");
+            }
+            return category;
+        }
         public async Task<ServiceResult<CategoryEntity>> AddCategoryAsync(CategoryAddDto model)
         {
             try
@@ -245,5 +277,56 @@ namespace BlogProject.Infrastructure.Services
                 return result;
             }
         }
+
+        public async Task<object> GetDailyPostCountsAsync(string categoryId)
+        {
+            var today = DateTime.Today;
+            var startDate = today.AddDays(-29); // Son 30 gün
+
+            // 30 günlük sabit tarih listesi (gün bazlı)
+            var dateRange = Enumerable.Range(0, 30)
+                .Select(offset => startDate.AddDays(offset))
+                .ToList();
+
+            // İlgili kategoride son 30 gün içindeki gönderileri gün bazında gruplama
+            var postCounts = await _context.Posts
+                .Where(p => p.CategoryId == Guid.Parse(categoryId) &&
+                            p.CreatedTime >= startDate &&
+                            p.CreatedTime <= today.AddDays(1) &&
+                            !p.IsDeleted)
+                .GroupBy(p => p.CreatedTime.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+
+            // Her gün için veri oluştur, gönderi olmayan günlere 0 ata
+            var chartData = dateRange.Select(date => new
+            {
+                Date = date.ToString("yyyy-MM-dd"),
+                Count = postCounts.FirstOrDefault(x => x.Date == date)?.Count ?? 0
+            }).ToList();
+
+            // Chart.js ile uyumlu JSON yapısı
+            var result = new
+            {
+                labels = chartData.Select(x => x.Date),
+                datasets = new[]
+                {
+            new {
+                label = "Daily post counts",
+                data = chartData.Select(x => x.Count),
+                backgroundColor = "rgba(75, 192, 192, 0.2)",
+                borderColor = "rgba(75, 192, 192, 1)",
+                borderWidth = 1
+            }
+        }
+            };
+
+            return result;
+        }
+
     }
 }

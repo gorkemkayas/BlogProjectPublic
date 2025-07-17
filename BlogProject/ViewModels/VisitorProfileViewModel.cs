@@ -1,4 +1,5 @@
 ﻿using BlogProject.Application.Validators;
+using BlogProject.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlogProject.Web.ViewModels
@@ -6,6 +7,7 @@ namespace BlogProject.Web.ViewModels
     public class VisitorProfileViewModel : BaseProfileViewModel
     {
         public string UserName { get; set; }
+        public string? VisitedUserId { get; set; }
 
         [Required]
         public string Name { get; set; } = null!;
@@ -59,5 +61,9 @@ namespace BlogProject.Web.ViewModels
         public string? CoverImagePicture { get; set; }
 
         public string? WorkingAtLogo { get; set; }
+        public List<PostEntity>? FeaturedPosts { get; set; } = new List<PostEntity>();
+        public List<PostEntity>? RecentPosts { get; set; } = new List<PostEntity>();
+
+        public bool? IsFollowing { get; set; }
     }
 }

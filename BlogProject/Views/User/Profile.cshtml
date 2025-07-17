@@ -3,8 +3,11 @@
     ViewData["Title"] = "Profile";
     Layout = "_Layout";
 }
-
 @model VisitorProfileViewModel
+<!-- CSRF Token -->
+<form id="tokenForm">
+    @Html.AntiForgeryToken()
+</form>
 
 @if (TempData["Succeed"] != null)
 {
@@ -50,7 +53,45 @@ else if (TempData["Failed"] != null)
         Your browser does not support the video tag.
     </video>
 </div> *@
+<style>
+    .post-card {
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    }
 
+    .post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .post-image-container {
+    height: 200px;
+    background-color: #f8f9fa;
+    }
+
+    .post-image {
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    }
+
+    .post-card:hover .post-image {
+    transform: scale(1.03);
+    }
+
+    .post-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5;
+    }
+
+    .post-stats i {
+    font-size: 0.9rem;
+    }
+</style>
 <section class="h-100 gradient-custom-2">
 
     <div class="container py-5 h-100">
@@ -86,7 +127,13 @@ else if (TempData["Failed"] != null)
 
                         <partial name="_EditProfileModalPartial" />
                     }
-
+                    else
+                    {
+                        <button id="followBtn" data-userid="@Model.VisitedUserId" type="button" class="btn btn-dark" style="border-radius:0%">
+                            @(Model.IsFollowing is true ? "Unfollow" : "Follow")
+                        </button>
+                    }
+                    @* <span>Takipçi: <span id="followerCount">@Model.FollowersCount</span></span> *@
 
 
                     <!-- Profile Stats and Buttons -->
@@ -98,7 +145,7 @@ else if (TempData["Failed"] != null)
                         </div>
                         <div class="d-flex justify-content-end text-center py-1 text-body align-items-center">
                             <div class="px-3">
-                                <p class="mb-1 h4">@Model.FollowersCount</p>
+                                <p class="mb-1 h4" id="followerCount">@Model.FollowersCount</p>
                                 <p class="small text-muted mb-0">Followers</p>
                             </div>
                             <div class="px-3">
@@ -211,26 +258,36 @@ else if (TempData["Failed"] != null)
                         <div class="mb-2">
                             <h4 class="fw-bold ms-4 mb-3">Featured Posts</h4>
                             <div class="row g-3 px-2">
-                                <div class="col-md-6">
-                                    <div class="p-3 rounded-3 h-100">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
-                                             alt="Post Image"
-                                             class="img-fluid rounded-3 mb-3">
-                                        <h5 class="fw-bold mb-2">This is a sample post title</h5>
-                                        <p class="text-muted mb-2">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
-                                        <p class="mb-0 text-muted">5 likes | 2 comments</p>
+                                @if(Model.FeaturedPosts.Count != 0)
+                                {
+                                    foreach (var item in Model.FeaturedPosts)
+                                    {
+                                    <div class="col-md-6">
+                                        <a class="text-decoration-none mx-0" asp-controller="post" asp-action="postdetails" asp-route-id="@item.Id">
+                                        <div class="post-card p-4 rounded-4 h-100 shadow-sm">
+                                            <div class="post-image-container rounded-3 overflow-hidden mb-3">
+                                                <img src="@item.CoverImageUrl"
+                                                alt="@item.Title"
+                                                class="img-fluid w-100 post-image">
+                                            </div>
+                                            <h5 class="fw-bold mb-2 text-dark">@item.Title</h5>
+                                            <p class="text-secondary mb-3 post-description">@item.Subtitle</p>
+                                            <div class="post-stats d-flex align-items-center text-muted">
+                                                <span class="me-3"><i class="fas fa-heart me-1"></i> @(item.Likes is null ? 0 : item.Likes.Count) likes</span>
+                                                    <span><i class="fas fa-comment me-1"></i> @(item.Comments is null ? 0 : item.Comments.Count) comments</span>
+                                            </div>
+                                        </div>
+                                        </a>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="p-3  rounded-3 h-100">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
-                                             alt="Post Image"
-                                             class="img-fluid rounded-3 mb-3">
-                                        <h5 class="fw-bold mb-2">Another post title</h5>
-                                        <p class="text-muted mb-2">This is another post description. It can be a bit longer to provide more context.</p>
-                                        <p class="mb-0 text-muted">12 likes | 4 comments</p>
+                                        
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="d-flex justify-content-center">
+                                        <p class="text-muted mb-0">There are no featured posts.</p>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -240,32 +297,39 @@ else if (TempData["Failed"] != null)
                         <div class="mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4 class="fw-bold ms-4 mb-0">Recent Posts</h4>
-                                <a href="#!" class="text-muted text-decoration-none pe-4">Show all</a>
+@*                                 <a href="#!" class="text-muted text-decoration-none pe-4">Show all</a> *@
                             </div>
                             <div class="row g-3 px-2">
-                                <!-- Post 1 -->
-                                <div class="col-md-6">
-                                    <div class="p-3  rounded-3 h-100">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
-                                             alt="Post Image 1"
-                                             class="img-fluid rounded-3 mb-3">
-                                        <h5 class="fw-bold mb-2">This is a sample post title</h5>
-                                        <p class="text-muted mb-2">This is a short description of the post. It can contain a brief summary of what the post is about.</p>
-                                        <p class="mb-0 text-muted">5 likes | 2 comments</p>
-                                    </div>
-                                </div>
+                                @if (Model.RecentPosts.Count != 0)
+                                {
+                                    foreach (var item in Model.RecentPosts)
+                                    {
+                                        <div class="col-md-6">
+                                            <a class="text-decoration-none mx-0" asp-controller="post" asp-action="postdetails" asp-route-id="@item.Id">
+                                            <div class="post-card p-4 rounded-4 h-100 shadow-sm">
+                                                <div class="post-image-container rounded-3 overflow-hidden mb-3">
+                                                    <img src="@item.CoverImageUrl"
+                                                         alt="@item.Title"
+                                                         class="img-fluid w-100 post-image">
+                                                </div>
+                                                <h5 class="fw-bold mb-2 text-dark">@item.Title</h5>
+                                                <p class="text-secondary mb-3 post-description">@item.Subtitle</p>
+                                                <div class="post-stats d-flex align-items-center text-muted">
+                                                    <span class="me-3"><i class="fas fa-heart me-1"></i> @(item.Likes is null ? 0 : item.Likes.Count) likes</span>
+                                                    <span><i class="fas fa-comment me-1"></i> @(item.Comments is null ? 0 : item.Comments.Count) comments</span>
+                                                </div>
+                                            </div>
+                                            </a>
+                                        </div>
 
-                                <!-- Post 2 -->
-                                <div class="col-md-6">
-                                    <div class="p-3  rounded-3 h-100">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
-                                             alt="Post Image 2"
-                                             class="img-fluid rounded-3 mb-3">
-                                        <h5 class="fw-bold mb-2">Another post title</h5>
-                                        <p class="text-muted mb-2">This is another post description. It can be a bit longer to provide more context.</p>
-                                        <p class="mb-0 text-muted">12 likes | 4 comments</p>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="d-flex justify-content-center">
+                                        <p class="text-muted mb-0">There are no recent posts.</p>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -295,7 +359,7 @@ else if (TempData["Failed"] != null)
 
                     <div class="card-body box mb-2 px-4 text-black">
                         <!-- Comments Section -->
-                        <div class="mb-2">
+                        @* <div class="mb-2">
                             <h4 class="fw-bold ms-4 mb-4">Recent Comments</h4>
                             <div class="px-4 mt-4 d-flex justify-content-center flex-column  align-items-center">
                                 <div class="d-flex">
@@ -311,7 +375,7 @@ else if (TempData["Failed"] != null)
 
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
                     </div>
                 </div>
 
@@ -414,12 +478,32 @@ else if (TempData["Failed"] != null)
                 }
             });
         }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on("click", "#followBtn", function () {
+            var userId = $(this).data("userid");
+            var token = $('#tokenForm input[name="__RequestVerificationToken"]').val();
 
-        // Sayfa yüklendiğinde validasyonu başlat
-        document.addEventListener('DOMContentLoaded', function () {
-            validateEmail('emailInput', 'emailError', 'saveChangesButton');
+            console.log("Gönderilecek userId:", userId);
+            console.log("Token:", token);
+
+            $.ajax({
+                url: "/User/ToggleFollow", // Controller ismi "UserController" olmalı
+                type: "POST",
+                data: { userId: userId },
+                headers: {
+                    "RequestVerificationToken": token
+                },
+                success: function (data) {
+                    console.log("İstek başarılı, sunucudan gelen:", data);
+                    $("#followerCount").text(data.followerCount);
+                    $("#followBtn").text(data.following ? "Unfollow" : "Follow");
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Hatası:", status, error);
+                }
+            });
         });
-
-
     </script>
 }

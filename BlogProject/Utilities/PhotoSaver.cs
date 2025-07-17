@@ -20,7 +20,16 @@ namespace BlogProject.Web.Utilities
             {
                 Directory.CreateDirectory(uploadPath);
             }
-            var fileName = formFile.FileName.Replace(" ", "_");
+            string fileName;
+            string extension = Path.GetExtension(formFile.FileName).ToLowerInvariant();
+            if (formFile.FileName.Length > 100)
+            {
+                fileName = formFile.FileName.Replace(" ", "_").Substring(0, 95) + extension;
+            }
+            else
+            {
+                fileName = formFile.FileName.Replace(" ", "_") + extension;
+            }
             string filePath = Path.Combine(uploadPath, fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

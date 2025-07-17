@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using static BlogProject.Domain.Entities.AppUser;
 
@@ -23,10 +24,11 @@ namespace BlogProject.Infrastructure.Services
         private readonly BlogDbContext _blogdbContext;
         private readonly IEmailService _emailService;
         private readonly ICommentService _commentService;
+        private readonly IPostService _postService;
         private readonly IUsernameGenerator _usernameGenerator;
         private readonly IUserTokenGenerator _userTokenGenerator;
         private readonly IUrlGenerator _urlGenerator;
-        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext, ICommentService commentService)
+        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext, ICommentService commentService, IPostService postService)
         {
             _userManager = userManager;
             _usernameGenerator = usernameGenerator;
@@ -36,6 +38,7 @@ namespace BlogProject.Infrastructure.Services
             _emailService = emailService;
             _blogdbContext = blogdbContext;
             _commentService = commentService;
+            _postService = postService;
         }
         public async Task<ServiceResult<AppUser>> DeleteUserByTypeAsync(string id, DeleteType deleteType, string deleterId)
         {
@@ -76,6 +79,35 @@ namespace BlogProject.Infrastructure.Services
             {
                 IsSuccess = true
             };
+        }
+
+        public async Task<bool> ToggleFollowAsync(string followerId, string followingId)
+        {
+            var existingFollow = await _blogdbContext.Follows
+                .FirstOrDefaultAsync(f => f.FollowerId.ToString() == followerId && f.FollowingId.ToString() == followingId);
+
+            if (existingFollow != null)
+            {
+                _blogdbContext.Follows.Remove(existingFollow);
+                await _blogdbContext.SaveChangesAsync();
+                return false; // Unfollow edildi
+            }
+
+            var follow = new FollowEntity
+            {
+                FollowerId = Guid.Parse(followerId),
+                FollowingId = Guid.Parse(followingId)
+            };
+
+            _blogdbContext.Follows.Add(follow);
+            await _blogdbContext.SaveChangesAsync();
+            return true; // Takip edildi
+        }
+        public async Task<int> GetFollowerCountByUserId(string userId)
+        {
+            var followerCount = await _blogdbContext.Follows
+        .CountAsync(f => f.FollowingId.ToString() == userId);
+            return followerCount;
         }
 
         public bool CheckEmailConfirmed(AppUser user)
@@ -175,8 +207,25 @@ namespace BlogProject.Infrastructure.Services
             return postCount;
         }
 
+        public async Task<bool> IsFollowing(string follower, string following)
+        {
+            var follow = await _blogdbContext.Follows
+                .FirstOrDefaultAsync(f => f.FollowerId.ToString() == follower && f.FollowingId.ToString() == following);
+            return follow != null;
+        }
         public VisitorProfileDto GetVisitorProfileInformation(AppUser visitedUser)
         {
+            var LikeCount = _blogdbContext.Posts
+    .Where(p => p.AuthorId == visitedUser.Id && p.Likes != null)
+    .SelectMany(p => p.Likes)
+    .Count();
+            var featuredPosts = _blogdbContext.Posts.Where(p => p.AuthorId == visitedUser.Id).OrderByDescending(p => p.ViewCount).Include(p => p.Likes).Include(p => p.Comments).Take(2).ToList();
+            var recentPosts = _blogdbContext.Posts.Where(p => p.AuthorId == visitedUser.Id).OrderByDescending(p => p.CreatedTime).Include(p => p.Likes).Include(p => p.Comments).Take(2).ToList();
+            var followersCount = _blogdbContext.Follows
+                .Count(f => f.FollowingId == visitedUser.Id);
+            var followingCount = _blogdbContext.Follows
+                .Count(f => f.FollowerId == visitedUser.Id);
+
             var visitorProfileInfo = new VisitorProfileDto()
             {
                 UserName = visitedUser.UserName!,
@@ -190,9 +239,15 @@ namespace BlogProject.Infrastructure.Services
                 ProfilePicture = visitedUser.ProfilePicture,
                 CoverImagePicture = visitedUser.CoverImagePicture,
                 WorkingAtLogo = visitedUser.WorkingAtLogo,
-                FollowersCount = visitedUser.FollowersCount,
-                FollowingCount = visitedUser.FollowingCount,
+                FollowersCount = followersCount,
+                FollowingCount = followingCount,
                 WorkingAt = visitedUser.WorkingAt,
+                CommentCount = _commentService.GetCommentCountByUserAsync(visitedUser).Result,
+                PostCount = _postService.GetPostCountByUserAsync(visitedUser).Result,
+                LikeCount = LikeCount,
+                FeaturedPosts = featuredPosts,
+                RecentPosts = recentPosts,
+                VisitedUserId = visitedUser.Id.ToString()
             };
 
             return visitorProfileInfo;
@@ -200,6 +255,20 @@ namespace BlogProject.Infrastructure.Services
         }
         public async Task<ExtendedProfileDto> GetExtendedProfileInformationAsync(AppUser currentUser)
         {
+            var postCount = await _postService.GetPostCountByUserAsync(currentUser);
+            var commentCount = await _commentService.GetCommentCountByUserAsync(currentUser);
+            var likeCount = _blogdbContext.Posts
+                                          .Where(p => p.AuthorId == currentUser.Id && p.Likes != null)
+                                          .SelectMany(p => p.Likes)
+                                          .Count();
+
+            var followersCount = _blogdbContext.Follows
+                .Count(f => f.FollowingId == currentUser.Id);
+            var followingCount = _blogdbContext.Follows
+                .Count(f => f.FollowerId == currentUser.Id);
+            var featuredPosts = _blogdbContext.Posts.Where(p => p.AuthorId == currentUser.Id).OrderByDescending(p => p.ViewCount).Include(p => p.Likes).Include(p => p.Comments).Take(2).ToList();
+            var recentPosts = _blogdbContext.Posts.Where(p => p.AuthorId == currentUser.Id).OrderByDescending(p => p.CreatedTime).Include(p => p.Likes).Include(p => p.Comments).Take(2).ToList();
+
             var extendedProfile = new ExtendedProfileDto()
             {
                 Id = currentUser.Id.ToString(),
@@ -218,11 +287,11 @@ namespace BlogProject.Infrastructure.Services
                 Bio = currentUser.Bio,
                 WorkingAt = currentUser.WorkingAt,
                 Country = currentUser.Country,
-                FollowersCount = currentUser.FollowersCount,
-                FollowingCount = currentUser.FollowingCount,
-                PostCount = (currentUser.Posts is null) ? 0 : currentUser.Posts.Count(),
-                CommentCount = (currentUser.Comments is null) ? 0 : currentUser.Comments.Count(),
-                LikeCount = (currentUser.Likes is null) ? 0 : currentUser.Likes.Count(),
+                FollowersCount = followersCount,
+                FollowingCount = followingCount,
+                PostCount = postCount,
+                CommentCount = commentCount,
+                LikeCount = likeCount,
                 CurrentPosition = currentUser.CurrentPosition,
                 City = currentUser.City,
                 Address = currentUser.Address,
@@ -239,11 +308,13 @@ namespace BlogProject.Infrastructure.Services
                 RegisteredDate = currentUser.RegisteredDate,
                 ProfilePicture = currentUser.ProfilePicture,
                 CoverImagePicture = currentUser.CoverImagePicture,
-                WorkingAtLogo = currentUser.WorkingAtLogo
+                WorkingAtLogo = currentUser.WorkingAtLogo,
+                FeaturedPosts = featuredPosts,
+                RecentPosts = recentPosts
             };
-            extendedProfile.CommentCount = await GetCommentCountByUserAsync(currentUser);
-            extendedProfile.LikeCount = await GetUserTotalLikeCount(currentUser);
-            extendedProfile.PostCount = await GetPostCountByUserAsync(currentUser);
+            //extendedProfile.CommentCount = await GetCommentCountByUserAsync(currentUser);
+            //extendedProfile.LikeCount = await GetUserTotalLikeCount(currentUser);
+            //extendedProfile.PostCount = await GetPostCountByUserAsync(currentUser);
 
 
 
@@ -286,7 +357,7 @@ namespace BlogProject.Infrastructure.Services
                 //From ExtendedProfileDto
                 Id = Guid.Parse(step3.Id),
                 PhoneNumber = step3.PhoneNumber,
-                Email =step3.EmailAddress,
+                Email = step3.EmailAddress,
                 EmailConfirmed = step3.EmailConfirmed,
                 TwoFactorEnabled = step3.TwoFactorEnabled,
                 LockoutEnabled = step3.LockoutEnabled,
@@ -351,7 +422,15 @@ namespace BlogProject.Infrastructure.Services
             {
                 Directory.CreateDirectory(uploadPath);
             }
-            var fileName = formFile.FileName.Replace(" ", "_");
+            string fileName;
+            if (formFile.FileName.Length > 100)
+            {
+                fileName = formFile.FileName.Replace(" ", "_").Substring(0, 100);
+            }
+            else
+            {
+                fileName = formFile.FileName.Replace(" ", "_");
+            }
             string filePath = Path.Combine(uploadPath, fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -374,7 +453,7 @@ namespace BlogProject.Infrastructure.Services
 
         public async Task<List<AppUser>> MostContributors(int countUser)
         {
-            var users = await _userManager.Users.OrderByDescending(x => x.Posts.Count).Take(countUser).ToListAsync();
+            var users = await _userManager.Users.OrderByDescending(x => x.Posts.Count).Take(countUser).Include(p => p.Followers).ToListAsync();
             return users;
         }
         public async Task<List<AppUser>> NewUsers(int countUser)
@@ -498,7 +577,7 @@ namespace BlogProject.Infrastructure.Services
 
         public async Task<AppUser?> FindByUsername(string? userName)
         {
-            if(userName == null)
+            if (userName == null)
             {
                 return null;
             }
@@ -656,6 +735,62 @@ namespace BlogProject.Infrastructure.Services
                 {
                     IsSuccess = false,
                     Errors = new List<IdentityError>() { new IdentityError { Code = "ActivateUserError", Description = "An error occurred while activating the user." } }
+                };
+            }
+        }
+        public async Task<ServiceResult<LikeEntity>> PostLikeOrDisLike(string userId, string postId)
+        {
+            var userExist = await _userManager.FindByIdAsync(userId);
+            if (userExist == null)
+            {
+                return new ServiceResult<LikeEntity>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "UserNotFound", Description = "User not found." } }
+                };
+            }
+            var post = await _blogdbContext.Posts.FindAsync(Guid.Parse(postId));
+            if (post == null)
+            {
+                return new ServiceResult<LikeEntity>()
+                {
+                    IsSuccess = false,
+                    Errors = new List<IdentityError>() { new IdentityError { Code = "PostNotFound", Description = "Post not found." } }
+                };
+            }
+            var like = await _blogdbContext.Likes.FirstOrDefaultAsync(x => x.UserId == Guid.Parse(userId) && x.PostId == Guid.Parse(postId));
+            if (like is null)
+            {
+                like = new LikeEntity()
+                {
+                    UserId = Guid.Parse(userId),
+                    PostId = Guid.Parse(postId)
+                };
+                try
+                {
+                    await _blogdbContext.Likes.AddAsync(like);
+                    return new ServiceResult<LikeEntity>()
+                    {
+                        IsSuccess = true,
+                        Data = like
+                    };
+                }
+                catch (Exception)
+                {
+                    return new ServiceResult<LikeEntity>()
+                    {
+                        IsSuccess = false,
+                        Errors = new List<IdentityError>() { new IdentityError { Code = "LikePostError", Description = "An error occurred while liking the post." } }
+                    };
+                }
+            }
+            else
+            {
+                _blogdbContext.Likes.Remove(like);
+                return new ServiceResult<LikeEntity>()
+                {
+                    IsSuccess = true,
+                    Data = like
                 };
             }
         }

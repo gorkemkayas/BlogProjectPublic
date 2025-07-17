@@ -11,7 +11,7 @@ namespace BlogProject.Web.Mapping
     {
         public MappingProfile() 
         {
-            CreateMap<CategoryViewModel, CategoryDto>().ReverseMap();
+            CreateMap<BlogProject.Areas.Admin.Models.CategoryViewModel, CategoryDto>().ReverseMap();
             CreateMap<CategoryAddViewModel, CategoryAddDto>().ReverseMap();
             CreateMap<CategoryUpdateViewModel, CategoryUpdateDto>().ReverseMap();
             CreateMap<CategoryEntity,CategoryUpdateViewModel>().ReverseMap();

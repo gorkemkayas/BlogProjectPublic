@@ -6,12 +6,17 @@ using BlogProject.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using static BlogProject.Domain.Entities.AppUser;
 
 namespace BlogProject.Application.Interfaces
 {
     public interface IUserService
     {
+        Task<int> GetFollowerCountByUserId(string userId);
+        Task<bool> IsFollowing(string follower, string following);
+        Task<bool> ToggleFollowAsync(string followerId, string followingId);
+        Task<ServiceResult<LikeEntity>> PostLikeOrDisLike(string userId, string postId);
         Task SaveChangesAsync();
         bool CheckEmailConfirmed(AppUser user);
         Task<AppUser?> FindByUsername(string? userName);

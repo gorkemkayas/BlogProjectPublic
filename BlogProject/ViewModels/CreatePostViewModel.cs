@@ -32,7 +32,7 @@ namespace BlogProject.Web.ViewModels
         public string CategoryId { get; set; }
 
         [Display(Name = "Etiketler")]
-        public List<string> TagIds { get; set; } = new List<string>();
+        public List<string>? TagIds { get; set; } = new List<string>();
 
         [Display(Name = "Taslak olarak kaydet")]
         public bool IsDraft { get; set; } = true;

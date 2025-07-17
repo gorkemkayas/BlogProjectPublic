@@ -10,6 +10,7 @@ using BlogProject.Web.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Controllers
 {
@@ -33,6 +34,18 @@ namespace BlogProject.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ToggleFollow(string userId)
+        {
+            var currentUserId = _userManager.GetUserId(User);
+            if (currentUserId == userId || currentUserId is null) return BadRequest();
+
+            var isFollowing = await _userService.ToggleFollowAsync(currentUserId, userId);
+            var followerCount = await _userService.GetFollowerCountByUserId(userId);
+
+            return Json(new { success = true, following = isFollowing, followerCount = followerCount });
+        }
         public IActionResult Index()
         {
             return View();
@@ -297,8 +310,8 @@ namespace BlogProject.Controllers
 
             var currentUser = await _userManager.GetUserAsync(User);
 
-            var postCount = await _commentService.GetCommentCountByUserAsync(visitedUser!);
-            var commentCount = await _userService.GetCommentCountByUserAsync(visitedUser!);
+            var postCount = await _userService.GetPostCountByUserAsync(visitedUser!);
+            var commentCount = await _commentService.GetCommentCountByUserAsync(visitedUser!);
 
 
             if (currentUser == visitedUser)
@@ -310,8 +323,9 @@ namespace BlogProject.Controllers
                 var mappedProfileInfo2 = _mapper.Map<ExtendedProfileViewModel>(extendedProfileInfo);
                 return View(mappedProfileInfo2);
             }
-
+            var isFollowing = await _userService.IsFollowing(currentUser!.Id.ToString(), visitedUser.Id.ToString());
             var visitorProfileInfo = _userService.GetVisitorProfileInformation(visitedUser);
+            visitorProfileInfo.IsFollowing = isFollowing;
             var mappedProfileInfo = _mapper.Map<ExtendedProfileViewModel>(visitorProfileInfo);
 
 

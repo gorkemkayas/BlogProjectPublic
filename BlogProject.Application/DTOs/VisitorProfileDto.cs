@@ -1,4 +1,5 @@
 ﻿using BlogProject.Application.Validators;
+using BlogProject.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlogProject.Application.DTOs
@@ -6,6 +7,7 @@ namespace BlogProject.Application.DTOs
     public class VisitorProfileDto : BaseProfileDto
     {
         public string UserName { get; set; }
+        public string? VisitedUserId { get; set; }
 
         [Required]
         public string Name { get; set; } = null!;
@@ -59,5 +61,10 @@ namespace BlogProject.Application.DTOs
         public string? CoverImagePicture { get; set; }
 
         public string? WorkingAtLogo { get; set; }
+
+        public List<PostEntity>? FeaturedPosts { get; set; }
+        public List<PostEntity>? RecentPosts { get; set; }
+
+        public bool? IsFollowing { get; set; }
     }
 }
