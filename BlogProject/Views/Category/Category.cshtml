@@ -360,6 +360,7 @@
 
         /* Post Cards */
         .post-card {
+            min-height: 400px;
             background: var(--white);
             border: 1px solid var(--medium-gray);
             border-radius: 8px;
@@ -367,9 +368,27 @@
             transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
+            flex: 0 0 calc(100% / 3); /* 3 kartlık yapı */
         }
 
             .post-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            }
+
+        .post-card-sub {
+            max-height:200px;
+            background: var(--white);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            flex: 0 0 calc(100% / 3); /* 3 kartlık yapı */
+        }
+
+            .post-card-sub:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
             }
@@ -391,6 +410,18 @@
             flex-shrink: 0;
         }
 
+        .post-img-container-bottom {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .posts-grid.list-view .post-img-container-bottom {
+            width: 320px;
+            /* height: 150px; */
+            flex-shrink: 0;
+        }
+
         .post-img {
             width: 100%;
             height: 100%;
@@ -403,7 +434,7 @@
         }
 
         .post-body {
-            padding: 1.75rem;
+            padding: 1.5rem;
             flex-grow: 1;
         }
 
@@ -627,6 +658,19 @@
                 }
 
                 .posts-grid.list-view .post-img-container {
+                    width: 300px;
+                    height: 200px;
+                }
+
+            .posts-grid-bottom {
+                grid-template-columns: 1fr;
+            }
+
+                .posts-grid-bottom.list-view .post-card {
+                    flex-direction: column;
+                }
+
+                .posts-grid-bottom.list-view .post-img-container {
                     width: 100%;
                     height: 200px;
                 }
@@ -635,6 +679,103 @@
                 flex-wrap: wrap;
             }
         }</style>
+    <style>
+        <style >
+        @@keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+    </style>
+    <style>
+    .post-slider {
+    display: flex;
+    gap: 20px;
+    transition: all 0.3s ease-in-out;
+            align-items: stretch; /* 👈 hepsini aynı yüksekliğe zorlar */
+    }
+    .slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    background: white;
+    border: 1px solid #ccc;
+    width: 40px;
+    height: 40px;
+    z-index: 2;
+    }
+    .slider-nav.left {
+    left: -50px;
+    }
+    .slider-nav.right {
+    right: -90px;
+    }
+
+        .post-img-container {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .post-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    </style>
+
+
+    <style>
+        .slider-nav-v5 {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 52px;
+            border: none;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #333;
+            transition: all 0.4s ease;
+            z-index: 2;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+            .slider-nav-v5:hover {
+                transform: translateY(-55%) rotate(5deg);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+                background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+                color: white;
+            }
+
+            .slider-nav-v5.prev {
+                left: -80px;
+            }
+
+            .slider-nav-v5.next {
+                right:-120px;
+            }
+    </style>
 </head>
 <body>
 
@@ -673,54 +814,23 @@
     <!-- Posts Section -->
     <section class="posts-section">
         <div class="container">
-            @if (Model.Posts.Any())
+            @if (Model.MostViewedPosts.Any())
             {
-                <div class="posts-grid" id="postsGrid">
-                    @foreach (var post in Model.Posts)
-                    {
-                        <article class="post-card post-title-link">
-                            <a class="text-decoration-none" asp-controller="post" asp-action="postdetails" asp-route-id="@post.Id">
-                                <div class="post-img-container">
-                                    <img src="@post.CoverImageUrl" alt="@post.Title" class="post-img">
-                                </div>
-                                <div class="post-body">
-                                    <div class="post-meta">
-                                        <span class="post-category">@post.Category.Name</span>
-                                        <span class="post-date">
-                                            <i class="fas fa-calendar-alt"></i>
-                                            @post.CreatedTime.ToString("dd MMM yyyy")
-                                        </span>
-                                    </div>
-                                    <h3 class="post-title">@post.Title</h3>
-                                    <p class="post-excerpt">@post.Subtitle</p>
-                                    <div class="post-footer">
-                                        <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id" class="read-more">
-                                            Devamını Oku
-                                        </a>
-                                        <div class="post-stats">
-                                            <span>
-                                                <i class="fas fa-eye"></i>
-                                                @post.ViewCount
-                                            </span>
-                                            <span>
-                                                <i class="fas fa-clock"></i>
 
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </article>
-                    }
-                </div>
+                <h4 class=" text-center mb-4" style="font-size: 1.5rem; font-weight: 500; position: relative; padding-bottom: 6px;">
+                    What interests our readers
+                    <span style="position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: 40%; height: 2px; background: linear-gradient(to right, #ff6a7f, #ff9a44); border-radius: 1px;"></span>
+                </h4>
 
-                <!-- Pagination -->
-                <div class="pagination">
-                    <a href="#">&laquo;</a>
-                    <span class="current">1</span>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">&raquo;</a>
+
+                <div class="post-slider-container position-relative" id="postsGrid" data-category-id="@Model.Category.Id">
+                    <button id="prevBtn" class="slider-nav-v5 prev left d-none">&#10094;</button>
+
+                    <div id="postSlider" class="post-slider d-flex">
+                        @await Html.PartialAsync("_SliderPostPartial", Model.MostViewedPosts.Take(3).ToList())
+                    </div>
+
+                    <button id="nextBtn" class="slider-nav-v5 next right">&#10095;</button>
                 </div>
             }
             else
@@ -736,78 +846,215 @@
     </section>
     <canvas id="postChart" width="800" height="200"></canvas>
     <!-- Posts Section -->
-    <section class="posts-section">
+    <section class="posts-section mt-4">
         <div class="container">
-            @if (Model.Posts.Any())
-            {
-                <div class="posts-grid list-view" id="postsGrid">
-                    @foreach (var post in Model.Posts)
-                    {
-                        <article class="post-card post-title-link">
-                            <a class="text-decoration-none" asp-controller="post" asp-action="postdetails" asp-route-id="@post.Id">
-                                <div class="post-img-container">
-                                    <img src="@post.CoverImageUrl" alt="@post.Title" class="post-img">
-                                </div>
-                                <div class="post-body">
-                                    <div class="post-meta">
-                                        <span class="post-category">@post.Category.Name</span>
-                                        <span class="post-date">
-                                            <i class="fas fa-calendar-alt"></i>
-                                            @post.CreatedTime.ToString("dd MMM yyyy")
-                                        </span>
-                                    </div>
-                                    <h3 class="post-title">@post.Title</h3>
-                                    <p class="post-excerpt">@post.Subtitle</p>
-                                    <div class="post-footer">
-                                        <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id" class="read-more">
-                                            Devamını Oku
-                                        </a>
-                                        <div class="post-stats">
-                                            <span>
-                                                <i class="fas fa-eye"></i>
-                                                @post.ViewCount
-                                            </span>
-                                            <span>
-                                                <i class="fas fa-clock"></i>
-
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </article>
-                    }
+            <div class="posts-grid list-view" id="postsGrid">
+                <h4 class="text-center mb-4" style="font-size: 1.5rem; font-weight: 500; position: relative; display: inline-block; padding-bottom: 6px;">
+                    Our readers loved these.
+                    <span style="position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: 40%; height: 2px; background: linear-gradient(to right, #ff6a7f, #ff9a44); border-radius: 1px;"></span>
+                </h4>
+                <div id="scrollPostContainer" data-category-id="@Model.Category.Id">
+                    @await Html.PartialAsync("_MostLikedPostsPartial", Model.MostLikedPosts)
                 </div>
 
-                <!-- Pagination -->
-                <div class="pagination">
-                    <a href="#">&laquo;</a>
-                    <span class="current">1</span>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">&raquo;</a>
+                <div id="loader" style="display: none; text-align: center;">
+                    <p class="text-muted"><i class="fa-solid fa-spinner"></i></p>
                 </div>
-            }
-            else
-            {
-                <div class="empty-state">
-                    <i class="fas fa-folder-open"></i>
-                    <h3>There are no posts yet</h3>
-                    <p>There are no articles published in this category yet.</p>
-                    <a href="/" class="read-more">Return to Home Page</a>
-                </div>
-            }
+            </div>
         </div>
     </section>
 
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* body {
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                            padding: 20px;
+                        } */
+
+        .related-categories {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); */
+            margin: 20px auto;
+            /* max-width: 600px; */
+        }
+
+            .related-categories h3 {
+                text-align: center;
+                color: black;
+                font-size: 28px;
+                margin-bottom: 30px;
+                font-weight: 300;
+                position: relative;
+            }
+
+                .related-categories h3:after {
+                    content: '';
+                    position: absolute;
+                    bottom: -10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 250px;
+                    height: 2px;
+                    background: red;
+                    border-radius: 2px;
+                }
+
+        .categories-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .category-card {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 14px;
+            min-width: auto;
+            white-space: nowrap;
+        }
+
+            .category-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .category-card:hover::before {
+                left: 100%;
+            }
+
+            .category-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                border-color: red;
+            }
+
+            .category-card i {
+                font-size: 14px;
+                margin-right: 8px;
+                color: black;
+                min-width: 16px;
+                text-align: center;
+            }
+
+            .category-card:hover i {
+                color: red;
+                transform: scale(1.1);
+            }
+
+            .category-card h4 {
+                font-size: 14px;
+                font-weight: 500;
+                margin: 0;
+            }
+
+            .category-card span {
+                color: #95a5a6;
+                font-size: 12px;
+                margin-left: 8px;
+            }
+
+                .category-card span:after {
+                    content: '';
+                    margin-left: 0;
+                }
+
+            .category-card:hover span:after {
+                transform: none;
+            }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .related-categories {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .category-card {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+                .category-card i {
+                    font-size: 12px;
+                    margin-right: 6px;
+                }
+
+                .category-card h4 {
+                    font-size: 12px;
+                }
+        }
+
+        /* Animasyonlar */
+        .category-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+            .category-card:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+
+            .category-card:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            .category-card:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+
+            .category-card:nth-child(4) {
+                animation-delay: 0.4s;
+            }
+
+            .category-card:nth-child(5) {
+                animation-delay: 0.5s;
+            }
+
+            .category-card:nth-child(6) {
+                animation-delay: 0.6s;
+            }
+
+        @@keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
     <!-- Related Categories -->
     <section class="related-categories">
         <div class="container">
-            <h3>Diğer Kategoriler</h3>
+            <h3>All categories</h3>
             <div class="categories-grid">
                 @foreach (var category in Model.RelatedCategories)
                 {
-                    <a href="/category/@category.Id" class="category-card">
+                    <a href="/category/category/@category.Id" class="category-card">
                         <i class="fas fa-@(GetCategoryIcon(category.Name))"></i>
                         <h4>@category.Name</h4>
                         <span></span>
@@ -969,3 +1216,112 @@
 
 </body>
 </html>
+
+<style>
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        opacity: 0;
+    }
+
+        .fade-in.animate {
+            animation: fadeInUp 0.5s ease-in-out;
+            opacity: 1;
+        }
+</style>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        window.categoryId = '@ViewBag.CategoryId';
+        let page = 2;
+        let isLoading = false;
+        let categoryId = $("#scrollPostContainer").data("category-id");
+
+        $(window).on("scroll", function () {
+            if (isLoading) return;
+
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 250) {
+                isLoading = true;
+                $("#loader").show();
+
+                $.get("/Category/LoadMoreMostViewedPostScrollPosts?page=" + page + "&categoryId=" + categoryId, function (data) {
+                    if ($.trim(data) === "") {
+                        $("#loader").html("<p class='text-muted'>All posts listed.</p>");
+                    } else {
+                        // Gelen HTML'yi jQuery nesnesine çevir
+        const $newPosts = $(data);
+
+        // fade-in class'ını baştan veriyoruz (başlangıçta görünmez olsun diye)
+        $newPosts.addClass("fade-in");
+
+        // DOM'a ekle
+        $("#scrollPostContainer").append($newPosts);
+        setTimeout(() => {
+            $newPosts.addClass("animate");
+        }, 50);
+                        page++;
+                        isLoading = false;
+                        // $("#loader").hide();
+                        $("#loader").html("<p class='text-muted'>Scroll for more posts</p>");
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let currentPage = 1;
+            const slider = document.getElementById('postSlider');
+            const categoryId = document.querySelector('.post-slider-container').dataset.categoryId;
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            togglePrevButton();
+
+            nextBtn.addEventListener('click', () => {
+                currentPage++;
+                loadPosts(currentPage);
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadPosts(currentPage);
+                }
+            });
+
+            function loadPosts(page) {
+                $.get(`/Category/GetSliderPosts?page=${page}&categoryId=${categoryId}`, function (data) {
+                    if ($.trim(data) === "") {
+                        currentPage--; // ileri gittik ama boş döndüyse geri al
+                        return;
+                    }
+
+                    slider.innerHTML = data;
+                    togglePrevButton();
+                });
+            }
+
+            function togglePrevButton() {
+                if (currentPage === 1) {
+                    prevBtn.classList.add("d-none");
+                } else {
+                    prevBtn.classList.remove("d-none");
+                }
+            }
+        });
+    </script>
+
+}

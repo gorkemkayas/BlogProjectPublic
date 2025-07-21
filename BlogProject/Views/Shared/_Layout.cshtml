@@ -94,10 +94,255 @@
         }
     </style>
 
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        /* Sabit geri bildirim butonu */
+        .feedback-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
+            .feedback-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+                background: linear-gradient(135deg, #c82333, #a71e2a);
+            }
 
+            .feedback-button:active {
+                transform: translateY(0);
+            }
 
+        /* Geri bildirim formu overlay */
+        .feedback-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+
+        }
+
+        @@keyframes slideIn {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        }
+
+        /* Form içeriği */
+        .feedback-content {
+            background: white;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+            /* Başlık */
+            .feedback-content h2 {
+                color: #212529;
+                font-size: 24px;
+                font-weight: 700;
+                margin-bottom: 8px;
+                text-align: center;
+            }
+
+        .feedback-subtitle {
+            color: #6c757d;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* Kapatma butonu */
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.2s ease;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+        }
+
+            .close-btn:hover {
+                color: #dc3545;
+                background: #f8f9fa;
+            }
+
+        /* Textarea */
+        .feedback-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+            background: #fff;
+            color: #212529;
+        }
+
+            .feedback-textarea:focus {
+                outline: none;
+                border-color: #dc3545;
+                box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+            }
+
+            .feedback-textarea::placeholder {
+                color: #adb5bd;
+            }
+
+        /* Buton grubu */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+
+        /* İptal butonu */
+        .cancel-btn {
+            background: transparent;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+            .cancel-btn:hover {
+                background: #f8f9fa;
+                border-color: #dee2e6;
+                color: #495057;
+            }
+
+        /* Gönder butonu */
+        .submit-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+        }
+
+            .submit-btn:hover {
+                background: linear-gradient(135deg, #c82333, #a71e2a);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+            }
+
+            .submit-btn:active {
+                transform: translateY(0);
+            }
+
+        /* Başarı mesajı */
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Responsif tasarım */
+        @@media (max-width: 768px) {
+            .feedback-content
+
+        {
+            padding: 24px;
+            margin: 20px;
+        }
+
+        .feedback-button {
+            bottom: 20px;
+            right: 20px;
+            padding: 14px 20px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        .cancel-btn, .submit-btn {
+            width: 100%;
+        }
+
+        }
+    </style>
     <style>
 
         /* Header */
@@ -140,34 +385,6 @@
         display: flex;
         align-items: center;
         gap: 1rem;
-        }
-
-        .btn-signin, .btn-signup {
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        transition: all 0.3s;
-        }
-
-        .btn-signin {
-        border: 1px solid var(--medium-gray);
-        color: var(--dark-gray);
-        background: transparent;
-        }
-
-        .btn-signin:hover {
-        background-color: var(--light-gray);
-        }
-
-        .btn-signup {
-        border: 1px solid var(--primary);
-        background-color: var(--primary);
-        color: var(--white);
-        }
-
-        .btn-signup:hover {
-        background-color: #1d4ed8;
         }
 
         .user-dropdown {
@@ -294,7 +511,6 @@
         font-size: 0.85rem;
         }
     </style>
-
     <style>
         .ad-left, .ad-right {
         position: fixed;
@@ -408,7 +624,6 @@
         }
 
     </style>
-
     <style>
         .footer {
         background-color: white !important;
@@ -584,7 +799,543 @@
         }
         }
     </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+/*         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            position: relative;
+        } */
+
+        /* Sabit buton grubu */
+        .floating-buttons {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .development-button {
+            background: linear-gradient(135deg, #212529, #495057);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(33, 37, 41, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .development-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(33, 37, 41, 0.4);
+                background: linear-gradient(135deg, #495057, #6c757d);
+            }
+
+            .development-button:active {
+                transform: translateY(0);
+            }
+
+        /* Geri bildirim butonu */
+        .feedback-button {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .feedback-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+                background: linear-gradient(135deg, #c82333, #a71e2a);
+            }
+
+            .feedback-button:active {
+                transform: translateY(0);
+            }
+
+        /* Geri bildirim formu overlay */
+        .feedback-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+
+        }
+
+        @@keyframes slideIn {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        }
+
+        /* Form içeriği */
+        .feedback-content {
+            background: white;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+            /* Başlık */
+            .feedback-content h2 {
+                color: #212529;
+                font-size: 24px;
+                font-weight: 700;
+                margin-bottom: 8px;
+                text-align: center;
+            }
+
+        .feedback-subtitle {
+            color: #6c757d;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* Kapatma butonu */
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.2s ease;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+        }
+
+            .close-btn:hover {
+                color: #dc3545;
+                background: #f8f9fa;
+            }
+
+        /* Textarea */
+        .feedback-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+            background: #fff;
+            color: #212529;
+        }
+
+            .feedback-textarea:focus {
+                outline: none;
+                border-color: #dc3545;
+                box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+            }
+
+            .feedback-textarea::placeholder {
+                color: #adb5bd;
+            }
+
+        /* Buton grubu */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+
+        /* İptal butonu */
+        .cancel-btn {
+            background: transparent;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+            .cancel-btn:hover {
+                background: #f8f9fa;
+                border-color: #dee2e6;
+                color: #495057;
+            }
+
+        /* Gönder butonu */
+        .submit-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+        }
+
+            .submit-btn:hover {
+                background: linear-gradient(135deg, #c82333, #a71e2a);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+            }
+
+            .submit-btn:active {
+                transform: translateY(0);
+            }
+
+        /* Başarı mesajı */
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Geliştirme durumu stilleri */
+        .development-section {
+            margin-bottom: 16px;
+        }
+
+        /* .section-title {
+            color: #212529;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        } */
+
+        .development-items {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .development-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #e9ecef;
+            transition: all 0.2s ease;
+        }
+
+            .development-item.active {
+                border-left-color: #dc3545;
+                background: #fff5f5;
+            }
+
+            .development-item.bug {
+                border-left-color: #ffc107;
+                background: #fffbf0;
+            }
+
+            .development-item.completed {
+                border-left-color: #28a745;
+                background: #f0fff4;
+            }
+
+            .development-item:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #212529;
+            font-size: 16px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+            .status-badge.in-progress {
+                background: #dc3545;
+                color: white;
+            }
+
+            .status-badge.planned {
+                background: #6c757d;
+                color: white;
+            }
+
+            .status-badge.bug {
+                background: #ffc107;
+                color: #212529;
+            }
+
+            .status-badge.completed {
+                background: #28a745;
+                color: white;
+            }
+
+        .item-description {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-on-feedback {
+            width: 100%;
+            height: 6px;
+            /* background: #e9ecef; */
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #dc3545, #c82333);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text,
+        .eta-text,
+        .priority-text,
+        .completion-text {
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .priority-text {
+            color: #ffc107;
+        }
+
+        .completion-text {
+            color: #28a745;
+        }
+        @@media (max-width: 768px) {
+            .feedback-content
+
+        {
+            padding: 24px;
+            margin: 20px;
+        }
+
+        .feedback-button {
+            bottom: 20px;
+            right: 20px;
+            padding: 14px 20px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        .cancel-btn, .submit-btn {
+            width: 100%;
+        }
+
+        }
+
+        .btn-signin, .btn-signup {
+            padding: 0.5rem 1rem;
+            border-radius: 6px; /* Daha yumuşak köşeler */
+            font-size: 0.9rem;
+            font-weight: 600; /* Daha kalın yazı */
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px; /* Harf aralığı */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Hafif gölge */
+            text-transform: uppercase; /* Tüm harfler büyük */
+            font-family: 'Segoe UI', Roboto, sans-serif; /* Modern font */
+        }
+
+        .btn-signin {
+            border: 1px solid #000; /* Siyah border */
+            color: #000; /* Siyah yazı */
+            background: #fff; /* Beyaz arkaplan */
+        }
+
+            .btn-signin:hover {
+                background-color: #f8f8f8; /* Çok hafif gri */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hover gölgesi */
+                transform: translateY(-1px); /* Hafif yükselme efekti */
+            }
+
+        .btn-signup {
+            border: 1px solid #000; /* Siyah border */
+            background-color: #000 !important; /* Siyah arkaplan */
+            color: #fff; /* Beyaz yazı */
+        }
+
+            .btn-signup:hover {
+                background-color: #333; /* Koyu gri */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                transform: translateY(-1px);
+            }
+
+            /* Aktif durum için ekstra efekt */
+            .btn-signin:active, .btn-signup:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+    </style>
+    <style>
+        .btn-secondary, .btn-primary {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            text-transform: uppercase;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            cursor: pointer;
+            height: auto; /* Orjinal yüksekliği koru */
+            line-height: 1.5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #e0e0e0;
+        }
+
+            .btn-secondary:hover {
+                background-color: #f5f5f5;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transform: translateY(-1px);
+                border-color: #d0d0d0;
+                color:black;
+            }
+
+        .btn-primary {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+            .btn-primary:hover {
+                background-color: #1a1a1a;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                transform: translateY(-1px);
+            }
+
+            /* Active/focus states */
+            .btn-secondary:active,
+            .btn-primary:active,
+            .btn-secondary:focus,
+            .btn-primary:focus {
+                outline: none;
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Disabled state */
+            .btn-secondary:disabled,
+            .btn-primary:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none !important;
+            }</style>
+    <style>
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease-in-out;
+        }</style>
 </head>
 @if (TempData["Succeed"] != null)
 {
@@ -715,8 +1466,8 @@ else if (TempData["Failed"] != null)
                         }
                         else
                         {
-                            <a href="/user/signin" class="btn btn-signin btn-sm px-2  me-2">Sign In</a>
-                            <a href="/user/signup" class="btn btn-signup btn-sm px-2">Sign Up</a>
+                            <a href="/user/signin" class="btn btn-secondary px-2  me-2">Sign In</a>
+                            <a href="/user/signup" class="btn btn-primary px-2">Sign Up</a>
                         }
                     </div>
 
@@ -743,13 +1494,313 @@ else if (TempData["Failed"] != null)
         </div>
     </header>
 
+
     <main class="flex-grow-1">
         <div class="container">
 
             @RenderBody()
         </div>
     </main>
+    <!-- Sabit geri bildirim butonu -->
+    <button id="feedbackButton" class="feedback-button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        Give us your feedback
+    </button>
 
+    <!-- Geri bildirim formu (başta gizli) -->
+    <div id="feedbackForm" class="feedback-form">
+        <div class="feedback-content">
+            <button id="closeFeedback" class="close-btn">&times;</button>
+            <h2>Give us your feedback</h2>
+            <p class="feedback-subtitle">Your feedback is very important for us to improve ourselves and offer you a better platform.</p>
+
+            <textarea id="feedbackText"
+                      class="feedback-textarea"
+                      placeholder="Please describe in detail your experience, suggestions or issues you encountered..."
+                      rows="5"></textarea>
+
+            <div class="button-group">
+                <button id="cancelFeedback" class="cancel-btn">Cancel</button>
+                <button id="submitFeedback" class="submit-btn" style="background: linear-gradient(135deg, #dc3545, #c82333);">Submit</button>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                ✓ Your feedback has been sent successfully. Thank you!
+            </div>
+        </div>
+    </div>
+
+    <!-- Sabit buton grubu -->
+    <div class="floating-buttons">
+        <button id="developmentButton" class="development-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            Progress & Plans
+        </button>
+    </div>
+
+    <!-- Development Status Modal -->
+    <div id="developmentForm" class="feedback-form">
+        <div class="feedback-content" style="max-width: 700px;">
+            <button id="closeDevelopment" class="close-btn">&times;</button>
+            <h2>Our Current Progress & Plans</h2>
+            <p class="feedback-subtitle">A snapshot of what we're working on and what's coming next</p>
+
+            <!-- Planned Features -->
+            <div class="development-section">
+                <h3 class="section-title">📋 Planned Features</h3>
+                <div class="development-items">
+                    <div class="development-item">
+                        <div class="item-header">
+                            <span class="item-title">Advanced Analytics</span>
+                            <span class="status-badge planned">Planned</span>
+                        </div>
+                        <p class="item-description">A detailed reporting and statistics system</p>
+                        <small class="eta-text">Estimated: Q4 2025</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Known Issues -->
+            <div class="development-section">
+                <h3 class="section-title">🐛 Known Issues</h3>
+                <div class="development-items">
+                    <div class="development-item bug">
+                        <div class="item-header">
+                            <span class="item-title">Rich text editor problem</span>
+                            <span class="status-badge bug">Bug</span>
+                        </div>
+                        <p class="item-description">Error that may occur while creating a post</p>
+                        <small class="priority-text">Priority: High</small>
+                    </div>
+
+                    <div class="development-item bug">
+                        <div class="item-header">
+                            <span class="item-title">About storing the content of the post.</span>
+                            <span class="status-badge bug">Bug</span>
+                        </div>
+                        <p class="item-description">
+                            Storing the entire post content as binary is a problem. We'll work on it.
+                        </p>
+                        <small class="priority-text">Priority: High</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Updates -->
+            <div class="development-section">
+                <h3 class="section-title">✅ Recent Updates</h3>
+                <div class="development-items">
+                    <div class="development-item completed">
+                        <div class="item-header">
+                            <span class="item-title">Feedback System</span>
+                            <span class="status-badge completed">Completed</span>
+                        </div>
+                        <p class="item-description">User feedback form and admin panel added</p>
+                        <small class="completion-text">July 18, 2025</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="closeDevelopmentBtn" class="cancel-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="feedbackForm" class="feedback-form">
+        <div class="feedback-content">
+            <button id="closeFeedback" class="close-btn">&times;</button>
+            <h2>Geri Bildirim</h2>
+            <p class="feedback-subtitle">Görüşleriniz bizim için çok değerli</p>
+
+            <textarea id="feedbackText"
+                      class="feedback-textarea"
+                      placeholder="Lütfen deneyiminizi, önerilerinizi veya karşılaştığınız sorunları detaylı olarak açıklayın..."
+                      rows="5"></textarea>
+
+            <div class="button-group">
+                <button id="cancelFeedback" class="cancel-btn">İptal</button>
+                <button id="submitFeedback" class="submit-btn">Gönder</button>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                ✓ Geri bildiriminiz başarıyla gönderildi. Teşekkür ederiz!
+            </div>
+        </div>
+    </div>
+    <script>
+        // DOM elementleri
+        const feedbackButton = document.getElementById('feedbackButton');
+        const feedbackForm = document.getElementById('feedbackForm');
+        const closeFeedback = document.getElementById('closeFeedback');
+        const cancelFeedback = document.getElementById('cancelFeedback');
+        const submitFeedback = document.getElementById('submitFeedback');
+        const feedbackText = document.getElementById('feedbackText');
+        const successMessage = document.getElementById('successMessage');
+
+        // Geliştirme durumu elementleri
+        const developmentButton = document.getElementById('developmentButton');
+        const developmentForm = document.getElementById('developmentForm');
+        const closeDevelopment = document.getElementById('closeDevelopment');
+        const closeDevelopmentBtn = document.getElementById('closeDevelopmentBtn');
+
+        // Geri bildirim formu açma
+        feedbackButton.addEventListener('click', () => {
+            feedbackForm.style.display = 'flex';
+            feedbackText.focus();
+        });
+
+        // Geliştirme durumu formu açma
+        developmentButton.addEventListener('click', () => {
+            developmentForm.style.display = 'flex';
+        });
+
+        // Geri bildirim formu kapatma fonksiyonu
+        function closeFeedbackForm() {
+            feedbackForm.style.display = 'none';
+            feedbackText.value = '';
+            successMessage.style.display = 'none';
+        }
+
+        // Geliştirme durumu formu kapatma fonksiyonu
+        function closeDevelopmentForm() {
+            developmentForm.style.display = 'none';
+        }
+
+        // Geri bildirim kapatma butonları
+        closeFeedback.addEventListener('click', closeFeedbackForm);
+        cancelFeedback.addEventListener('click', closeFeedbackForm);
+
+        // Geliştirme durumu kapatma butonları
+        closeDevelopment.addEventListener('click', closeDevelopmentForm);
+        closeDevelopmentBtn.addEventListener('click', closeDevelopmentForm);
+
+        // Overlay'e tıklayınca kapatma
+        feedbackForm.addEventListener('click', (e) => {
+            if (e.target === feedbackForm) {
+                closeFeedbackForm();
+            }
+        });
+
+        developmentForm.addEventListener('click', (e) => {
+            if (e.target === developmentForm) {
+                closeDevelopmentForm();
+            }
+        });
+
+        // ESC tuşu ile kapatma
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (feedbackForm.style.display === 'flex') {
+                    closeFeedbackForm();
+                }
+                if (developmentForm.style.display === 'flex') {
+                    closeDevelopmentForm();
+                }
+            }
+        });
+
+        // Geri bildirim gönderme
+        submitFeedback.addEventListener('click', () => {
+            const feedback = feedbackText.value.trim();
+
+            if (feedback === '') {
+                alert('Lütfen geri bildiriminizi yazın.');
+                return;
+            }
+
+            // Burada gerçek bir API çağrısı yapabilirsiniz
+            console.log('Geri bildirim gönderildi:', feedback);
+
+            // Başarı mesajını göster
+            successMessage.style.display = 'block';
+            feedbackText.value = '';
+
+            // 2 saniye sonra formu kapat
+            setTimeout(() => {
+                closeFeedbackForm();
+            }, 2000);
+        });
+
+        // Textarea otomatik boyutlandırma
+        feedbackText.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.max(120, this.scrollHeight) + 'px';
+        });
+    </script>
+    <script>
+        // DOM elementleri
+                const feedbackButton = document.getElementById('feedbackButton');
+                const feedbackForm = document.getElementById('feedbackForm');
+                const closeFeedback = document.getElementById('closeFeedback');
+                const cancelFeedback = document.getElementById('cancelFeedback');
+                const submitFeedback = document.getElementById('submitFeedback');
+                const feedbackText = document.getElementById('feedbackText');
+                const successMessage = document.getElementById('successMessage');
+
+                // Formu açma
+                feedbackButton.addEventListener('click', () => {
+                    feedbackForm.style.display = 'flex';
+                    feedbackText.focus();
+                });
+
+                // Formu kapatma fonksiyonu
+                function closeFeedbackForm() {
+                    feedbackForm.style.display = 'none';
+                    feedbackText.value = '';
+                    successMessage.style.display = 'none';
+                }
+
+                // Kapatma butonları
+                closeFeedback.addEventListener('click', closeFeedbackForm);
+                cancelFeedback.addEventListener('click', closeFeedbackForm);
+
+                // Overlay'e tıklayınca kapatma
+                feedbackForm.addEventListener('click', (e) => {
+                    if (e.target === feedbackForm) {
+                        closeFeedbackForm();
+                    }
+                });
+
+                // ESC tuşu ile kapatma
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && feedbackForm.style.display === 'flex') {
+                        closeFeedbackForm();
+                    }
+                });
+
+                // Geri bildirim gönderme
+                submitFeedback.addEventListener('click', () => {
+                    const feedback = feedbackText.value.trim();
+
+                    if (feedback === '') {
+                        alert('Please write your feedback.');
+                        return;
+                    }
+
+                    // Burada gerçek bir API çağrısı yapabilirsiniz
+                    console.log('Feedback sent:', feedback);
+
+                    // Başarı mesajını göster
+                    successMessage.style.display = 'block';
+                    feedbackText.value = '';
+
+                    // 2 saniye sonra formu kapat
+                    setTimeout(() => {
+                        closeFeedbackForm();
+                    }, 2000);
+                });
+
+                // Textarea otomatik boyutlandırma
+                feedbackText.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.max(120, this.scrollHeight) + 'px';
+                });
+</script>
     <!-- Premium Footer -->
     @*  <footer class="premium-footer">
         <div class="footer-container">
@@ -1049,6 +2100,7 @@ else if (TempData["Failed"] != null)
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
+
 
     <footer class="footer mt-4"><div class="container"><div class="footer-content"><div class="footer-section"><h3>My Blog</h3><p>We share quality content about technology, lifestyle and personal development. We're here to create an inspiring community that shares your thoughts.</p></div><div class="footer-section"><h3>Categories</h3><ul><li><a href="#">Technology</a></li><li><a href="#">Lifestyle</a></li><li><a href="#">Personal Development</a></li><li><a href="#">Entrepreneurship</a></li><li><a href="#">Design</a></li></ul></div><div class="footer-section"><h3>Quick Links</h3><ul><li><a href="#">About Us</a></li><li><a href="#">Contact</a></li><li><a href="#">Archive</a></li><li><a href="#">RSS</a></li><li><a href="#">Sitemap</a></li></ul></div><div class="footer-section"><h3>Newsletter</h3><p>Subscribe to our newsletter to stay updated with our latest articles.</p><div class="newsletter my-0 py-2"><div class="newsletter-form">@if (User.Identity.IsAuthenticated)
                             {

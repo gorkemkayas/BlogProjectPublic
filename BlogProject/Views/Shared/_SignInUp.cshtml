@@ -17,7 +17,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
 
     <link rel="icon" type="image/png" href="~/favicon.png" />
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">
 
     @* FontAwesome *@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -29,6 +31,13 @@
             max-width: 1200px; /* Maksimum genişlik */
             margin: 0 auto; /* Merkezi hizalama */
         }
+
+        .yellowtail-regular {
+            font-family: "Yellowtail", cursive;
+            font-weight: 400;
+            font-style: normal;
+        }
+
 
         .nav-links {
             display: flex;
@@ -75,7 +84,7 @@
 
 </head>
 <body>
-    <div class="ad-left-full">
+@*     <div class="ad-left-full">
         <video class="ad-video" autoplay loop muted playsinline>
             <source src="~/img/AdLeft.webm" type="video/mp4">
             Your browser does not support the video tag.
@@ -86,7 +95,7 @@
             <source src="~/img/AdRight.webm" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-    </div>
+    </div> *@
 
     <main class="flex-grow-1">
         <div class="container mt-4">
@@ -94,12 +103,6 @@
             @RenderBody()
         </div>
     </main>
-
-    <footer class="bg-white py-3 border-top shadow-sm">
-        <div class="container d-flex justify-content-center">
-            <span class="text-muted">gorkemkayas<span class="text-danger">.</span></span>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

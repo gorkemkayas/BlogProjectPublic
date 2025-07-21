@@ -8,6 +8,9 @@ namespace BlogProject.Application.Interfaces
 {
     public interface ITagService
     {
+        Task<object> GetDailyPostCountsAsync(string tagId);
+        Task<List<TagEntity>> GetRelatedTagsAsync(string tagId);
+        Task<TagEntity> GetByIdAsync(string tagId);
         Task<ServiceResult<TagEntity>> AddTagAsync(TagAddDto model);
         Task<ItemPagination<TagDto>> GetPagedTagsAsync(int page, int pageSize, bool includeDeleted = false);
         Task<TagEntity> GetTagByIdAsync(Guid tagId);

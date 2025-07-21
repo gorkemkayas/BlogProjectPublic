@@ -19,10 +19,10 @@ namespace BlogProject.Web.Mapping
             CreateMap<TagUpdateViewModel, TagUpdateDto>().ReverseMap();
 
             CreateMap<ItemPagination<RoleViewModel>, ItemPagination<RoleDto>>().ReverseMap();
-            CreateMap<ItemPagination<TagViewModel>, ItemPagination<TagDto>>().ReverseMap();
+            CreateMap<ItemPagination<BlogProject.Areas.Admin.Models.TagViewModel>, ItemPagination<TagDto>>().ReverseMap();
 
             CreateMap<RoleViewModel, RoleDto>().ReverseMap();
-            CreateMap<TagViewModel, TagDto>().ReverseMap();
+            CreateMap<BlogProject.Areas.Admin.Models.TagViewModel, TagDto>().ReverseMap();
             CreateMap<TagAddDto,TagAddViewModel>().ReverseMap();
 
             CreateMap<ConfirmEmailDto, ConfirmEmailViewModel>().ReverseMap();

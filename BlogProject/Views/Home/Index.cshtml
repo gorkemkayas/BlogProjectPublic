@@ -973,6 +973,7 @@
             {
                 <!-- Post 1 -->
                 <article class="post-card post-title-link ">
+                <a class="text-decoration-none" asp-controller="post" asp-action="postdetails" asp-route-id="@post.Id">
                     <div class="post-img-container">
                         <img src="@post.CoverImageUrl" alt="Coding" class="post-img">
                     </div>
@@ -982,6 +983,7 @@
                         <p class="post-excerpt">@post.Subtitle</p>
                         <a asp-controller="Post" asp-action="PostDetails" asp-route-Id="@post.Id.ToString()" class="read-more">Read more</a>
                     </div>
+                </a>
                 </article>
 
                 @*    <!-- Post 2 -->
@@ -1064,6 +1066,7 @@
             {
                 <!-- Post 4 -->
                 <article class="post-card post-title-link">
+                <a class="text-decoration-none" asp-controller="post" asp-action="postdetails" asp-route-id="@post.Id">
                     <div class="post-img-container">
                         <img src="@post.CoverImageUrl" alt="Code" class="post-img">
                     </div>
@@ -1073,6 +1076,7 @@
                         <p class="post-excerpt">@post.Subtitle</p>
                         <a asp-controller="Post" asp-action="PostDetails" asp-route-id="@post.Id" class="read-more">Read more</a>
                     </div>
+                </a>
                 </article>
 
                 @* <!-- Post 5 -->
@@ -1128,7 +1132,7 @@
                                 <span class="stat">@(contributor.Followers is null ? "0" : $"{contributor.Followers.Count} ") Followers</span>
                             </div>
                         </div>
-                        <a asp-controller="User" asp-action="Profile" asp-route-userName="@contributor.UserName" class="author-view">View</a>
+                        <a asp-controller="User" asp-action="Profile" asp-route-userName="@contributor.UserName" class="author-view text-white">View</a>
                     </div>
                 }
             </div>
@@ -1515,7 +1519,7 @@
             <div class="tags-container">
                 @foreach (var tag in Model.PopularTags)
                 {
-                    <a href="#" class="tag">@tag.Name</a>
+                    <a asp-controller="Tag" asp-action="Tag" asp-route-id="@tag.Id.ToString()" class="tag">@tag.Name</a>
                 }
                 @* <a href="#" class="tag">Technology</a>
                 <a href="#" class="tag">Design</a>

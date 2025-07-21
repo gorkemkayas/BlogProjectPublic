@@ -19,6 +19,87 @@ namespace BlogProject.Infrastructure.Services
             _context = context;
         }
 
+        public async Task<object> GetDailyPostCountsAsync(string tagId)
+        {
+            var today = DateTime.Today;
+            var startDate = today.AddDays(-29); // Son 30 gün
+
+            // 30 günlük sabit tarih listesi (gün bazlı)
+            var dateRange = Enumerable.Range(0, 30)
+                .Select(offset => startDate.AddDays(offset))
+                .ToList();
+
+            // İlgili tagdeki son 30 gün içindeki gönderileri gün bazında gruplama
+            var postCounts = await _context.Posts
+                                           .Where(p => p.TagPosts.Any(tp => tp.TagId == Guid.Parse(tagId)) &&
+                                           p.CreatedTime >= startDate &&
+                                           p.CreatedTime <= today.AddDays(1) &&
+                                           !p.IsDeleted)
+                                           .GroupBy(p => p.CreatedTime.Date)
+                                           .Select(g => new
+                                           {
+                                               Date = g.Key,
+                                               Count = g.Count()
+                                           })
+                                           .ToListAsync();
+
+
+            // Her gün için veri oluştur, gönderi olmayan günlere 0 ata
+            var chartData = dateRange.Select(date => new
+            {
+                Date = date.ToString("yyyy-MM-dd"),
+                Count = postCounts.FirstOrDefault(x => x.Date == date)?.Count ?? 0
+            }).ToList();
+
+            // Chart.js ile uyumlu JSON yapısı
+            var result = new
+            {
+                labels = chartData.Select(x => x.Date),
+                datasets = new[]
+                {
+            new {
+                label = "Daily post counts",
+                data = chartData.Select(x => x.Count),
+                backgroundColor = "rgba(75, 192, 192, 0.2)",
+                borderColor = "rgba(75, 192, 192, 1)",
+                borderWidth = 1
+            }
+        }
+            };
+
+            return result;
+        }
+        public async Task<List<TagEntity>> GetRelatedTagsAsync(string tagId)
+        {
+            if (string.IsNullOrEmpty(tagId))
+            {
+                throw new ArgumentException("Tag ID cannot be null or empty.", nameof(tagId));
+            }
+            var tagGuid = Guid.Parse(tagId);
+            var tag = await _context.Tags.FindAsync(tagGuid);
+            if (tag == null)
+            {
+                throw new KeyNotFoundException($"Tag with ID {tagId} not found.");
+            }
+            // Assuming related tags are those that share the same name
+            return await _context.Tags
+                .Where(t => t.Name == tag.Name && t.Id != tagGuid && !t.IsDeleted)
+                .ToListAsync();
+        }
+
+        public async Task<TagEntity> GetByIdAsync(string tagId)
+        {
+            if (string.IsNullOrEmpty(tagId))
+            {
+                throw new ArgumentException("Tag ID cannot be null or empty.", nameof(tagId));
+            }
+            var tag = await _context.Tags.FindAsync(Guid.Parse(tagId));
+            if (tag == null)
+            {
+                throw new KeyNotFoundException($"Tag with ID {tagId} not found.");
+            }
+            return tag;
+        }
         public async Task<ServiceResult<TagEntity>> AddTagAsync(TagAddDto model)
         {
             try

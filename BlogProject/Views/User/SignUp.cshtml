@@ -1,287 +1,896 @@
 ﻿@using BlogProject.Web.ViewModels
 @{
     Layout = "_SignInUp";
-    ViewData["Title"] = "Signup";
+    ViewData["Title"] = "Sign Up";
 }
-
-
-@model SignUpViewModel
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-    
 }
 
-<style>
-    .custom-alert {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        font-size: 18px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        opacity: 0;
-        transform: translateY(-20px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
-        z-index: 1050;
-    }
+@model SignUpViewModel
 
-    .alert-danger {
-        background: linear-gradient(135deg, #ff4e50, #f9d423);
-        color: white;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayas - Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Yellowtail&display=swap" rel="stylesheet">
 
-    .alert-success {
-        background: linear-gradient(135deg, #56ab2f, #a8e063);
-        color: white;
-    }
+    <style>
+        .date-input-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
 
-    .custom-alert i {
-        font-size: 22px;
-    }
+            .date-input-container input[type="date"] {
+                width: 100%;
+                padding: 1.2rem 0 0.5rem 0;
+                border: none;
+                border-bottom: 2px solid var(--border);
+                background: transparent;
+                font-size: 1rem;
+                color: var(--text-primary);
+                outline: none;
+            }
 
-    .show-alert {
-        opacity: 1;
-        transform: translateY(0);
-    }
-</style>
+            .date-input-container label {
+                position: absolute;
+                left: 0;
+                top: 1.2rem;
+                color: var(--text-light);
+                transition: all 0.3s ease;
+                pointer-events: none;
+            }
 
-@* <div id="errorAlert" class="custom-alert alert-danger">
-    <i class="fa-solid fa-xmark"></i> Kullanıcı oluşturulamadı.
-</div>
+            /* Label animation */
+            .date-input-container input:focus + label,
+            .date-input-container input:not(:placeholder-shown) + label {
+                top: 0;
+                font-size: 0.8rem;
+                color: var(--primary);
+            }
 
-<!-- Başarılı Alert -->
-<div id="successAlert" class="custom-alert alert-success">
-    <i class="fa-solid fa-check"></i> Kullanıcı başarıyla oluşturuldu.
-</div> *@
+            /* Date input specific fixes */
+            .date-input-container input[type="date"]::-webkit-datetime-edit {
+                padding: 0;
+                line-height: 1;
+            }
 
-<!-- Registration 12 - Bootstrap Brain Component -->
+            .date-input-container input[type="date"]::-webkit-inner-spin-button,
+            .date-input-container input[type="date"]::-webkit-calendar-picker-indicator {
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
 
-@if (TempData["Succeed"] != null)
-{
-    <div id="successAlert" class="custom-alert alert-success">
-        <i class="fa-solid fa-check"></i>
-     @TempData["Succeed"]!.ToString()
- </div>
-}
-else if (TempData["Failed"] != null)
-{
-    <div id="errorAlert" class="custom-alert alert-danger">
-        <i class="fa-solid fa-xmark"></i>  @TempData["Failed"]!.ToString()
-    </div>
-}
+        /* Firefox fix */
+        @@supports (-moz-appearance: none) {
+            .date-input-container input[type="date"]
 
-<section class="py-3 py-md-4 py-xl-6" style="margin-top:5rem">
-    
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="mb-4">
-                    <h2 class="display-5 fw-bold text-center">Sign up</h2>
-                    <p class="text-center m-0">Already have an account? <a href="/user/signin" class="text-danger text-decoration-none">Sign in</a></p>
-                </div>
+        {
+            padding-top: 1.5rem;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Video Hero Section -->
+        <section class="hero-section">
+            <div class="video-wrapper">
+                <video autoplay muted loop playsinline>
+                    <source src="/15439750-hd_1080_1920_30fps.mp4">
+                    <div class="video-fallback"></div>
+                </video>
+                <div class="hero-overlay"></div>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8">
-                <div class="row gy-3 justify-content-center">
-                    <div class="col-12 col-lg-5">
-                        <form asp-controller="User" asp-action="SignUp" method="post">
-                            <div class="row gy-2 overflow-hidden">
-                                <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input asp-for="Name" class="form-control border-0 border-bottom rounded-0" placeholder="Your Workplace" >
-                                        <label asp-for="Name" class="form-label"></label>
-                                        <span class="text-danger mt-2" asp-validation-for="Name"></span>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input asp-for=Surname class="form-control border-0 border-bottom rounded-0" placeholder="Your Workplace" >
-                                        <label asp-for=Surname class="form-label"></label>
-                                        <span class="text-danger mt-2" asp-validation-for="Surname"></span>
-                                    </div>
-                                </div>
-                                <!-- Email Field -->
-                                <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input asp-for="Email" class="form-control border-0 border-bottom rounded-0" placeholder="example@gmail.com" >
-                                        <label asp-for="Email" class="form-label"></label>
-                                        <span class="text-danger mt-2" asp-validation-for="Email"></span>
-                                    </div>
-                                </div>
 
-                                <!-- Password Field -->
-                                <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input asp-for="Password" type="password" class="form-control border-0 border-bottom rounded-0" placeholder="Password">
-                                        <label asp-for="Password" class="form-label"></label>
-                                        <span class="text-danger mt-2" asp-validation-for="Password"></span>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input asp-for="ConfirmPassword" type="password" class="form-control border-0 border-bottom rounded-0" placeholder="Confirm Password">
-                                        <label asp-for="ConfirmPassword" class="form-label"></label>
-                                        <span class="text-danger mt-2" asp-validation-for="ConfirmPassword"></span>
-                                    </div>
-                                </div>
-                                @* <!-- Username Field -->
-                                <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input type="text" class="form-control border-0 border-bottom rounded-0" name="username" id="username" placeholder="Username" required>
-                                        <label for="username" class="form-label">Username</label>
-                                    </div>
-                                </div> *@
+            <div class="hero-content">
+                <div class="brand-identity">
+                    <h1 class="brand-logo">
+                        <span class="logo-text">kayas</span><span class="logo-dot">.</span>
+                    </h1>
+                    <p class="brand-subtitle">Share, discover, be inspired.</p>
+                </div>
 
-                                <!-- Title Field -->
-                                @* <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <select class="form-control border-0 border-bottom rounded-0" name="title" id="title" required>
-                                            <option value="" disabled selected>Select your title</option>
-                                            <option value="Mr.">Mr.</option>
-                                            <option value="Ms.">Ms.</option>
-                                            <option value="Mrs.">Mrs.</option>
-                                            <option value="Dr.">Dr.</option>
-                                        </select>
-                                        <label for="title" class="form-label">Title</label>
-                                    </div>
-                                </div> *@
-
-                                <!-- Working At Field -->
-                                @* <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input type="text" class="form-control border-0 border-bottom rounded-0" name="workingAt" id="workingAt" placeholder="Your Workplace" required>
-                                        <label for="workingAt" class="form-label">Working At</label>
-                                    </div>
-                                </div> *@
-                                <!-- Bio Field -->
-                                @* <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <textarea class="form-control border-0 border-bottom rounded-0" name="bio" id="bio" placeholder="Tell us about yourself" required></textarea>
-                                        <label for="bio" class="form-label">Bio</label>
-                                    </div>
-                                </div> *@
-                                @* <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input type="text" class="form-control border-0 border-bottom rounded-0" name="workingAt" id="workingAt" placeholder="Your Workplace" required>
-                                        <label for="workingAt" class="form-label">Working At</label>
-                                    </div>
-                                </div> *@
-
-                                <!-- Country Field -->
-                                @* <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <select class="form-control border-0 border-bottom rounded-0" name="country" id="country" required>
-                                            <option value="" disabled selected>Select your country</option>
-                                            <option value="USA">USA</option>
-                                            <option value="Canada">Canada</option>
-                                            <option value="UK">UK</option>
-                                            <option value="Germany">Germany</option>
-                                            <!-- Add more countries as needed -->
-                                        </select>
-                                        <label for="country" class="form-label">Country</label>
-                                    </div>
-                                </div> *@
-
-                                <!-- Birthdate Field -->
-                                <div class="col-12">
-                                    <div class="form-floating mb-2">
-                                        <input asp-for="BirthDate" type="date" class="form-control border-0 border-bottom rounded-0" >
-                                        <label asp-for="BirthDate" class="form-label"></label>
-                                        <span class="text-danger mt-2" asp-validation-for="BirthDate"></span>
-                                    </div>
-                                </div>
-
-                                <!-- Agree to Terms Checkbox -->
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" name="iAgree" id="iAgree" required>
-                                        <label class="form-check-label text-secondary" for="iAgree">
-                                            I agree to the <a href="#!" class="text-danger text-decoration-none">terms and conditions</a>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Submit Button -->
-                                <div class="col-12">
-                                    <div class="d-grid">
-                                        <button class="btn btn-lg btn-dark rounded-0 fs-6" type="submit">Sign up</button>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-12 col-lg-2 d-flex align-items-center justify-content-center gap-3 flex-lg-column">
-                        <div class="bg-dark h-100 d-none d-lg-block" style="width: 1px; --bs-bg-opacity: .1;"></div>
-                        <div class="bg-dark w-100 d-lg-none" style="height: 1px; --bs-bg-opacity: .1;"></div>
-                        <div>or</div>
-                        <div class="bg-dark h-100 d-none d-lg-block" style="width: 1px; --bs-bg-opacity: .1;"></div>
-                        <div class="bg-dark w-100 d-lg-none" style="height: 1px; --bs-bg-opacity: .1;"></div>
-                    </div>
-                    <div class="col-12 col-lg-5 d-flex align-items-center flex-column justify-content-center">
-                        <div asp-validation-summary="ModelOnly" class="text-danger">
+                <div class="value-proposition">
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <i class="fas fa-pencil-alt"></i>
+                            <span>Freedom to Write</span>
                         </div>
-                        <div class="d-flex gap-3 flex-column w-100 ">
-                            <a href="#!" class="btn bsb-btn-2xl btn-outline-dark rounded-0 d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google text-danger" viewBox="0 0 16 16">
-                                    <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
-                                </svg>
-                                <span class="ms-2 fs-6 flex-grow-1">Continue with Google</span>
-                            </a>
-                            <a href="#!" class="btn bsb-btn-2xl btn-outline-dark rounded-0 d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-apple text-dark" viewBox="0 0 16 16">
-                                    <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516.024.034 1.52.087 2.475-1.258.955-1.345.762-2.391.728-2.43Zm3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422.212-2.189 1.675-2.789 1.698-2.854.023-.065-.597-.79-1.254-1.157a3.692 3.692 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56.244.729.625 1.924 1.273 2.796.576.984 1.34 1.667 1.659 1.899.319.232 1.219.386 1.843.067.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758.347-.79.505-1.217.473-1.282Z" />
-                                    <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516.024.034 1.52.087 2.475-1.258.955-1.345.762-2.391.728-2.43Zm3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422.212-2.189 1.675-2.789 1.698-2.854.023-.065-.597-.79-1.254-1.157a3.692 3.692 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56.244.729.625 1.924 1.273 2.796.576.984 1.34 1.667 1.659 1.899.319.232 1.219.386 1.843.067.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758.347-.79.505-1.217.473-1.282Z" />
-                                </svg>
-                                <span class="ms-2 fs-6 flex-grow-1">Continue with Apple</span>
-                            </a>
-                            <a href="#!" class="btn bsb-btn-2xl btn-outline-dark rounded-0 d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook text-primary" viewBox="0 0 16 16">
-                                    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
-                                </svg>
-                                <span class="ms-2 fs-6 flex-grow-1">Continue with Facebook</span>
-                            </a>
+                        <div class="feature-item">
+                            <i class="fas fa-users"></i>
+                            <span>Community Support</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Inspiring Content</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-rocket"></i>
+                            <span>Fast Updates</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
+        <style>
+            .yazi-efekti {
+                font-size: 32px;
+                white-space: nowrap;
+                overflow: hidden;
+                border-right: 3px solid black;
+                width: 0;
+                animation: yaz 4s steps(16) infinite;
+                animation-fill-mode: forwards;
+            }
 
+            @@keyframes yaz {
+                0% {
+                    width: 0;
+                }
+
+                80% {
+                    width: 16ch; /* yazı tamamlanıyor */
+                }
+
+                100% {
+                    width: 16ch; /* burada bekleme süresi */
+                }
+            }
+        </style>
+        <!-- Auth Section -->
+        <section class="auth-section">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2 class="yazi-efekti">Create Account</h2>
+                    <p>Already have an account? <a asp-controller="User" asp-action="SignIn" class="text-link">Sign in</a></p>
+                </div>
+
+                @if (TempData["Succeed"] != null)
+                {
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> @TempData["Succeed"]!.ToString()
+                    </div>
+                }
+                else if (TempData["Failed"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> @TempData["Failed"]!.ToString()
+                    </div>
+                }
+
+                <form asp-controller="User" asp-action="SignUp" method="post">
+                    <div class="input-row mb-0">
+                        <div class="input-group">
+                            <input asp-for="Name" required>
+                            <label asp-for="Name">First Name</label>
+                            <div class="input-line"></div>
+                            <span class="text-danger" asp-validation-for="Name"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <input asp-for="Surname" required>
+                            <label asp-for="Surname">Last Name</label>
+                            <div class="input-line"></div>
+                            <span class="text-danger" asp-validation-for="Surname"></span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <input asp-for="Email" required>
+                        <label asp-for="Email">Email</label>
+                        <div class="input-line"></div>
+                        <span class="text-danger" asp-validation-for="Email"></span>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="input-group">
+                            <input type="password" asp-for="Password" required>
+                            <label asp-for="Password">Password</label>
+                            <button type="button" class="password-toggle" tabindex="-1">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <div class="input-line"></div>
+                            <span class="text-danger" asp-validation-for="Password"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="password" asp-for="ConfirmPassword" required>
+                            <label asp-for="ConfirmPassword">Confirm Password</label>
+                            <button type="button" class="password-toggle" tabindex="-1">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <div class="input-line"></div>
+                            <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+                        </div>
+                    </div>
+
+                    <div class="date-input-container">
+                        <input asp-for="BirthDate" type="date" id="birthDateInput" required>
+                        <label asp-for="BirthDate" for="birthDateInput">Birth Date</label>
+                        <div class="input-line"></div>
+                        <span class="text-danger" asp-validation-for="BirthDate"></span>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="iAgree" name="iAgree" required>
+                            <span class="checkmark"></span>
+                            <span>I agree to the terms and conditions</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="signin-btn">
+                        <span>Sign Up</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <div class="social-signin">
+                    <button class="social-btn google-btn" disabled>
+                        <i class="fab fa-google"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                    <button class="social-btn apple-btn" disabled>
+                        <i class="fab fa-apple"></i>
+                        <span>Continue with Apple</span>
+                    </button>
+                </div>
+
+                <div class="beta-notice">
+                    <i class="fas fa-flask"></i>
+                    <span>Social login options coming soon</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        :root {
+            --primary: #000000;
+            --primary-light: #1a1a1a;
+            --secondary: #ffffff;
+            --accent: #e63946;
+            --text-primary: #000000;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --surface: #f9fafb;
+            --surface-hover: #f3f4f6;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-brand: 'Yellowtail', cursive;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--secondary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 440px;
+            border: 1px solid var(--border);
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: grid;
+            place-items: center;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        }
+
+        .video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+            .video-wrapper video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                opacity: 0.6;
+            }
+
+        .video-fallback {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(30, 30, 30, 0.6) 50%, rgba(0, 0, 0, 0.9) 100%), url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.8) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            padding: 4rem;
+            color: var(--secondary);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-identity {
+            margin-bottom: 4rem;
+        }
+
+        .brand-logo {
+            font-family: var(--font-brand);
+            font-size: 4rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .logo-text {
+            color: var(--secondary);
+        }
+
+        .logo-dot {
+            color: var(--accent);
+            margin-left: 0.1em;
+        }
+
+        .brand-subtitle {
+            font-size: 1.25rem;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 24rem;
+        }
+
+        .value-proposition {
+            margin-top: auto;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.95rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+            .feature-item i {
+                font-size: 1.25rem;
+                color: var(--accent);
+                width: 24px;
+                text-align: center;
+            }
+
+        /* Auth Section */
+        .auth-section {
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+            .auth-header h2 {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                color: var(--text-primary);
+            }
+
+            .auth-header p {
+                color: var(--text-secondary);
+                font-size: 1rem;
+                font-weight: 400;
+            }
+
+        .text-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+            .text-link:hover {
+                color: var(--accent);
+            }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-success {
+            background-color: rgba(72, 199, 142, 0.1);
+            color: #48C78E;
+            border: 1px solid rgba(72, 199, 142, 0.2);
+        }
+
+        .alert-danger {
+            background-color: rgba(241, 70, 104, 0.1);
+            color: #F14668;
+            border: 1px solid rgba(241, 70, 104, 0.2);
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.0rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.0rem;
+        }
+
+            .input-group input {
+                width: 100%;
+                padding: 1rem 0 0.75rem 0;
+                background: transparent;
+                border: none;
+                border-bottom: 2px solid var(--border);
+                font-size: 1rem;
+                font-weight: 400;
+                color: var(--text-primary);
+                transition: var(--transition);
+                outline: none;
+            }
+
+                .input-group input:focus {
+                    border-bottom-color: var(--primary);
+                }
+
+                    .input-group input:focus + label,
+                    .input-group input:valid + label {
+                        transform: translateY(-1.5rem) scale(0.85);
+                        color: var(--primary);
+                    }
+
+            .input-group label {
+                position: absolute;
+                top: 1rem;
+                left: 0;
+                font-size: 1rem;
+                font-weight: 400;
+                color: var(--text-light);
+                pointer-events: none;
+                transition: var(--transition);
+                transform-origin: left top;
+            }
+
+        .input-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .input-group input:focus ~ .input-line {
+            width: 100%;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0;
+            top: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: var(--transition);
+        }
+
+            .password-toggle:hover {
+                color: var(--text-primary);
+            }
+
+        .text-danger {
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .form-options {
+            margin-bottom: 2rem;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            user-select: none;
+        }
+
+            .checkbox-container input {
+                display: none;
+            }
+
+        .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            margin-right: 0.75rem;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+            .checkbox-container input:checked ~ .checkmark::after {
+                content: '✓';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: var(--secondary);
+                font-size: 11px;
+                font-weight: 600;
+            }
+
+        .signin-btn {
+            width: 100%;
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+            .signin-btn:hover {
+                background: var(--primary-light);
+                transform: translateY(-1px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .signin-btn:active {
+                transform: translateY(0);
+            }
+
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+            .divider::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: var(--border);
+                z-index: 1;
+            }
+
+            .divider span {
+                background: var(--secondary);
+                padding: 0 1rem;
+                position: relative;
+                z-index: 2;
+            }
+
+        .social-signin {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.875rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--secondary);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transition: var(--transition);
+        }
+
+            .social-btn i {
+                font-size: 1.1rem;
+            }
+
+        .beta-notice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            color: var(--text-light);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+            .beta-notice i {
+                color: var(--accent);
+                font-size: 0.9rem;
+            }
+
+        /* Responsive */
+        @@media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-section {
+                min-height: 40vh;
+            }
+
+            .hero-content {
+                padding: 3rem 2rem;
+            }
+
+            .brand-logo {
+                font-size: 3rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .auth-section {
+                padding: 3rem 2rem;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @@media (max-width: 640px) {
+            .hero-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .brand-logo {
+                font-size: 2.5rem;
+            }
+
+            .brand-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .auth-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .signin-btn.loading {
+            pointer-events: none;
+        }
+
+            .signin-btn.loading i {
+                animation: spin 1s linear infinite;
+            }
+
+        @@keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Focus States */
+        .signin-btn:focus,
+        .social-btn:focus,
+        .text-link:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Enhanced Accessibility */
+        @@media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password toggle functionality
+            const passwordToggles = document.querySelectorAll('.password-toggle');
+
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const input = this.parentElement.querySelector('input');
+                    const type = input.type === 'password' ? 'text' : 'password';
+                    input.type = type;
+
+                    const icon = this.querySelector('i');
+                    icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+                });
+            });
+
+            // Form submission
+            const form = document.querySelector('form');
+            const submitBtn = document.querySelector('.signin-btn');
+
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Add loading state
+                    submitBtn.classList.add('loading');
+                    const icon = submitBtn.querySelector('i');
+                    const originalClass = icon.className;
+                    icon.className = 'fas fa-spinner';
+                });
+            }
+
+            // Enhanced input animations
+            const inputs = document.querySelectorAll('.input-group input');
+            inputs.forEach(input => {
+                // Check if input has value on page load
+                if (input.value.trim() !== '') {
+                    input.classList.add('has-value');
+                }
+
+                input.addEventListener('blur', function() {
+                    if (this.value.trim() !== '') {
+                        this.classList.add('has-value');
+                    } else {
+                        this.classList.remove('has-value');
+                    }
+                });
+            });
+
+            // Video error handling
+            const video = document.querySelector('video');
+            if (video) {
+                video.addEventListener('error', function() {
+                    const videoWrapper = document.querySelector('.video-wrapper');
+                    const fallback = document.querySelector('.video-fallback');
+
+                    if (fallback) {
+                        fallback.style.display = 'block';
+                        this.style.display = 'none';
+                    }
+                });
+            }
+
+            // Auto-hide alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>
 <script>
-    function showAlertSuccess(alertId) {
-        var alertBox = document.getElementById(alertId);
-        if (alertBox) {
-            alertBox.classList.add("show-alert");
-            setTimeout(() => {
-                alertBox.classList.remove("show-alert");
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('birthDateInput');
 
-                // Yönlendirme işlemi
-                window.location.href = '/user/signin';
-
-            }, 3000); // 3 saniye sonra kaybolur
+        // Initialize label position based on existing value
+        if(dateInput.value) {
+            dateInput.nextElementSibling.classList.add('active');
         }
-    }
 
-    function showAlertError(alertId) {
-        var alertBox = document.getElementById(alertId);
-        if (alertBox) {
-            alertBox.classList.add("show-alert");
-            setTimeout(() => {
-                alertBox.classList.remove("show-alert");
-            }, 3000); // 3 saniye sonra kaybolur
-        }
-    }
+        // Handle focus/blur events
+        dateInput.addEventListener('focus', function() {
+            this.nextElementSibling.classList.add('active');
+        });
 
-    // Örnek: Alertleri açmak için
-    showAlertSuccess('successAlert'); // Başarılı mesajı göster
-    showAlertError('errorAlert'); // Başarısız mesajı göster
+        dateInput.addEventListener('blur', function() {
+            if(!this.value) {
+                this.nextElementSibling.classList.remove('active');
+            }
+        });
+    });
 </script>

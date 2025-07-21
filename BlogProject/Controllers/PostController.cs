@@ -199,6 +199,5 @@ namespace BlogProject.Controllers
                 likeCount = post.Likes is null ? 0 : post.Likes.Count(),
             });
         }
-
     }
 }

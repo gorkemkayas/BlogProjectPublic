@@ -204,7 +204,8 @@ else if (TempData["Failed"] != null)
                         </div>
                         <hr class="m-0" style="margin-top:10px" />
                     }
-                    @if (Model is ExtendedProfileViewModel extendedProfileViewModel)
+                    
+                    @if (ViewBag.IsOwner is true && Model is ExtendedProfileViewModel extendedProfileViewModel)
                     {
 
                         <div class="card-body p-2 text-black">

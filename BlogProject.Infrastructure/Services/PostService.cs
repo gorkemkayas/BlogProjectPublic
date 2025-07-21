@@ -5,9 +5,11 @@ using BlogProject.Domain.Entities;
 using BlogProject.Infrastructure.CustomMethods;
 using BlogProject.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System.Linq.Expressions;
 
 namespace BlogProject.Infrastructure.Services
 {
@@ -20,6 +22,30 @@ namespace BlogProject.Infrastructure.Services
             _blogDbContext = blogDbContext;
         }
 
+        public async Task<List<PostEntity>> GetPostByTagIdAsync(string tagId)
+        {
+            if (string.IsNullOrWhiteSpace(tagId))
+            {
+                throw new ArgumentException("TagId boş olamaz.", nameof(tagId));
+            }
+            var tag = await _blogDbContext.Tags
+                                          .FirstOrDefaultAsync(t => t.Id == Guid.Parse(tagId));
+            if (tag == null)
+            {
+                throw new KeyNotFoundException("Belirtilen Id ile ilişkili tag bulunamadı.");
+            }
+            var posts = await _blogDbContext.Posts
+                                       .Where(p => p.TagPosts.Any(tp => tp.TagId == tag.Id) && !p.IsDeleted)
+                                       .Include(p => p.Author)
+                                       .ToListAsync();
+
+            if (posts == null)
+            {
+                return new List<PostEntity>();
+            }
+
+            return posts;
+        }
         public async Task<List<PostEntity>> GetByCategoryIdAsync(string categoryId)
         {
             if (string.IsNullOrWhiteSpace(categoryId))
@@ -72,7 +98,7 @@ namespace BlogProject.Infrastructure.Services
                 _blogDbContext.Update(post);
                 await _blogDbContext.SaveChangesAsync();
             }
-            return await _blogDbContext.Posts.Include(a => a.Author).FirstOrDefaultAsync(p => p.Id == postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
+            return await _blogDbContext.Posts.Include(a => a.Author).Include(c => c.Category).FirstOrDefaultAsync(p => p.Id == postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
         }
 
         public async Task<ICollection<PostEntity>> GetPostsByAuthorIdAsync(Guid authorId, bool isDescending)
@@ -93,7 +119,7 @@ namespace BlogProject.Infrastructure.Services
             return await query.ToListAsync();
         }
 
-        public async Task<ICollection<PostEntity>> GetPostsByCategoryAsync(string categoryName, bool isDescending)
+        public async Task<ICollection<PostEntity>> GetPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null)
         {
             if (string.IsNullOrWhiteSpace(categoryName))
             {
@@ -110,11 +136,67 @@ namespace BlogProject.Infrastructure.Services
 
             var query = _blogDbContext.Posts.Where(p => p.CategoryId == category.Id);
 
+            if (additionalFilter != null)
+            {
+                query = query.Where(additionalFilter);
+            }
+
             query = isDescending
                 ? query.OrderByDescending(p => p.CreatedTime)
                 : query.OrderBy(p => p.CreatedTime);
 
             return await query.ToListAsync();
+        }
+        public async Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null)
+        {
+            if (string.IsNullOrWhiteSpace(categoryName))
+            {
+                throw new ArgumentException("Category ismi belirtilmedi.", nameof(categoryName));
+            }
+
+            var category = await _blogDbContext.Categories
+                                               .FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.ToLower());
+
+            if (category == null)
+            {
+                throw new KeyNotFoundException("Category bulunamadı.");
+            }
+
+            var query = _blogDbContext.Posts.Where(p => p.CategoryId == category.Id);
+
+            if (additionalFilter != null)
+            {
+                query = query.Where(additionalFilter);
+            }
+
+            query = isDescending
+                ? query.OrderByDescending(p => p.ViewCount)
+                : query.OrderBy(p => p.ViewCount);
+
+            return await query.ToListAsync();
+        }
+        public async Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryIdAsync(string categoryId, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null)
+        {
+
+            var category = await _blogDbContext.Categories.FirstOrDefaultAsync(c => c.Id == Guid.Parse(categoryId));
+
+            if (category == null)
+            {
+                throw new KeyNotFoundException("Category bulunamadı.");
+            }
+
+            var query = _blogDbContext.Posts.Where(p => p.CategoryId == category.Id);
+
+            if (additionalFilter != null)
+            {
+                query = query.Where(additionalFilter);
+            }
+
+            query = isDescending
+                ? query.OrderByDescending(p => p.ViewCount)
+                : query.OrderBy(p => p.ViewCount);
+
+            return await query.Include(c => c.Category).ToListAsync();
         }
 
         public async Task<ICollection<PostEntity>> GetPostsByCommentCountAsync(bool isDescending)
@@ -133,6 +215,48 @@ namespace BlogProject.Infrastructure.Services
                 : _blogDbContext.Posts.OrderBy(p => p.Likes.Count());
 
             return await query.ToListAsync();
+        }
+
+        public async Task<List<PostEntity>> LoadMoreMostViewedPostScrollPosts(int page, int pageSize, string? categoryId)
+        {
+            try
+            {
+                var query = _blogDbContext.Posts.AsQueryable();
+                if(categoryId is not null)
+                {
+                    query = query.Where(p => p.CategoryId == Guid.Parse(categoryId) && !p.IsDeleted);
+                }
+                else
+                {
+                    query = query.Where(p => !p.IsDeleted);
+                }
+                var posts = await query
+                .OrderByDescending(p => p.ViewCount)
+                .Include(p => p.Category)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            if (posts == null || !posts.Any())
+            {
+                return new List<PostEntity>();
+            }
+
+            return posts;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("Hata mesajı:" + ex.Message);
+            }
+        }
+        public async Task<ICollection<PostEntity>> GetCategorizedPostsByLikeCountsAsync(bool isDescending, string categoryId)
+        {
+            var query = isDescending
+                ? _blogDbContext.Posts.Where(p => p.CategoryId == Guid.Parse(categoryId)).OrderByDescending(p => p.Likes.Count())
+                : _blogDbContext.Posts.Where(p => p.CategoryId == Guid.Parse(categoryId)).OrderBy(p => p.Likes.Count());
+
+            return await query.Take(3).ToListAsync();
         }
 
         public async Task<ICollection<PostEntity>> GetPostsByShareCountAsync(bool isDescending)
@@ -319,10 +443,10 @@ namespace BlogProject.Infrastructure.Services
                     await _blogDbContext.SaveChangesAsync();
                 }
 
-                    var result = new ServiceResult<object>
-                    {
-                        IsSuccess = true
-                    };
+                var result = new ServiceResult<object>
+                {
+                    IsSuccess = true
+                };
 
                 return result;
             }

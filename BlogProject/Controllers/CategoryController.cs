@@ -1,6 +1,8 @@
 ﻿using BlogProject.Application.Interfaces;
+using BlogProject.Domain.Entities;
 using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Controllers
 {
@@ -43,18 +45,24 @@ namespace BlogProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Category(string id)
         {
+            int scrollPageSize = 3;
+
             var category = await _categoryService.GetByIdAsync(id);
-            var posts = await _postService.GetByCategoryIdAsync(id);
+            ICollection<PostEntity> posts = await _postService.GetByCategoryIdAsync(id) ?? new List<PostEntity>(); ;
+            ICollection<PostEntity> mostLikedPosts = await _postService.GetCategorizedPostsByLikeCountsAsync(true,id) ?? new List<PostEntity>();
+            ICollection<PostEntity> mostViewedPosts = await _postService.GetMostViewedPostsByCategoryAsync(category.Name, true) ?? new List<PostEntity>();
             var relatedCategories = await _categoryService.GetRelatedCategoriesAsync(id);
             ViewBag.CategoryId = id;
 
             var viewModel = new CategoryViewModel
             {
                 Category = category,
-                Posts = posts,
+                Posts = posts.ToList(),
                 RelatedCategories = relatedCategories,
                 TotalViews = posts.Sum(p => p.ViewCount),
-                AuthorCount = posts.Select(p => p.AuthorId).Distinct().Count()
+                AuthorCount = posts.Select(p => p.AuthorId).Distinct().Count(),
+                MostViewedPosts = mostViewedPosts.ToList(),
+                MostLikedPosts =  mostLikedPosts.ToList()
             };
 
             return View(viewModel);
@@ -65,6 +73,44 @@ namespace BlogProject.Controllers
         {
             var chartData = await _categoryService.GetDailyPostCountsAsync(categoryId);
             return Json(chartData);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LoadMoreMostViewedPostScrollPosts(int page, string? categoryId)
+        {
+            int pageSize = 3;
+
+            var posts = await _postService.LoadMoreMostViewedPostScrollPosts(page, pageSize, categoryId);
+
+            if (posts is null || !posts.Any())
+                return Content("");
+
+            return PartialView("_MostLikedPostsPartial", posts);
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetSliderPosts(int page, string categoryId)
+        {
+            int pageSize = 3;
+
+            var posts = await _postService
+                .GetMostViewedPostsByCategoryIdAsync(categoryId, true);
+
+            Console.WriteLine("GetSliderPosts metodundan gelen gönderilerin bilgileri :\n");
+            foreach (var item in posts)
+            {
+                Console.WriteLine($"PostId {item.Id}\n CategoryId {item.Category.Id}\n PostName {item.Title} \n CategoryName {item.Category.Name}");
+            }
+            var sliderPosts = posts
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+
+            if (!sliderPosts.Any())
+                return Content(""); // sonuna geldiysek boş dön
+
+            return PartialView("_SliderPostPartial", sliderPosts); // Razor partial view
         }
 
     }

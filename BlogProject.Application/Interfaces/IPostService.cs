@@ -1,16 +1,17 @@
 ﻿using BlogProject.Application.Common;
 using BlogProject.Application.DTOs;
 using BlogProject.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace BlogProject.Application.Interfaces
 {
     public interface IPostService
     {
-
-        // post silme( buna ayrı önem ver, soft delete olayı var).
-
-
-        // CreatePostDto ile UpdatePostDto ları baştan yapıcam şuanda boş, hata vermesin diye.
+        Task<List<PostEntity>> LoadMoreMostViewedPostScrollPosts(int page, int pageSize, string? categoryId);
+        Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryIdAsync(string categoryId, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null);
+        Task<ICollection<PostEntity>> GetCategorizedPostsByLikeCountsAsync(bool isDescending, string categoryId);
+        Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null);
+        Task<List<PostEntity>> GetPostByTagIdAsync(string tagId);
         Task<List<PostEntity>> GetByCategoryIdAsync(string categoryId);
         Task<ICollection<PostEntity>> GetLatestPostsWithCount(int count = 3);
         Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3, bool currentWeek = false);
@@ -19,7 +20,7 @@ namespace BlogProject.Application.Interfaces
         Task<bool> IsPostLikedByCurrentUserAsync(string userId, string PostId);
         public Task SoftDeletePostAsync(Guid postId);
         public Task<PostEntity> GetPostByIdAsync(Guid postId, bool updateReadCount = false);
-        public Task<ICollection<PostEntity>> GetPostsByCategoryAsync(string categoryName, bool isDescending);
+        public Task<ICollection<PostEntity>> GetPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null);
         public Task<ICollection<PostEntity>> GetPostsByTitleAsync(string title, bool isDescending);
         public Task<ICollection<PostEntity>> GetPostsByAuthorIdAsync(Guid AuthorId, bool isDescending);
         public Task<ICollection<PostEntity>> GetPostsByTagIdAsync(Guid tagId, bool isDescending);

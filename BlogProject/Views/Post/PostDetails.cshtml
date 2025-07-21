@@ -244,7 +244,8 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--accent);
+        /* color: var(--accent); */
+        color:red;
         margin-bottom: var(--space-sm);
         }
 
@@ -615,10 +616,11 @@
         }
 
         .related-post {
+            background-color:white;
         border-radius: var(--radius);
         overflow: hidden;
         transition: transform 0.3s, box-shadow 0.3s;
-        box-shadow: var(--shadow-sm);
+        box-shadow: var(--shadow-md);
         }
 
         .related-post:hover {
@@ -763,7 +765,7 @@
 
         <article>
             <header class="post-header mb-0" style="position:inherit">
-                <span class="post-category">Technology</span>
+                <span class="post-category">@Model.Post.Category.Name</span>
                 <h1>@Model.Post.Title</h1>
                 <div class="post-meta">Published on @Model.Post.CreatedTime.ToString("dddd d, yyyy", CultureInfo.InvariantCulture) · @Model.ReadingTime.Minutes min read</div>
             </header>
@@ -1385,49 +1387,50 @@
                 }
             </div>
         </div>
+        <style>
+            .related-grid {
+                display: flex;
+                gap: 1.5rem;
+                justify-content: center;
+            }
 
+                .related-grid .col-md-4 {
+                    flex: 1;
+                    max-width: calc(33.333% - 1rem);
+                }
+
+            .related-post {
+                height: 100%; /* Kartların yüksekliğini eşitler */
+                display: flex;
+                flex-direction: column;
+            }
+
+            .related-post-body {
+                flex-grow: 1; /* İçerik alanını esnetir */
+            }
+        </style>
         <!-- Related Posts -->
         <section class="related-posts">
             <h2 class="related-title">You Might Also Like</h2>
-            <div class="related-grid d-flex @(Model.RecommendedPosts.Count == 1 ? "justify-content-center" : "justify-content-between") ">
-                @foreach (var recommendedPost in Model.RecommendedPosts)
+            <div class="related-grid">
+                @foreach (var post in Model.RecommendedPosts)
                 {
-
-                    <article class="related-post">
-                    <a asp-controller="post" asp-action="postdetails" asp-area-id="@recommendedPost.Id" class="text-decoration-none">
-                        <img src="@recommendedPost.CoverImageUrl" alt="@recommendedPost.Category.Name" class="related-post-img">
-                        <div class="related-post-body">
-                            <h3 class="related-post-title">@recommendedPost.Title</h3>
-                            <a asp-controller="Post" asp-action="PostDetails" asp-route-id="@recommendedPost.Id" class="related-post-link">Read article</a>
-                        </div>
-                    </a>
+                    <div class="col-md-4">
+                    <article class="related-post post-title-link">
+                        <a asp-controller="Post" asp-action="PostDetails" asp-route-id="@post.Id" class="text-decoration-none">
+                            <img src="@post.CoverImageUrl" alt="@post.Category.Name" class="related-post-img" />
+                            <div class="related-post-body">
+                                <h3 class="related-post-title">@post.Title</h3>
+                                <span class="related-post-link">Read article</span>
+                            </div>
+                        </a>
                     </article>
+
+                    </div>
                 }
-                @*  <article class="related-post">
-                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Design" class="related-post-img">
-                    <div class="related-post-body">
-                        <h3 class="related-post-title">Minimalism in UI Design</h3>
-                        <a href="#" class="related-post-link">Read article</a>
-                    </div>
-                </article>
-
-                <article class="related-post">
-                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Code" class="related-post-img">
-                    <div class="related-post-body">
-                        <h3 class="related-post-title">Clean Code Principles</h3>
-                        <a href="#" class="related-post-link">Read article</a>
-                    </div>
-                </article>
-
-                <article class="related-post">
-                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Meeting" class="related-post-img">
-                    <div class="related-post-body">
-                        <h3 class="related-post-title">Remote Work Culture</h3>
-                        <a href="#" class="related-post-link">Read article</a>
-                    </div>
-                </article> *@
             </div>
         </section>
+
     </div>
     <form method="post">
         @Html.AntiForgeryToken()

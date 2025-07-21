@@ -115,6 +115,7 @@ header {
         background: var(--special-red-color);
         transition: width 0.3s ease;
     }
+    
 
     .nav-link-item:hover:after,
     .nav-link-item.active:after {
@@ -272,6 +273,7 @@ footer {
     .footer-brand .dot {
         color: var(--secondary-color);
     }
+
 
 /* Side Ads */
 .ad-container {
