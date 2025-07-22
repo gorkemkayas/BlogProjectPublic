@@ -1515,7 +1515,8 @@ else if (TempData["Failed"] != null)
             <button id="closeFeedback" class="close-btn">&times;</button>
             <h2>Give us your feedback</h2>
             <p class="feedback-subtitle">Your feedback is very important for us to improve ourselves and offer you a better platform.</p>
-
+            <form id="feedbackForm">
+    @Html.AntiForgeryToken()
             <textarea id="feedbackText"
                       class="feedback-textarea"
                       placeholder="Please describe in detail your experience, suggestions or issues you encountered..."
@@ -1523,9 +1524,9 @@ else if (TempData["Failed"] != null)
 
             <div class="button-group">
                 <button id="cancelFeedback" class="cancel-btn">Cancel</button>
-                <button id="submitFeedback" class="submit-btn" style="background: linear-gradient(135deg, #dc3545, #c82333);">Submit</button>
+                <button id="submitFeedback" type="button" class="submit-btn" style="background: linear-gradient(135deg, #dc3545, #c82333);">Submit</button>
             </div>
-
+            </form>
             <div id="successMessage" class="success-message">
                 ✓ Your feedback has been sent successfully. Thank you!
             </div>
@@ -1705,26 +1706,42 @@ else if (TempData["Failed"] != null)
         });
 
         // Geri bildirim gönderme
-        submitFeedback.addEventListener('click', () => {
+                   submitFeedback.addEventListener('click', (e) => {
+            e.preventDefault(); // form submit olmasın
             const feedback = feedbackText.value.trim();
 
             if (feedback === '') {
-                alert('Lütfen geri bildiriminizi yazın.');
+                alert('Please write your feedback.');
                 return;
             }
 
-            // Burada gerçek bir API çağrısı yapabilirsiniz
-            console.log('Geri bildirim gönderildi:', feedback);
-
-            // Başarı mesajını göster
-            successMessage.style.display = 'block';
-            feedbackText.value = '';
-
-            // 2 saniye sonra formu kapat
-            setTimeout(() => {
-                closeFeedbackForm();
-            }, 2000);
+            fetch('/Feedback/Submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Eğer CSRF token gerekiyorsa ekle:
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(feedback) // string gönderiyoruz çünkü controller string alıyor
+            })
+            .then(response => {
+                if (response.ok) {
+                    successMessage.style.display = 'block';
+                    feedbackText.value = '';
+                    setTimeout(() => {
+                        closeFeedbackForm();
+                    }, 2000);
+                } else {
+                    alert("An error occurred while sending feedback.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Could not connect to the server.");
+            });
         });
+
+
 
         // Textarea otomatik boyutlandırma
         feedbackText.addEventListener('input', function() {
@@ -1773,27 +1790,41 @@ else if (TempData["Failed"] != null)
                     }
                 });
 
-                // Geri bildirim gönderme
-                submitFeedback.addEventListener('click', () => {
-                    const feedback = feedbackText.value.trim();
+                       submitFeedback.addEventListener('click', () => {
+            const feedback = feedbackText.value.trim();
 
-                    if (feedback === '') {
-                        alert('Please write your feedback.');
-                        return;
-                    }
+            if (feedback === '') {
+                alert('Lütfen geri bildiriminizi yazın.');
+                return;
+            }
 
-                    // Burada gerçek bir API çağrısı yapabilirsiniz
-                    console.log('Feedback sent:', feedback);
-
-                    // Başarı mesajını göster
+            // API çağrısı: geri bildirimi controller'a gönder
+            fetch('/Feedback/Submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value // CSRF koruması için
+                },
+                body: JSON.stringify({ message: feedback })
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Geri bildirim gönderildi:', feedback);
                     successMessage.style.display = 'block';
                     feedbackText.value = '';
-
-                    // 2 saniye sonra formu kapat
                     setTimeout(() => {
                         closeFeedbackForm();
                     }, 2000);
-                });
+                } else {
+                    alert("Geri bildirim gönderilirken bir hata oluştu.");
+                }
+            })
+            .catch(error => {
+                console.error("Hata:", error);
+                alert("Sunucuya bağlanılamadı.");
+            });
+        });
+
 
                 // Textarea otomatik boyutlandırma
                 feedbackText.addEventListener('input', function() {

@@ -12,6 +12,7 @@ namespace BlogProject.Infrastructure.Persistence
 {
     public class BlogDbContext : IdentityDbContext<AppUser,AppRole,Guid>
     {
+        public DbSet<FeedbackEntity> Feedbacks { get; set; }
         public DbSet<BadgeEntity> Badges { get; set; }
         public DbSet<BadgeUserEntity> BadgeUsers { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }

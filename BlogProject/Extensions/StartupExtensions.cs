@@ -56,6 +56,7 @@ namespace BlogProject.Extensions
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IFeedbackService, FeedbackService>();
             services.AddScoped<IUsernameGenerator, UsernameGenerator>();
             services.AddScoped<IUserTokenGenerator, UserTokenGenerator>();
             services.AddScoped<IUrlGenerator, UrlGenerator>();
