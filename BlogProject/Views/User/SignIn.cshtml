@@ -21,6 +21,352 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Yellowtail&display=swap" rel="stylesheet">
 </head>
 <body>
+    @if (TempData["restricted"] != null)
+    {
+        <div class="suspension-overlay">
+            <div class="suspension-card">
+                <div class="card-header">
+                    <div class="status-indicator">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+                            <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="1.5" />
+                            <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" />
+                        </svg>
+                    </div>
+                    <h1>Access Denied</h1>
+                    <p>Your account has been temporarily suspended</p>
+                </div>
+
+                <div class="card-body">
+                    @if (TempData["SuspensionCategory"] != null)
+                    {
+                        <div class="field">
+                            <label>CATEGORY</label>
+                            <div class="category-badge">@TempData["SuspensionCategory"]</div>
+                        </div>
+                    }
+
+                    @if (TempData["SuspensionMessage"] != null)
+                    {
+                        <div class="field">
+                            <label>REASON</label>
+                            <div class="field-value">@TempData["SuspensionMessage"]</div>
+                        </div>
+                    }
+
+                    @if (TempData["SuspensionDetail"] != null)
+                    {
+                        <div class="field">
+                            <label>DESCRIPTION</label>
+                            <div class="field-value">@TempData["SuspensionDetail"]</div>
+                        </div>
+                    }
+
+                    @if (TempData["SuspendedUserId"] != null)
+                    {
+                        <div class="field">
+                            <label>REFERENCE</label>
+                            <div class="reference-code">#@TempData["SuspendedUserId"]</div>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer">
+                    <p class="footer-text">This action cannot be undone. Contact our support team for more information.</p>
+                    <div class="action-buttons">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Home Page</a>
+                        <a href="#" onclick="sendSupportEmail()" class="btn btn-primary">Support</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .suspension-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+
+        }
+
+        .suspension-card {
+            background: #ffffff;
+            width: 90%;
+            max-width: 480px;
+            border-radius: 0;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @@keyframes slideIn {
+            from
+
+        {
+            transform: translateY(40px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        }
+
+        .card-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        .status-indicator {
+            width: 48px;
+            height: 48px;
+            background: #ff0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #ffffff;
+        }
+
+        .card-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .card-header p {
+            font-size: 14px;
+            margin: 0;
+            opacity: 0.8;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .card-body {
+            padding: 32px;
+            background: #ffffff;
+        }
+
+        .field {
+            margin-bottom: 24px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 16px;
+        }
+
+            .field:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+
+            .field label {
+                display: block;
+                font-size: 11px;
+                font-weight: 700;
+                color: #000000;
+                margin-bottom: 8px;
+                letter-spacing: 1px;
+            }
+
+        .field-value {
+            font-size: 15px;
+            color: #000000;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .category-badge {
+            background: #ff0000;
+            color: #ffffff;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .reference-code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #000000;
+            background: #f8f8f8;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .card-footer {
+            background: #f8f8f8;
+            padding: 32px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: #666666;
+            margin: 0 0 24px 0;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid;
+            background: transparent;
+            min-width: 120px;
+            text-align: center;
+            display: inline-block;
+        }
+
+            .btn:hover {
+                text-decoration: none;
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: #ff0000;
+            color: #ffffff;
+            border-color: #ff0000;
+        }
+
+            .btn-primary:hover {
+                background: #cc0000;
+                border-color: #cc0000;
+                color: #ffffff;
+                box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
+            }
+
+        .btn-secondary {
+            background: transparent;
+            color: #000000;
+            border-color: #000000;
+        }
+
+            .btn-secondary:hover {
+                background: #000000;
+                color: #ffffff;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .suspension-card
+
+        {
+            width: 95%;
+            max-width: none;
+            margin: 20px;
+        }
+
+        .card-header {
+            padding: 32px 24px;
+        }
+
+            .card-header h1 {
+                font-size: 20px;
+            }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .card-footer {
+            padding: 24px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .status-indicator {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 16px;
+        }
+
+            .status-indicator svg {
+                width: 20px;
+                height: 20px;
+            }
+
+        }
+
+        @@media (max-width: 480px) {
+            .suspension-card
+
+        {
+            width: calc(100% - 32px);
+            margin: 16px;
+        }
+
+        .card-header {
+            padding: 28px 20px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-footer {
+            padding: 20px;
+        }
+
+        }
+    </style>
+
     <div class="main-container">
         <!-- Video Hero Section -->
         <section class="hero-section">
@@ -742,6 +1088,35 @@
     </style>
 
     <script>
+            function sendSupportEmail() {
+            const category = '@(TempData["SuspensionCategory"] ?? "Unknown")';
+            const message = '@(TempData["SuspensionMessage"] ?? "Not specified")';
+            const detail = '@(TempData["SuspensionDetail"] ?? "No details available")';
+            const userId = '@(TempData["SuspendedUserId"] ?? "Unknown")';
+
+            const subject = encodeURIComponent('Account Suspension Appeal - Reference #' + userId);
+
+            const body = encodeURIComponent(
+                'Hello Support Team,\n\n' +
+                'I would like to appeal the suspension of my account.\n\n' +
+                '--- SUSPENSION DETAILS ---\n' +
+                'Reference Number: #' + userId + '\n' +
+                'Category: ' + category + '\n' +
+                'Reason: ' + detail + '\n' +
+                'Details: ' + message + '\n\n' +
+                '--- APPEAL MESSAGE ---\n' +
+                '[Please write your appeal reason here]\n\n' +
+                '--- ADDITIONAL INFORMATION ---\n' +
+                '[Please write any additional information here if applicable]\n\n' +
+                'Best regards,\n' +
+                '[Your Name]'
+            );
+
+            const mailtoLink = `mailto:gorkemkayas@@hotmail.com?subject=${subject}&body=${body}`;
+            window.location.href = mailtoLink;
+        }
+
+
         document.addEventListener('DOMContentLoaded', function() {
             // Password toggle functionality
             const passwordToggle = document.querySelector('.password-toggle');

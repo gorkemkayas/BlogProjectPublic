@@ -1,5 +1,6 @@
 ﻿@using BlogProject.Domain.Entities
 @using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
 <!DOCTYPE html>
 @{
     AppUser? currentUserLayout = null;
@@ -1445,7 +1446,9 @@ else if (TempData["Failed"] != null)
                                             <i class="fas fa-key me-2"></i> Change Password
                                         </a>
                                     </li>
-                                    @if (User.HasClaim(c => c.Value == "Manager" || c.Value == "Takım Lideri" || c.Value == "Bölge Sorumlusu"))
+                                    @if (User.Claims.Any(c => c.Type == ClaimTypes.Role &&
+                                   (c.Value == "Manager" || c.Value == "Takım Lideri" || c.Value == "Bölge Sorumlusu")))
+
                                     {
 
                                         <li><hr class="dropdown-divider"></li>

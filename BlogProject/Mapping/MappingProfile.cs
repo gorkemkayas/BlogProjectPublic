@@ -24,7 +24,7 @@ namespace BlogProject.Web.Mapping
             CreateMap<RoleViewModel, RoleDto>().ReverseMap();
             CreateMap<BlogProject.Areas.Admin.Models.TagViewModel, TagDto>().ReverseMap();
             CreateMap<TagAddDto,TagAddViewModel>().ReverseMap();
-
+            CreateMap<SuspendUserViewModel, SuspendUserDto>().ReverseMap();
             CreateMap<ConfirmEmailDto, ConfirmEmailViewModel>().ReverseMap();
 
             CreateMap<ForgetPasswordDto, ForgetPasswordViewModel>().ReverseMap();

@@ -6,6 +6,7 @@ using BlogProject.Infrastructure.CustomMethods;
 using BlogProject.Infrastructure.Persistence;
 using BlogProject.Infrastructure.Services;
 using BlogProject.Localizations;
+using BlogProject.Web.Extensions.Classes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -48,6 +49,7 @@ namespace BlogProject.Extensions
         public static void AddServicesWithLifeTimes(this IServiceCollection services)
         {
             //services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
+            services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, AppUserClaimsPrincipalFactory>();
 
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IUserService, UserService>();

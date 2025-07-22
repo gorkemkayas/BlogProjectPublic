@@ -56,13 +56,11 @@ namespace BlogProject.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInViewModel request, string? returnUrl = null)
         {
             var mappedRequest = _mapper.Map<SignInDto>(request);
             var result = await _userService.SignInAsync(mappedRequest);
-
             if (!result.Item1)
             {
                 if (result.Item2!.Any(err => err.Code == "SuspendedAccount"))
@@ -71,9 +69,13 @@ namespace BlogProject.Controllers
                     TempData["SuspensionMessage"] = description;
                     TempData["SuspensionCategory"] = result.Item2!.Where(error => error.Code == "SuspendedAccountCategory").FirstOrDefault()!.Description;
                     TempData["SuspensionDetail"] = result.Item2!.Where(error => error.Code == "SuspendedAccountReason").FirstOrDefault()!.Description;
-                    TempData["SuspendedUserId"] = await _userManager.FindByEmailAsync(request.Email);
+                    var suspendedUser = await _userManager.FindByEmailAsync(request.Email);
+                    TempData["SuspendedUserId"] = suspendedUser.Id.ToString();
+
                     ModelState.AddModelError(string.Empty, description);
-                    return View();
+
+                    TempData["restricted"] = true;
+                    return RedirectToAction(nameof(SignIn),request);
                 }
                 if (result.Item2!.Any(err => err.Code == "EmailNotConfirmed"))
                 {
@@ -81,10 +83,10 @@ namespace BlogProject.Controllers
                     TempData["EmailNotConfirmed"] = true;
                     TempData["UserEmail"] = request.Email;
 
-                    return View();
+                    return RedirectToAction(nameof(SignIn),request);
                 }
                 ModelState.AddModelErrorList(result.Item2!.ToList());
-                return View();
+                return RedirectToAction(nameof(SignIn),request);
             }
 
             returnUrl = returnUrl ?? Url.Action("Index", "Home");

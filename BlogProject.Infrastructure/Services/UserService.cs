@@ -9,11 +9,7 @@ using BlogProject.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Security.Claims;
-using static BlogProject.Domain.Entities.AppUser;
 
 namespace BlogProject.Infrastructure.Services
 {
@@ -545,8 +541,13 @@ namespace BlogProject.Infrastructure.Services
             {
                 await _userManager.RemoveClaimAsync(hasUser, existingProfileClaim);
             }
+            else
+            {
             await _userManager.AddClaimAsync(hasUser, new Claim("ProfilePictureUrl", hasUser.ProfilePicture ?? ""));
-            await _signInManager.SignOutAsync();
+
+            }
+
+                await _signInManager.SignOutAsync();
 
             var signInResult = await _signInManager.PasswordSignInAsync(hasUser, request.Password, request.RememberMe, true);
 
