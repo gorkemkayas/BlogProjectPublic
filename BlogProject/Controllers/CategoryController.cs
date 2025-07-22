@@ -76,11 +76,11 @@ namespace BlogProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoadMoreMostViewedPostScrollPosts(int page, string? categoryId)
+        public async Task<IActionResult> LoadMoreMostLikedPostScrollPosts(int page, string? categoryId)
         {
             int pageSize = 3;
 
-            var posts = await _postService.LoadMoreMostViewedPostScrollPosts(page, pageSize, categoryId);
+            var posts = await _postService.LoadMoreMostLikedPostScrollPosts(page, pageSize, categoryId);
 
             if (posts is null || !posts.Any())
                 return Content("");

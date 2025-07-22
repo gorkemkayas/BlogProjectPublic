@@ -250,6 +250,39 @@ namespace BlogProject.Infrastructure.Services
                 throw new Exception("Hata mesajı:" + ex.Message);
             }
         }
+        public async Task<List<PostEntity>> LoadMoreMostLikedPostScrollPosts(int page, int pageSize, string? categoryId)
+        {
+            try
+            {
+                var query = _blogDbContext.Posts.AsQueryable();
+                if (categoryId is not null)
+                {
+                    query = query.Where(p => p.CategoryId == Guid.Parse(categoryId) && !p.IsDeleted);
+                }
+                else
+                {
+                    query = query.Where(p => !p.IsDeleted);
+                }
+                var posts = await query
+                .OrderByDescending(p => p.Likes.Count)
+                .Include(p => p.Category)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+                if (posts == null || !posts.Any())
+                {
+                    return new List<PostEntity>();
+                }
+
+                return posts;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("Hata mesajı:" + ex.Message);
+            }
+        }
         public async Task<ICollection<PostEntity>> GetCategorizedPostsByLikeCountsAsync(bool isDescending, string categoryId)
         {
             var query = isDescending

@@ -1255,7 +1255,7 @@
                 isLoading = true;
                 $("#loader").show();
 
-                $.get("/Category/LoadMoreMostViewedPostScrollPosts?page=" + page + "&categoryId=" + categoryId, function (data) {
+                $.get("/Category/LoadMoreMostLikedPostScrollPosts?page=" + page + "&categoryId=" + categoryId, function (data) {
                     if ($.trim(data) === "") {
                         $("#loader").html("<p class='text-muted'>All posts listed.</p>");
                     } else {
