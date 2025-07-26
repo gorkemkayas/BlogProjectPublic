@@ -26,7 +26,7 @@ namespace BlogProject.Infrastructure.Services
                 throw new ArgumentException("Post ID cannot be null or empty.", nameof(postId));
             }
             Console.WriteLine("Checking if post is valid...");
-            var postValid = await _blogDbContext.Posts.AnyAsync(p => p.Id.ToString() == postId);
+            var postValid = await _blogDbContext.Posts.AsNoTracking().AnyAsync(p => p.Id.ToString() == postId);
             Console.WriteLine("Post validity check complete.");
 
             if (!postValid)
@@ -34,7 +34,7 @@ namespace BlogProject.Infrastructure.Services
                 throw new ArgumentException("Post not found with the provided ID.", nameof(postId));
             }
             Console.WriteLine("Getting comments...");
-            var comments = await _blogDbContext.Comments
+            var comments = await _blogDbContext.Comments.AsNoTracking()
                 .Where(c => c.PostId.ToString() == postId)
                 .Include(c => c.Author)
                 .Include(c => c.Replies)

@@ -30,7 +30,7 @@ namespace BlogProject.Infrastructure.Services
                 .ToList();
 
             // İlgili tagdeki son 30 gün içindeki gönderileri gün bazında gruplama
-            var postCounts = await _context.Posts
+            var postCounts = await _context.Posts.AsNoTracking()
                                            .Where(p => p.TagPosts.Any(tp => tp.TagId == Guid.Parse(tagId)) &&
                                            p.CreatedTime >= startDate &&
                                            p.CreatedTime <= today.AddDays(1) &&
@@ -334,7 +334,7 @@ namespace BlogProject.Infrastructure.Services
         {
             try
             {
-                return await _context.Tags.Where(t => t.IsDeleted == false).Take(count).OrderByDescending(v => v.UsageCount).ToListAsync();
+                return await _context.Tags.AsNoTracking().Where(t => t.IsDeleted == false).Take(count).OrderByDescending(v => v.UsageCount).ToListAsync();
             }
             catch (Exception)
             {

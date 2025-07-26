@@ -23,33 +23,40 @@ namespace BlogProject.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (HttpContext.Session.GetString("FirstVisit") == null)
+            if (!Request.Cookies.ContainsKey("FirstVisit"))
             {
                 ViewBag.ShowWelcomeMessage = true;
-                HttpContext.Session.SetString("FirstVisit", "true");
+                Response.Cookies.Append("FirstVisit", "true", new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddDays(30)
+                });
             }
             else
             {
                 ViewBag.ShowWelcomeMessage = false;
             }
 
-            var mostViewedPosts = await _postService.GetMostViewedPostsWithCount();
-            var LatestPosts = await _postService.GetLatestPostsWithCount();
-            var popularTags = await _tagService.GetPopularTags(15);
-            var mostContributors = await _userService.MostContributors(3);
-            var mostReadPostsThisWeek = await _postService.GetMostViewedPostsWithCount(5, true);
+
+            var mostViewedTask = _postService.GetMostViewedPostsWithCount();
+            var latestPostsTask = _postService.GetLatestPostsWithCount();
+            var popularTagsTask = _tagService.GetPopularTags(15);
+            var mostContributorsTask = _userService.MostContributors(3);
+            var mostReadThisWeekTask = _postService.GetMostViewedPostsWithCount(5, true);
+
+            await Task.WhenAll(mostViewedTask, latestPostsTask, popularTagsTask, mostContributorsTask, mostReadThisWeekTask);
 
             var model = new IndexViewModel
             {
-                MostViewedPosts = mostViewedPosts,
-                LatestPosts = LatestPosts,
-                PopularTags = popularTags,
-                MostContributors = mostContributors,
-                MostReadPostsThisWeek = mostReadPostsThisWeek
-
+                MostViewedPosts = mostViewedTask.Result,
+                LatestPosts = latestPostsTask.Result,
+                PopularTags = popularTagsTask.Result,
+                MostContributors = mostContributorsTask.Result,
+                MostReadPostsThisWeek = mostReadThisWeekTask.Result
             };
+
             return View(model);
         }
+
 
         [Route("/development-updates")]
         public async Task<IActionResult> DevelopmentUpdates()

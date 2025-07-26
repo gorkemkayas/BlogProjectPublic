@@ -4,17 +4,38 @@ using BlogProject.Domain.Entities;
 using BlogProject.Extensions;
 using BlogProject.Infrastructure.Configurations;
 using BlogProject.Infrastructure.Persistence;
+using BlogProject.Web.Extensions;
 using BlogProject.Web.Mapping;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NLog;
+using Serilog;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information() // Canlıda Verbose yerine Information tercih et
+    .Enrich.FromLogContext()
+    .Enrich.WithThreadId()
+    .Enrich.WithMachineName()
+    .WriteTo.Async(a => a.File(
+        path: "logs/log-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 10,
+        fileSizeLimitBytes: 10_000_000,
+        rollOnFileSizeLimit: true,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] (Thread: {ThreadId}) {MachineName} {SourceContext} {Message:lj}{NewLine}{Exception}"
+    ))
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(opt =>
@@ -59,7 +80,6 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB
 });
 
-LogManager.Setup().LoadConfigurationFromFile(Directory.GetCurrentDirectory() + "nlog.config");
 
 //builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomClaimsPrincipalFactory>();
 
@@ -83,8 +103,9 @@ if(builder.Environment.IsDevelopment())
 }
 else
 {
+    var keyPath = Path.Combine(AppContext.BaseDirectory, "App_Data", "keys");
     builder.Services.AddDataProtection()
-        .PersistKeysToFileSystem(new DirectoryInfo(@"C:\inetpub\vhosts\kayas.dev\httpdocs\App_Data\keys"))
+        .PersistKeysToFileSystem(new DirectoryInfo(keyPath))
         .SetApplicationName("kayasdev_blog");
 }
 
@@ -94,8 +115,7 @@ Console.WriteLine("SMTP Host: " + config["EmailSettings:Host"]);
 
 
 var app = builder.Build();
-var loggerService = app.Services.GetRequiredService<ILoggerService>();
-app.ConfigureExceptionHandler(loggerService);
+
 
 //bekleyen migrationları otomatik veritabanına göndermek için.
 using (var scope = app.Services.CreateScope())
@@ -132,12 +152,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection(); // eğer http:local... li istek gelirse https:local... e yönlendirmesini söylüyoruz.
 app.UseStaticFiles();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseRouting();
-
-app.UseSession(); // Session'ı kullanabilmek için ekledik.
-
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession(); // Session'ı kullanabilmek için ekledik.
+
+
+
 
 
 app.MapControllerRoute(

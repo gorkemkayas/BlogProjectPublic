@@ -31,7 +31,7 @@ namespace BlogProject.Infrastructure.Services
                 throw new KeyNotFoundException($"Category with ID {categoryId} not found.");
             }
             // Assuming related categories are those that are not the same as the current category
-            var relatedCategories = await _context.Categories
+            var relatedCategories = await _context.Categories.AsNoTracking()
                 .Where(c => c.Id != categoryGuid && !c.IsDeleted)
                 .ToListAsync();
             return relatedCategories;
@@ -119,7 +119,7 @@ namespace BlogProject.Infrastructure.Services
             var itemsQuery = _context.Categories.AsQueryable();
             if (!includeDeleted)
             {
-                itemsQuery = itemsQuery.Where(p => p.IsDeleted == false);
+                itemsQuery = itemsQuery.AsNoTracking().Where(p => p.IsDeleted == false);
             }
 
             var pagedUsers = new ItemPagination<CategoryDto>()
@@ -289,7 +289,7 @@ namespace BlogProject.Infrastructure.Services
                 .ToList();
 
             // İlgili kategoride son 30 gün içindeki gönderileri gün bazında gruplama
-            var postCounts = await _context.Posts
+            var postCounts = await _context.Posts.AsNoTracking()
                 .Where(p => p.CategoryId == Guid.Parse(categoryId) &&
                             p.CreatedTime >= startDate &&
                             p.CreatedTime <= today.AddDays(1) &&

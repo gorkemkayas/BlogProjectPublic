@@ -59,47 +59,54 @@ namespace BlogProject.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInViewModel request, string? returnUrl = null)
         {
+            if (!ModelState.IsValid)
+                return View(request); // Validation hataları varsa formu geri döndür
+
             var mappedRequest = _mapper.Map<SignInDto>(request);
             var result = await _userService.SignInAsync(mappedRequest);
+
             if (!result.Item1)
             {
-                if (result.Item2!.Any(err => err.Code == "SuspendedAccount"))
+                var errors = result.Item2?.ToList();
+
+                if (errors != null)
                 {
-                    var description = result.Item2!.Where(error => error.Code == "SuspendedAccount").FirstOrDefault()!.Description;
-                    TempData["SuspensionMessage"] = description;
-                    TempData["SuspensionCategory"] = result.Item2!.Where(error => error.Code == "SuspendedAccountCategory").FirstOrDefault()!.Description;
-                    TempData["SuspensionDetail"] = result.Item2!.Where(error => error.Code == "SuspendedAccountReason").FirstOrDefault()!.Description;
-                    var suspendedUser = await _userManager.FindByEmailAsync(request.Email);
-                    TempData["SuspendedUserId"] = suspendedUser.Id.ToString();
+                    if (errors.Any(e => e.Code == "SuspendedAccount"))
+                    {
+                        TempData["SuspensionMessage"] = errors.FirstOrDefault(e => e.Code == "SuspendedAccount")?.Description;
+                        TempData["SuspensionCategory"] = errors.FirstOrDefault(e => e.Code == "SuspendedAccountCategory")?.Description;
+                        TempData["SuspensionDetail"] = errors.FirstOrDefault(e => e.Code == "SuspendedAccountReason")?.Description;
 
-                    ModelState.AddModelError(string.Empty, description);
+                        // Eğer bu bilgi UI'da kritikse sakla
+                        var suspendedUser = await _userManager.FindByEmailAsync(request.Email);
+                        TempData["SuspendedUserId"] = suspendedUser?.Id;
 
-                    TempData["restricted"] = true;
-                    return RedirectToAction(nameof(SignIn),request);
+                        ModelState.AddModelError(string.Empty, TempData["SuspensionMessage"]?.ToString() ?? "Your account is suspended.");
+                        return View(request); // Redirect yerine View
+                    }
+
+                    if (errors.Any(e => e.Code == "EmailNotConfirmed"))
+                    {
+                        TempData["Error"] = "Please confirm your email address!";
+                        TempData["EmailNotConfirmed"] = true;
+                        TempData["UserEmail"] = request.Email;
+                        return View(request); // Redirect yerine View
+                    }
+
+                    ModelState.AddModelErrorList(errors);
                 }
-                if (result.Item2!.Any(err => err.Code == "EmailNotConfirmed"))
-                {
-                    TempData["Error"] = "Please confirm your email address!";
-                    TempData["EmailNotConfirmed"] = true;
-                    TempData["UserEmail"] = request.Email;
 
-                    return RedirectToAction(nameof(SignIn),request);
-                }
-                ModelState.AddModelErrorList(result.Item2!.ToList());
-                return RedirectToAction(nameof(SignIn),request);
+                return View(request); // Redirect yerine View
             }
-
-            returnUrl = returnUrl ?? Url.Action("Index", "Home");
 
             TempData["Succeed"] = "You have logged in successfully.";
 
             if (!Url.IsLocalUrl(returnUrl))
-            {
-                return RedirectToAction(nameof(Index), "Home");
-            }
+                return RedirectToAction("Index", "Home");
 
             return Redirect(returnUrl!);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
