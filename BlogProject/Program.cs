@@ -49,17 +49,37 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")), ServiceLifetime.Scoped);
 
+// Farklı dbcontext nesnelerini kullanabilmek için DbContextFactory ekliyoruz.
+//builder.Services.AddDbContextFactory<BlogDbContext>(options =>
+//{
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+//});
+builder.Services.AddDbContextFactory<BlogDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"), sqlOptions =>
+    {
+        sqlOptions.CommandTimeout(5_000); // 5 saniye
+    });
+}, ServiceLifetime.Transient);
+
+
 
 // app.settings.dev deki email uygulama tarafında temsil edebilmek için bir sınıf ile eşleştiriyorum.
 // Ne zaman EmailSettings sınıfına ihtiyaç duyarsam bana appsetting.json dosyasındaki EmailSettings bölümünü verecek.
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddIdentityWithExtension();
+
+//builder.Services.AddMemoryCache(options =>
+//{
+//    options.SizeLimit = 300;
+//});
+
 builder.Services.ConfigureApplicationCookie(opt =>
 {
     opt.Cookie.Name = "BlogCookie";
 
-    opt.ExpireTimeSpan = TimeSpan.FromDays(30);
+    opt.ExpireTimeSpan = TimeSpan.FromHours(1);
     opt.SlidingExpiration = true;
 
     opt.LoginPath = new PathString("/User/SignIn");
@@ -117,30 +137,30 @@ Console.WriteLine("SMTP Host: " + config["EmailSettings:Host"]);
 var app = builder.Build();
 
 
-//bekleyen migrationları otomatik veritabanına göndermek için.
-using (var scope = app.Services.CreateScope())
-{
+////bekleyen migrationları otomatik veritabanına göndermek için.
+//using (var scope = app.Services.CreateScope())
+//{
 
-    var services = scope.ServiceProvider;
+//    var services = scope.ServiceProvider;
 
-    try
-    {
-        var dbContext = services.GetRequiredService<BlogDbContext>(); 
+//    try
+//    {
+//        var dbContext = services.GetRequiredService<BlogDbContext>(); 
 
 
-        if (dbContext.Database.GetPendingMigrations().Any())
-        {
-            dbContext.Database.Migrate();
-            Console.WriteLine("Migrations updated successfully!");
-        }
-    }
-    catch (Exception)
-    {
+//        if (dbContext.Database.GetPendingMigrations().Any())
+//        {
+//            dbContext.Database.Migrate();
+//            Console.WriteLine("Migrations updated successfully!");
+//        }
+//    }
+//    catch (Exception)
+//    {
 
-        Console.WriteLine("There are errors while updating migrations to database.");
-        throw;
-    }
-}
+//        Console.WriteLine("There are errors while updating migrations to database.");
+//        throw;
+//    }
+//}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

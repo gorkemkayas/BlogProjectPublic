@@ -16,10 +16,12 @@ namespace BlogProject.Infrastructure.Services
     public class PostService : IPostService
     {
         private readonly BlogDbContext _blogDbContext;
+        private readonly IDbContextFactory<BlogDbContext> _contextFactory;
 
-        public PostService(BlogDbContext blogDbContext)
+        public PostService(BlogDbContext blogDbContext, IDbContextFactory<BlogDbContext> contextFactory)
         {
             _blogDbContext = blogDbContext;
+            _contextFactory = contextFactory;
         }
 
         public async Task<List<PostEntity>> GetPostByTagIdAsync(string tagId)
@@ -100,7 +102,7 @@ namespace BlogProject.Infrastructure.Services
                 _blogDbContext.Update(post);
                 await _blogDbContext.SaveChangesAsync();
             }
-            return await _blogDbContext.Posts.Include(a => a.Author).Include(c => c.Category).AsNoTracking().FirstOrDefaultAsync(p => p.Id == postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
+            return await _blogDbContext.Posts.Include(a => a.Author).Include(c => c.Category).Include(l => l.Likes).AsNoTracking().FirstOrDefaultAsync(p => p.Id == postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
         }
 
         public async Task<ICollection<PostEntity>> GetPostsByAuthorIdAsync(Guid authorId, bool isDescending)
@@ -164,7 +166,7 @@ namespace BlogProject.Infrastructure.Services
                 throw new KeyNotFoundException("Category bulunamadı.");
             }
 
-            var query = _blogDbContext.Posts.Where(p => p.CategoryId == category.Id).AsNoTracking();
+            var query = _blogDbContext.Posts.Include(c => c.Category).Where(p => p.CategoryId == category.Id);
 
             if (additionalFilter != null)
             {
@@ -175,19 +177,25 @@ namespace BlogProject.Infrastructure.Services
                 ? query.OrderByDescending(p => p.ViewCount)
                 : query.OrderBy(p => p.ViewCount);
 
-            return await query.AsNoTracking().ToListAsync();
+            return await query.ToListAsync();
         }
-        public async Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryIdAsync(string categoryId, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null)
+        public async Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryIdAsync(string categoryId,bool isDescending,Expression<Func<PostEntity, bool>>? additionalFilter = null)
         {
-
-            var category = await _blogDbContext.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.Id == Guid.Parse(categoryId));
-
-            if (category == null)
+            if (!Guid.TryParse(categoryId, out var parsedCategoryId))
             {
-                throw new KeyNotFoundException("Category bulunamadı.");
+                throw new ArgumentException("Geçersiz kategori ID.");
             }
 
-            var query = _blogDbContext.Posts.Where(p => p.CategoryId == category.Id).AsNoTracking();
+            bool categoryExists = await _blogDbContext.Categories
+                                                      .AnyAsync(c => c.Id == parsedCategoryId);
+
+            if (!categoryExists)
+            {
+                throw new KeyNotFoundException("Kategori bulunamadı.");
+            }
+
+            var query = _blogDbContext.Posts
+                .Where(p => p.CategoryId == parsedCategoryId);
 
             if (additionalFilter != null)
             {
@@ -198,8 +206,12 @@ namespace BlogProject.Infrastructure.Services
                 ? query.OrderByDescending(p => p.ViewCount)
                 : query.OrderBy(p => p.ViewCount);
 
-            return await query.Include(c => c.Category).AsNoTracking().ToListAsync();
+            return await query
+                .Include(p => p.Category)
+                .AsNoTracking()
+                .ToListAsync();
         }
+
 
         public async Task<ICollection<PostEntity>> GetPostsByCommentCountAsync(bool isDescending)
         {
@@ -224,7 +236,7 @@ namespace BlogProject.Infrastructure.Services
             try
             {
                 var query = _blogDbContext.Posts.AsNoTracking().AsQueryable();
-                if(categoryId is not null)
+                if (categoryId is not null)
                 {
                     query = query.Where(p => p.CategoryId == Guid.Parse(categoryId) && !p.IsDeleted);
                 }
@@ -239,12 +251,12 @@ namespace BlogProject.Infrastructure.Services
                 .Take(pageSize)
                 .ToListAsync();
 
-            if (posts == null || !posts.Any())
-            {
-                return new List<PostEntity>();
-            }
+                if (posts == null || !posts.Any())
+                {
+                    return new List<PostEntity>();
+                }
 
-            return posts;
+                return posts;
             }
             catch (Exception ex)
             {
@@ -291,7 +303,7 @@ namespace BlogProject.Infrastructure.Services
                 ? _blogDbContext.Posts.AsNoTracking().Where(p => p.CategoryId == Guid.Parse(categoryId)).OrderByDescending(p => p.Likes.Count())
                 : _blogDbContext.Posts.AsNoTracking().Where(p => p.CategoryId == Guid.Parse(categoryId)).OrderBy(p => p.Likes.Count());
 
-            return await query.Take(3).ToListAsync();
+            return await query.Include(p => p.Category).Take(3).ToListAsync();
         }
 
         public async Task<ICollection<PostEntity>> GetPostsByShareCountAsync(bool isDescending)
@@ -507,23 +519,25 @@ namespace BlogProject.Infrastructure.Services
 
         public async Task<ICollection<PostEntity>> GetLatestPostsWithCount(int count = 3)
         {
+            var context = _contextFactory.CreateDbContext();
             if (count <= 0)
             {
                 throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
             }
-            return await _blogDbContext.Posts.AsNoTracking()
-                .OrderByDescending(p => p.CreatedTime)
-                .Take(count)
-                .Include(p => p.Category)
-                .AsNoTracking()
-                .ToListAsync();
+            return await context.Posts
+                        .Include(p => p.Category)  // Include'u başa alın
+                        .OrderByDescending(p => p.CreatedTime)
+                        .Take(count)
+                        .AsNoTracking()
+                        .ToListAsync();
         }
         public async Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3, bool currentWeek = false)
         {
+            var context = _contextFactory.CreateDbContext();
             if (count <= 0)
                 throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
 
-            var query = _blogDbContext.Posts.AsNoTracking();
+            var query = context.Posts.AsNoTracking();
 
             if (currentWeek)
             {

@@ -38,6 +38,7 @@ namespace BlogProject.Infrastructure.Services
                 .Where(c => c.PostId.ToString() == postId)
                 .Include(c => c.Author)
                 .Include(c => c.Replies)
+                .ThenInclude(c => c.Author)
                 .ToListAsync();
             if (comments == null || !comments.Any())
             {

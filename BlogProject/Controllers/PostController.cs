@@ -167,9 +167,6 @@ namespace BlogProject.Controllers
             if (userIdStr == null || !Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized();
 
-            var post = await _postService.GetPostByIdAsync(Guid.Parse(request.PostId));
-            if (post == null)
-                return NotFound();
             var existingLike = await _context.Likes
                 .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
 
@@ -177,7 +174,7 @@ namespace BlogProject.Controllers
 
             if (existingLike != null)
             {
-                _context.Likes.Remove(existingLike); // asla eksiye düşmesin
+                _context.Likes.Remove(existingLike);
                 liked = false;
             }
             else
@@ -193,11 +190,14 @@ namespace BlogProject.Controllers
 
             await _context.SaveChangesAsync();
 
+            var likeCount = await _context.Likes.CountAsync(l => l.PostId == postId);
+
             return Json(new
             {
                 liked,
-                likeCount = post.Likes is null ? 0 : post.Likes.Count(),
+                likeCount
             });
         }
+
     }
 }

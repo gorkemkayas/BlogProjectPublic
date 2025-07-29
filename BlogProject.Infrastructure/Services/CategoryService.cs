@@ -25,7 +25,7 @@ namespace BlogProject.Infrastructure.Services
                 throw new ArgumentException("Category ID cannot be null or empty.", nameof(categoryId));
             }
             var categoryGuid = Guid.Parse(categoryId);
-            var category = await _context.Categories.FindAsync(categoryGuid);
+            var category = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(c => c.Id == categoryGuid);
             if (category == null)
             {
                 throw new KeyNotFoundException($"Category with ID {categoryId} not found.");

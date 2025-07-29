@@ -18,13 +18,14 @@ namespace BlogProject.Infrastructure.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly BlogDbContext _blogdbContext;
+        private readonly IDbContextFactory<BlogDbContext> _contextFactory;
         private readonly IEmailService _emailService;
         private readonly ICommentService _commentService;
         private readonly IPostService _postService;
         private readonly IUsernameGenerator _usernameGenerator;
         private readonly IUserTokenGenerator _userTokenGenerator;
         private readonly IUrlGenerator _urlGenerator;
-        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext, ICommentService commentService, IPostService postService)
+        public UserService(UserManager<AppUser> userManager, IUsernameGenerator usernameGenerator, SignInManager<AppUser> signInManager, IUserTokenGenerator userTokenService, IUrlGenerator urlGenerator, IEmailService emailService, BlogDbContext blogdbContext, ICommentService commentService, IPostService postService, IDbContextFactory<BlogDbContext> contextFactory)
         {
             _userManager = userManager;
             _usernameGenerator = usernameGenerator;
@@ -35,6 +36,7 @@ namespace BlogProject.Infrastructure.Services
             _blogdbContext = blogdbContext;
             _commentService = commentService;
             _postService = postService;
+            _contextFactory = contextFactory;
         }
         public async Task<ServiceResult<AppUser>> DeleteUserByTypeAsync(string id, DeleteType deleteType, string deleterId)
         {
@@ -449,7 +451,8 @@ namespace BlogProject.Infrastructure.Services
 
         public async Task<List<AppUser>> MostContributors(int countUser)
         {
-            var users = await _userManager.Users.AsNoTracking().OrderByDescending(x => x.Posts.Count).Take(countUser).Include(p => p.Followers).AsNoTracking().ToListAsync();
+            var context = _contextFactory.CreateDbContext();
+            var users = await context.Users.AsNoTracking().OrderByDescending(x => x.Posts.Count).Take(countUser).Include(p => p.Followers).AsNoTracking().ToListAsync();
             return users;
         }
         public async Task<List<AppUser>> NewUsers(int countUser)

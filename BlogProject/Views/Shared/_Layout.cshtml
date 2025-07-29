@@ -1518,23 +1518,26 @@ else if (TempData["Failed"] != null)
             <button id="closeFeedback" class="close-btn">&times;</button>
             <h2>Give us your feedback</h2>
             <p class="feedback-subtitle">Your feedback is very important for us to improve ourselves and offer you a better platform.</p>
-            <form id="feedbackForm">
-    @Html.AntiForgeryToken()
-            <textarea id="feedbackText"
-                      class="feedback-textarea"
-                      placeholder="Please describe in detail your experience, suggestions or issues you encountered..."
-                      rows="5"></textarea>
 
-            <div class="button-group">
-                <button id="cancelFeedback" class="cancel-btn">Cancel</button>
-                <button id="submitFeedback" type="button" class="submit-btn" style="background: linear-gradient(135deg, #dc3545, #c82333);">Submit</button>
-            </div>
+            <form id="feedbackFormElement">
+                @Html.AntiForgeryToken()
+                <textarea id="feedbackText"
+                          class="feedback-textarea"
+                          placeholder="Please describe in detail your experience, suggestions or issues you encountered..."
+                          rows="5"></textarea>
+
+                <div class="button-group">
+                    <button id="cancelFeedback" class="cancel-btn" type="button">Cancel</button>
+                    <button id="submitFeedback" type="button" class="submit-btn" style="background: linear-gradient(135deg, #dc3545, #c82333);">Submit</button>
+                </div>
             </form>
+
             <div id="successMessage" class="success-message">
                 ✓ Your feedback has been sent successfully. Thank you!
             </div>
         </div>
     </div>
+
 
     <!-- Sabit buton grubu -->
     <div class="floating-buttons">
@@ -1614,28 +1617,6 @@ else if (TempData["Failed"] != null)
             </div>
         </div>
     </div>
-
-    <div id="feedbackForm" class="feedback-form">
-        <div class="feedback-content">
-            <button id="closeFeedback" class="close-btn">&times;</button>
-            <h2>Geri Bildirim</h2>
-            <p class="feedback-subtitle">Görüşleriniz bizim için çok değerli</p>
-
-            <textarea id="feedbackText"
-                      class="feedback-textarea"
-                      placeholder="Lütfen deneyiminizi, önerilerinizi veya karşılaştığınız sorunları detaylı olarak açıklayın..."
-                      rows="5"></textarea>
-
-            <div class="button-group">
-                <button id="cancelFeedback" class="cancel-btn">İptal</button>
-                <button id="submitFeedback" class="submit-btn">Gönder</button>
-            </div>
-
-            <div id="successMessage" class="success-message">
-                ✓ Geri bildiriminiz başarıyla gönderildi. Teşekkür ederiz!
-            </div>
-        </div>
-    </div>
     <script>
         // DOM elementleri
         const feedbackButton = document.getElementById('feedbackButton');
@@ -1646,21 +1627,10 @@ else if (TempData["Failed"] != null)
         const feedbackText = document.getElementById('feedbackText');
         const successMessage = document.getElementById('successMessage');
 
-        // Geliştirme durumu elementleri
-        const developmentButton = document.getElementById('developmentButton');
-        const developmentForm = document.getElementById('developmentForm');
-        const closeDevelopment = document.getElementById('closeDevelopment');
-        const closeDevelopmentBtn = document.getElementById('closeDevelopmentBtn');
-
         // Geri bildirim formu açma
         feedbackButton.addEventListener('click', () => {
             feedbackForm.style.display = 'flex';
             feedbackText.focus();
-        });
-
-        // Geliştirme durumu formu açma
-        developmentButton.addEventListener('click', () => {
-            developmentForm.style.display = 'flex';
         });
 
         // Geri bildirim formu kapatma fonksiyonu
@@ -1670,18 +1640,9 @@ else if (TempData["Failed"] != null)
             successMessage.style.display = 'none';
         }
 
-        // Geliştirme durumu formu kapatma fonksiyonu
-        function closeDevelopmentForm() {
-            developmentForm.style.display = 'none';
-        }
-
-        // Geri bildirim kapatma butonları
+        // Form kapatma butonları
         closeFeedback.addEventListener('click', closeFeedbackForm);
         cancelFeedback.addEventListener('click', closeFeedbackForm);
-
-        // Geliştirme durumu kapatma butonları
-        closeDevelopment.addEventListener('click', closeDevelopmentForm);
-        closeDevelopmentBtn.addEventListener('click', closeDevelopmentForm);
 
         // Overlay'e tıklayınca kapatma
         feedbackForm.addEventListener('click', (e) => {
@@ -1690,27 +1651,16 @@ else if (TempData["Failed"] != null)
             }
         });
 
-        developmentForm.addEventListener('click', (e) => {
-            if (e.target === developmentForm) {
-                closeDevelopmentForm();
-            }
-        });
-
         // ESC tuşu ile kapatma
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (feedbackForm.style.display === 'flex') {
-                    closeFeedbackForm();
-                }
-                if (developmentForm.style.display === 'flex') {
-                    closeDevelopmentForm();
-                }
+            if (e.key === 'Escape' && feedbackForm.style.display === 'flex') {
+                closeFeedbackForm();
             }
         });
 
         // Geri bildirim gönderme
-                   submitFeedback.addEventListener('click', (e) => {
-            e.preventDefault(); // form submit olmasın
+        submitFeedback.addEventListener('click', (e) => {
+            e.preventDefault();
             const feedback = feedbackText.value.trim();
 
             if (feedback === '') {
@@ -1718,14 +1668,15 @@ else if (TempData["Failed"] != null)
                 return;
             }
 
+            const token = document.querySelector('#feedbackFormElement input[name="__RequestVerificationToken"]').value;
+
             fetch('/Feedback/Submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Eğer CSRF token gerekiyorsa ekle:
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    'RequestVerificationToken': token
                 },
-                body: JSON.stringify(feedback) // string gönderiyoruz çünkü controller string alıyor
+                body: JSON.stringify({ message: feedback }) // ✅ Doğru formatta gönderim
             })
             .then(response => {
                 if (response.ok) {
@@ -1744,97 +1695,13 @@ else if (TempData["Failed"] != null)
             });
         });
 
-
-
         // Textarea otomatik boyutlandırma
-        feedbackText.addEventListener('input', function() {
+        feedbackText.addEventListener('input', function () {
             this.style.height = 'auto';
             this.style.height = Math.max(120, this.scrollHeight) + 'px';
         });
     </script>
-    <script>
-        // DOM elementleri
-                const feedbackButton = document.getElementById('feedbackButton');
-                const feedbackForm = document.getElementById('feedbackForm');
-                const closeFeedback = document.getElementById('closeFeedback');
-                const cancelFeedback = document.getElementById('cancelFeedback');
-                const submitFeedback = document.getElementById('submitFeedback');
-                const feedbackText = document.getElementById('feedbackText');
-                const successMessage = document.getElementById('successMessage');
 
-                // Formu açma
-                feedbackButton.addEventListener('click', () => {
-                    feedbackForm.style.display = 'flex';
-                    feedbackText.focus();
-                });
-
-                // Formu kapatma fonksiyonu
-                function closeFeedbackForm() {
-                    feedbackForm.style.display = 'none';
-                    feedbackText.value = '';
-                    successMessage.style.display = 'none';
-                }
-
-                // Kapatma butonları
-                closeFeedback.addEventListener('click', closeFeedbackForm);
-                cancelFeedback.addEventListener('click', closeFeedbackForm);
-
-                // Overlay'e tıklayınca kapatma
-                feedbackForm.addEventListener('click', (e) => {
-                    if (e.target === feedbackForm) {
-                        closeFeedbackForm();
-                    }
-                });
-
-                // ESC tuşu ile kapatma
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && feedbackForm.style.display === 'flex') {
-                        closeFeedbackForm();
-                    }
-                });
-
-                       submitFeedback.addEventListener('click', () => {
-            const feedback = feedbackText.value.trim();
-
-            if (feedback === '') {
-                alert('Lütfen geri bildiriminizi yazın.');
-                return;
-            }
-
-            // API çağrısı: geri bildirimi controller'a gönder
-            fetch('/Feedback/Submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value // CSRF koruması için
-                },
-                body: JSON.stringify({ message: feedback })
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Geri bildirim gönderildi:', feedback);
-                    successMessage.style.display = 'block';
-                    feedbackText.value = '';
-                    setTimeout(() => {
-                        closeFeedbackForm();
-                    }, 2000);
-                } else {
-                    alert("Geri bildirim gönderilirken bir hata oluştu.");
-                }
-            })
-            .catch(error => {
-                console.error("Hata:", error);
-                alert("Sunucuya bağlanılamadı.");
-            });
-        });
-
-
-                // Textarea otomatik boyutlandırma
-                feedbackText.addEventListener('input', function() {
-                    this.style.height = 'auto';
-                    this.style.height = Math.max(120, this.scrollHeight) + 'px';
-                });
-</script>
     <!-- Premium Footer -->
     @*  <footer class="premium-footer">
         <div class="footer-container">

@@ -48,7 +48,7 @@ namespace BlogProject.Controllers
             int scrollPageSize = 3;
 
             var category = await _categoryService.GetByIdAsync(id);
-            ICollection<PostEntity> posts = await _postService.GetByCategoryIdAsync(id) ?? new List<PostEntity>(); ;
+            ICollection<PostEntity> posts = await _postService.GetByCategoryIdAsync(id) ?? new List<PostEntity>();
             ICollection<PostEntity> mostLikedPosts = await _postService.GetCategorizedPostsByLikeCountsAsync(true,id) ?? new List<PostEntity>();
             ICollection<PostEntity> mostViewedPosts = await _postService.GetMostViewedPostsByCategoryAsync(category.Name, true) ?? new List<PostEntity>();
             var relatedCategories = await _categoryService.GetRelatedCategoriesAsync(id);
@@ -97,10 +97,10 @@ namespace BlogProject.Controllers
                 .GetMostViewedPostsByCategoryIdAsync(categoryId, true);
 
             Console.WriteLine("GetSliderPosts metodundan gelen gönderilerin bilgileri :\n");
-            foreach (var item in posts)
-            {
-                Console.WriteLine($"PostId {item.Id}\n CategoryId {item.Category.Id}\n PostName {item.Title} \n CategoryName {item.Category.Name}");
-            }
+            //foreach (var item in posts)
+            //{
+            //    Console.WriteLine($"PostId {item.Id}\n CategoryId {item.Category.Id}\n PostName {item.Title} \n CategoryName {item.Category.Name}");
+            //}
             var sliderPosts = posts
             .Skip((page - 1) * pageSize)
             .Take(pageSize)

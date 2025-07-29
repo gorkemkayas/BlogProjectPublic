@@ -43,7 +43,23 @@ namespace BlogProject.Controllers
             var mostContributorsTask = _userService.MostContributors(3);
             var mostReadThisWeekTask = _postService.GetMostViewedPostsWithCount(5, true);
 
+            try
+            {
             await Task.WhenAll(mostViewedTask, latestPostsTask, popularTagsTask, mostContributorsTask, mostReadThisWeekTask);
+            }
+            catch (Exception)
+            {
+                if (mostViewedTask.IsFaulted)
+                    Console.WriteLine($"mostViewedTask failed: {mostViewedTask.Exception?.GetBaseException().Message}");
+                if (latestPostsTask.IsFaulted)
+                    Console.WriteLine($"latestPostsTask failed: {latestPostsTask.Exception?.GetBaseException().Message}");
+                if (popularTagsTask.IsFaulted)
+                    Console.WriteLine($"mostViewedTask failed: {popularTagsTask.Exception?.GetBaseException().Message}");
+                if (mostContributorsTask.IsFaulted)
+                    Console.WriteLine($"latestPostsTask failed: {mostContributorsTask.Exception?.GetBaseException().Message}");
+                if (mostReadThisWeekTask.IsFaulted)
+                    Console.WriteLine($"latestPostsTask failed: {mostReadThisWeekTask.Exception?.GetBaseException().Message}");
+            }
 
             var model = new IndexViewModel
             {

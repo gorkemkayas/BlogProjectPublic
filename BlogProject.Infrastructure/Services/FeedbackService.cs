@@ -16,24 +16,40 @@ namespace BlogProject.Infrastructure.Services
 
         public async Task<bool> SubmitFeedbackAsync(string message)
         {
-
-            var sanitizer = new HtmlSanitizer();
-            var sanitizedMessage = sanitizer.Sanitize(message);
-            if (string.IsNullOrWhiteSpace(message))
+            try
             {
-                throw new ArgumentException("Geri bildirim mesajı boş olamaz.", nameof(sanitizedMessage));
+                Console.WriteLine("Geri bildirim mesajı alındı: " + message);
+                Console.WriteLine("sanitizere geldim.");
+                var sanitizer = new HtmlSanitizer();
+                var sanitizedMessage = sanitizer.Sanitize(message);
+                Console.WriteLine($"sanitized message : {sanitizedMessage}");
+
+
+                if (string.IsNullOrWhiteSpace(sanitizedMessage))
+                {
+                    throw new ArgumentException("Geri bildirim mesajı boş olamaz.", nameof(sanitizedMessage));
+                }
+
+                var newFeedback = new FeedbackEntity
+                {
+                    Message = sanitizedMessage,
+                    CreatedTime = DateTime.Now
+                };
+                Console.WriteLine($"newFeedback Entitysi oluşuturldu : {newFeedback.Message}, {newFeedback.CreatedTime}");
+                Console.WriteLine($"db ye ekleniyor.");
+                _blogDbContext.Feedbacks.Add(newFeedback);
+                Console.WriteLine("db ye eklendi.");
+                var result = await _blogDbContext.SaveChangesAsync();
+                Console.WriteLine($"db ye ekleme sonucu : {result}");
+                return result > 0;
+            } 
+            catch (Exception ex)
+            {
+
+                throw new Exception("Geri bildirim gönderilirken bir hata oluştu: " + ex.Message, ex);
             }
-            var newFeedback = new FeedbackEntity
-            {
-                Message = sanitizedMessage,
-                CreatedTime = DateTime.Now
-            };
 
-            _blogDbContext.Feedbacks.Add(newFeedback);
-            var result = await _blogDbContext.SaveChangesAsync();
-
-            // Eğer kayıt başarılıysa, 1 döner
-            return result > 0;
         }
+
     }
 }

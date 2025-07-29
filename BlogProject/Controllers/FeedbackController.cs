@@ -1,5 +1,6 @@
 ﻿using BlogProject.Application.Interfaces;
 using BlogProject.Domain.Entities;
+using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogProject.Web.Controllers
@@ -12,22 +13,23 @@ namespace BlogProject.Web.Controllers
         {
             _feedbackService = feedbackService;
         }
+
         [Route("Feedback/Submit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Submit([FromBody] string message)
+        public async Task<IActionResult> Submit([FromBody] FeedbackSubmitViewModel dto)
         {
-            Console.WriteLine("submit e geldi.");
-            if (string.IsNullOrWhiteSpace(message))
+            Console.WriteLine($"submit e geldi");
+            if (string.IsNullOrWhiteSpace(dto.Message))
             {
                 return BadRequest("Geri bildirim boş olamaz.");
             }
 
-            var isOk = await _feedbackService.SubmitFeedbackAsync(message);
-            // TODO: Geri bildirimi kaydet, e-posta gönder vs.
-            Console.WriteLine("Geri bildirim alındı: " + message);
+            var isOk = await _feedbackService.SubmitFeedbackAsync(dto.Message);
+            Console.WriteLine("Geri bildirim alındı: " + dto.Message);
 
-            return Ok(new { success = true });
+            return Ok(new { success = isOk });
         }
+
     }
 }

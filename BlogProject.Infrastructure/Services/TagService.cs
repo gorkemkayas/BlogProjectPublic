@@ -13,10 +13,11 @@ namespace BlogProject.Infrastructure.Services
     public class TagService : ITagService
     {
         private readonly BlogDbContext _context;
-
-        public TagService(BlogDbContext context)
+        private readonly IDbContextFactory<BlogDbContext> _contextFactory;
+        public TagService(BlogDbContext context, IDbContextFactory<BlogDbContext> contextFactory)
         {
             _context = context;
+            _contextFactory = contextFactory;
         }
 
         public async Task<object> GetDailyPostCountsAsync(string tagId)
@@ -332,9 +333,10 @@ namespace BlogProject.Infrastructure.Services
         }
         public async Task<List<TagEntity>> GetPopularTags(int count = 10)
         {
+            var context = _contextFactory.CreateDbContext();
             try
             {
-                return await _context.Tags.AsNoTracking().Where(t => t.IsDeleted == false).Take(count).OrderByDescending(v => v.UsageCount).ToListAsync();
+                return await context.Tags.AsNoTracking().Where(t => t.IsDeleted == false).Take(count).OrderByDescending(v => v.UsageCount).ToListAsync();
             }
             catch (Exception)
             {

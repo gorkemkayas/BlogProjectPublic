@@ -12,7 +12,12 @@
         currentUser = await userManager.FindByNameAsync(User.Identity.Name!);
 }
 
+
 @model CategoryViewModel
+@{
+    var categoryName = Model.MostViewedPosts.FirstOrDefault()?.Category?.Name ?? "Category null";
+}
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -738,8 +743,6 @@
         }
 
     </style>
-
-
     <style>
         .slider-nav-v5 {
             position: absolute;
@@ -863,8 +866,6 @@
             </div>
         </div>
     </section>
-
-
     <style>
         * {
             margin: 0;
@@ -1284,7 +1285,7 @@
             let currentPage = 1;
             const slider = document.getElementById('postSlider');
             const categoryId = document.querySelector('.post-slider-container').dataset.categoryId;
-
+            console.log("İstek atılıyor → page:", page, "categoryId:", categoryId);
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
 
@@ -1303,6 +1304,8 @@
             });
 
             function loadPosts(page) {
+                console.log("adasdasd");
+                console.log("İstek atılıyor → page:", page, "categoryId:", categoryId);
                 $.get(`/Category/GetSliderPosts?page=${page}&categoryId=${categoryId}`, function (data) {
                     if ($.trim(data) === "") {
                         currentPage--; // ileri gittik ama boş döndüyse geri al
