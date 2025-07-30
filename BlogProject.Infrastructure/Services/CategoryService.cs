@@ -18,7 +18,7 @@ namespace BlogProject.Infrastructure.Services
         {
             _context = context;
         }
-        public async Task<List<CategoryEntity>> GetRelatedCategoriesAsync(string  categoryId)
+        public async Task<List<CategoryIdAndNameDto>> GetRelatedCategoriesAsync(string  categoryId)
         {
             if (string.IsNullOrEmpty(categoryId))
             {
@@ -33,17 +33,27 @@ namespace BlogProject.Infrastructure.Services
             // Assuming related categories are those that are not the same as the current category
             var relatedCategories = await _context.Categories.AsNoTracking()
                 .Where(c => c.Id != categoryGuid && !c.IsDeleted)
-                .ToListAsync();
+                .Select(c => new CategoryIdAndNameDto() { Id = c.Id.ToString(), Name = c.Name}).ToListAsync();
+            // sadece id ve name'i gerekli
             return relatedCategories;
         }
-        public async Task<CategoryEntity> GetByIdAsync(string id)
+        public async Task<CategoryIdNameDescriptionDto> GetByIdAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 throw new ArgumentException("Category ID cannot be null or empty.", nameof(id));
             }
             var categoryId = Guid.Parse(id);
-            var category = await _context.Categories.FindAsync(categoryId);
+            var category = await _context.Categories
+                                         .Where(c => !c.IsDeleted && c.Id == categoryId)
+                                         .Select(c => new CategoryIdNameDescriptionDto
+                                         {
+                                             Id = c.Id,
+                                             Name = c.Name,
+                                             Description = c.Description
+                                         })
+                                         .FirstOrDefaultAsync();
+
             if (category == null)
             {
                 throw new KeyNotFoundException($"Category with ID {id} not found.");

@@ -1,5 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using BlogProject.Application.DTOs;
 using BlogProject.Application.Interfaces;
+using BlogProject.Domain.Entities;
 using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,42 +38,38 @@ namespace BlogProject.Controllers
                 ViewBag.ShowWelcomeMessage = false;
             }
 
-
+            // Task'ları başlatıyoruz
             var mostViewedTask = _postService.GetMostViewedPostsWithCount();
             var latestPostsTask = _postService.GetLatestPostsWithCount();
             var popularTagsTask = _tagService.GetPopularTags(15);
             var mostContributorsTask = _userService.MostContributors(3);
-            var mostReadThisWeekTask = _postService.GetMostViewedPostsWithCount(5, true);
+            var mostReadThisWeekTask = _postService.GetMostViewedPostsWithCount(5, currentWeek: true);
 
             try
             {
-            await Task.WhenAll(mostViewedTask, latestPostsTask, popularTagsTask, mostContributorsTask, mostReadThisWeekTask);
+                // Tüm sorguları paralel bekliyoruz
+                await Task.WhenAll(mostViewedTask, latestPostsTask, popularTagsTask, mostContributorsTask, mostReadThisWeekTask);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                if (mostViewedTask.IsFaulted)
-                    Console.WriteLine($"mostViewedTask failed: {mostViewedTask.Exception?.GetBaseException().Message}");
-                if (latestPostsTask.IsFaulted)
-                    Console.WriteLine($"latestPostsTask failed: {latestPostsTask.Exception?.GetBaseException().Message}");
-                if (popularTagsTask.IsFaulted)
-                    Console.WriteLine($"mostViewedTask failed: {popularTagsTask.Exception?.GetBaseException().Message}");
-                if (mostContributorsTask.IsFaulted)
-                    Console.WriteLine($"latestPostsTask failed: {mostContributorsTask.Exception?.GetBaseException().Message}");
-                if (mostReadThisWeekTask.IsFaulted)
-                    Console.WriteLine($"latestPostsTask failed: {mostReadThisWeekTask.Exception?.GetBaseException().Message}");
+                // Hata varsa logluyoruz, ama işlemin devam etmesini sağlıyoruz
+                // Burada dilersen ayrıntılı logging yapabilirsin
+                Console.WriteLine($"Index metodu sorgu hatası: {ex.Message}");
             }
 
+            // Task.Result çağırmadan önce Task tamamlandı, burası güvenli
             var model = new IndexViewModel
             {
-                MostViewedPosts = mostViewedTask.Result,
-                LatestPosts = latestPostsTask.Result,
-                PopularTags = popularTagsTask.Result,
-                MostContributors = mostContributorsTask.Result,
-                MostReadPostsThisWeek = mostReadThisWeekTask.Result
+                MostViewedPosts = mostViewedTask.IsCompletedSuccessfully ? mostViewedTask.Result : new List<PostDto>(),
+                LatestPosts = latestPostsTask.IsCompletedSuccessfully ? latestPostsTask.Result : new List<PostDto>(),
+                PopularTags = popularTagsTask.IsCompletedSuccessfully ? popularTagsTask.Result : new List<TagEntity>(),
+                MostContributors = mostContributorsTask.IsCompletedSuccessfully ? mostContributorsTask.Result : new List<AppUser>(),
+                MostReadPostsThisWeek = mostReadThisWeekTask.IsCompletedSuccessfully ? mostReadThisWeekTask.Result : new List<PostDto>()
             };
 
             return View(model);
         }
+
 
 
         [Route("/development-updates")]

@@ -1,4 +1,5 @@
-﻿using BlogProject.Application.Interfaces;
+﻿using BlogProject.Application.DTOs;
+using BlogProject.Application.Interfaces;
 using BlogProject.Domain.Entities;
 using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -45,12 +46,14 @@ namespace BlogProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Category(string id)
         {
+            try
+            {
             int scrollPageSize = 3;
 
             var category = await _categoryService.GetByIdAsync(id);
-            ICollection<PostEntity> posts = await _postService.GetByCategoryIdAsync(id) ?? new List<PostEntity>();
-            ICollection<PostEntity> mostLikedPosts = await _postService.GetCategorizedPostsByLikeCountsAsync(true,id) ?? new List<PostEntity>();
-            ICollection<PostEntity> mostViewedPosts = await _postService.GetMostViewedPostsByCategoryAsync(category.Name, true) ?? new List<PostEntity>();
+            ICollection<PostListItemDto> posts = await _postService.GetByCategoryIdAsync(id) ?? new List<PostListItemDto>();
+            ICollection<PostDto> mostLikedPosts = await _postService.GetCategorizedPostsByLikeCountsAsync(true,id) ?? new List<PostDto>();
+            ICollection<PostWithCategoryNameDto> mostViewedPosts = await _postService.GetMostViewedPostsByCategoryAsync(category.Name, true) ?? new List<PostWithCategoryNameDto>();
             var relatedCategories = await _categoryService.GetRelatedCategoriesAsync(id);
             ViewBag.CategoryId = id;
 
@@ -66,6 +69,13 @@ namespace BlogProject.Controllers
             };
 
             return View(viewModel);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception($"HATA: {ex.Message}\nHATA STACKTRACE: {ex.StackTrace}");
+            }
         }
 
         [HttpGet]

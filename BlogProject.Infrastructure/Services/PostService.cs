@@ -24,61 +24,80 @@ namespace BlogProject.Infrastructure.Services
             _contextFactory = contextFactory;
         }
 
-        public async Task<List<PostEntity>> GetPostByTagIdAsync(string tagId)
+        public async Task<List<PostListItemDto>> GetPostByTagIdAsync(string tagId)
         {
             if (string.IsNullOrWhiteSpace(tagId))
-            {
                 throw new ArgumentException("TagId boş olamaz.", nameof(tagId));
-            }
-            var tag = await _blogDbContext.Tags
-                                          .FirstOrDefaultAsync(t => t.Id == Guid.Parse(tagId));
-            if (tag == null)
-            {
-                throw new KeyNotFoundException("Belirtilen Id ile ilişkili tag bulunamadı.");
-            }
-            var posts = await _blogDbContext.Posts
-                                       .Where(p => p.TagPosts.Any(tp => tp.TagId == tag.Id) && !p.IsDeleted)
-                                       .Include(p => p.Author)
-                                       .AsNoTracking()
-                                       .ToListAsync();
 
-            if (posts == null)
-            {
-                return new List<PostEntity>();
-            }
+            var tagGuid = Guid.Parse(tagId);
+
+            var tagExists = await _blogDbContext.Tags
+                .AsNoTracking()
+                .AnyAsync(t => t.Id == tagGuid);
+
+            if (!tagExists)
+                throw new KeyNotFoundException("Belirtilen Id ile ilişkili tag bulunamadı.");
+
+            var posts = await _blogDbContext.Posts
+                .AsNoTracking()
+                .Where(p => p.TagPosts.Any(tp => tp.TagId == tagGuid) && !p.IsDeleted)
+                .Select(p => new PostListItemDto
+                {
+                    Id = p.Id,
+                    AuthorId = p.AuthorId,
+                    CoverImageUrl = p.CoverImageUrl,
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    CreatedTime = p.CreatedTime,
+                    ViewCount = p.ViewCount
+                })
+                .ToListAsync();
 
             return posts;
         }
-        public async Task<List<PostEntity>> GetByCategoryIdAsync(string categoryId)
+
+        public async Task<List<PostListItemDto>> GetByCategoryIdAsync(string categoryId)
         {
             if (string.IsNullOrWhiteSpace(categoryId))
-            {
                 throw new ArgumentException("CategoryId boş olamaz.", nameof(categoryId));
-            }
-            var category = await _blogDbContext.Categories.AsNoTracking()
-                                               .FirstOrDefaultAsync(c => c.Id == Guid.Parse(categoryId));
-            if (category == null)
-            {
+
+            var categoryGuid = Guid.Parse(categoryId);
+
+            var categoryExists = await _blogDbContext.Categories
+                .AsNoTracking()
+                .AnyAsync(c => c.Id == categoryGuid);
+
+            if (!categoryExists)
                 throw new KeyNotFoundException("Belirtilen Id ile ilişkili kategori bulunamadı.");
-            }
+
             return await _blogDbContext.Posts
-                                       .Where(p => p.CategoryId == category.Id && !p.IsDeleted)
-                                       .Include(p => p.Author)
-                                       .AsNoTracking()
-                                       .ToListAsync();
+                .AsNoTracking()
+                .Where(p => p.CategoryId == categoryGuid && !p.IsDeleted)
+                .Select(p => new PostListItemDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    CoverImageUrl = p.CoverImageUrl,
+                    CreatedTime = p.CreatedTime,
+                    ViewCount = p.ViewCount,
+                    AuthorId = p.AuthorId,
+                    CategoryId = p.CategoryId,
+                    CategoryName = p.Category.Name
+                })
+                .ToListAsync();
         }
+
         public async Task<bool> IsPostLikedByCurrentUserAsync(string userId, string postId)
         {
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(postId))
             {
                 throw new ArgumentException("UserId veya PostId boş olamaz.");
             }
-            var likeCheck = await _blogDbContext.Likes.Where(p => p.PostId == Guid.Parse(postId) && p.UserId == Guid.Parse(userId)).AsNoTracking().FirstOrDefaultAsync();
-            if (likeCheck == null)
-            {
-                return false;
-            }
-            return true;
+            var isLiked = await _blogDbContext.Likes
+                                              .AsNoTracking()
+                                              .AnyAsync(p => p.PostId == Guid.Parse(postId) && p.UserId == Guid.Parse(userId));
+            return isLiked;
         }
 
         public async Task<int> GetPostCountByUserAsync(AppUser user)
@@ -89,7 +108,7 @@ namespace BlogProject.Infrastructure.Services
             }
             return await _blogDbContext.Posts.CountAsync(p => p.AuthorId == user.Id && !p.IsDeleted);
         }
-        public async Task<PostEntity> GetPostByIdAsync(Guid postId, bool updateReadCount = false)
+        public async Task<PostDetailsDto> GetPostByIdAsync(Guid postId, bool updateReadCount = false)
         {
             if (postId == Guid.Empty)
             {
@@ -102,7 +121,44 @@ namespace BlogProject.Infrastructure.Services
                 _blogDbContext.Update(post);
                 await _blogDbContext.SaveChangesAsync();
             }
-            return await _blogDbContext.Posts.Include(a => a.Author).Include(c => c.Category).Include(l => l.Likes).AsNoTracking().FirstOrDefaultAsync(p => p.Id == postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
+            var postDto = await _blogDbContext.Posts
+                                            .Where(p => p.Id == postId && !p.IsDeleted)
+                                            .AsNoTracking()
+                                            .Select(p => new PostDetailsDto
+                                            {
+                                                Id = p.Id,
+                                                Title = p.Title,
+                                                Content = p.Content,
+                                                CoverImageUrl = p.CoverImageUrl,
+                                                CreatedTime = p.CreatedTime,
+                                                ViewCount = p.ViewCount,
+                                                LikeCount = p.Likes.Count,
+                                                CategoryName = p.Category.Name,
+                                                Author = new AuthorInfoDto
+                                                {
+                                                    FullName = p.Author.FullName,
+                                                    UserName = p.Author.UserName,
+                                                    ProfilePicture = p.Author.ProfilePicture,
+                                                    Title = p.Author.Title,
+                                                    CurrentPosition = p.Author.CurrentPosition,
+                                                    UniversityName = p.Author.UniversityName,
+                                                    XAddress = p.Author.XAddress,
+                                                    LinkedinAddress = p.Author.LinkedinAddress,
+                                                    GithubAddress = p.Author.GithubAddress,
+                                                    MediumAddress = p.Author.MediumAddress,
+                                                    YoutubeAddress = p.Author.YoutubeAddress,
+                                                    PersonalWebAddress = p.Author.PersonalWebAddress
+                                                }
+                                            })
+                                            .FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Post bulunamadı.");
+
+            return postDto;
+            //return await _blogDbContext.Posts
+            //    .Include(a => a.Author)
+            //    .Include(c => c.Category)
+            //    .Include(l => l.Likes)
+            //    .AsNoTracking()
+            //    .FirstOrDefaultAsync(p => p.Id == postId) ?? throw new Exception("Belirtilen Id ile ilişkili post yok.");
         }
 
         public async Task<ICollection<PostEntity>> GetPostsByAuthorIdAsync(Guid authorId, bool isDescending)
@@ -112,9 +168,11 @@ namespace BlogProject.Infrastructure.Services
                 throw new ArgumentNullException(nameof(authorId));
             }
 
-            var author = await _blogDbContext.Users.FindAsync(authorId) ?? throw new Exception("Bu Id ile ilişkili 'author' bulunamadı.");
+            var exists = await _blogDbContext.Users.AsNoTracking().AnyAsync(u => u.Id == authorId);
+            if (!exists)
+                throw new Exception("Bu Id ile ilişkili author bulunamadı.");
 
-            var query = _blogDbContext.Posts.Where(p => p.AuthorId == author.Id);
+            var query = _blogDbContext.Posts.Where(p => p.AuthorId == authorId);
 
             query = isDescending
                 ? query.OrderByDescending(p => p.CreatedTime)
@@ -130,15 +188,14 @@ namespace BlogProject.Infrastructure.Services
                 throw new ArgumentException("Category ismi belirtilmedi.", nameof(categoryName));
             }
 
-            var category = await _blogDbContext.Categories.AsNoTracking()
-                                               .FirstOrDefaultAsync(c => c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
+            var categoryId = await _blogDbContext.Categories.AsNoTracking().Where(c => c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase)).Select(c => c.Id).FirstOrDefaultAsync();
 
-            if (category == null)
+            if (categoryId == Guid.Empty)
             {
                 throw new KeyNotFoundException("Category bulunamadı.");
             }
 
-            var query = _blogDbContext.Posts.Where(p => p.CategoryId == category.Id).AsNoTracking();
+            var query = _blogDbContext.Posts.Where(p => p.CategoryId == categoryId).AsNoTracking();
 
             if (additionalFilter != null)
             {
@@ -151,24 +208,29 @@ namespace BlogProject.Infrastructure.Services
 
             return await query.AsNoTracking().ToListAsync();
         }
-        public async Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null)
+        public async Task<ICollection<PostWithCategoryNameDto>> GetMostViewedPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null)
         {
             if (string.IsNullOrWhiteSpace(categoryName))
             {
                 throw new ArgumentException("Category ismi belirtilmedi.", nameof(categoryName));
             }
 
-            var category = await _blogDbContext.Categories.AsNoTracking()
-                                               .FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.ToLower());
+            var categoryId = await _blogDbContext.Categories
+                .AsNoTracking()
+                .Where(c => c.Name.ToLower() == categoryName.ToLower())
+                .Select(c => c.Id)
+                .FirstOrDefaultAsync();
 
-            if (category == null)
+            if (categoryId == Guid.Empty)
             {
                 throw new KeyNotFoundException("Category bulunamadı.");
             }
 
-            var query = _blogDbContext.Posts.Include(c => c.Category).Where(p => p.CategoryId == category.Id);
+            var query = _blogDbContext.Posts
+                .AsNoTracking()
+                .Where(p => p.CategoryId == categoryId && !p.IsDeleted);
 
-            if (additionalFilter != null)
+            if (additionalFilter is not null)
             {
                 query = query.Where(additionalFilter);
             }
@@ -177,9 +239,21 @@ namespace BlogProject.Infrastructure.Services
                 ? query.OrderByDescending(p => p.ViewCount)
                 : query.OrderBy(p => p.ViewCount);
 
-            return await query.ToListAsync();
+            return await query
+                .Select(p => new PostWithCategoryNameDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    ViewCount = p.ViewCount,
+                    CreatedTime = p.CreatedTime,
+                    CoverImageUrl = p.CoverImageUrl,
+                    CategoryName = p.Category.Name
+                })
+                .ToListAsync();
         }
-        public async Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryIdAsync(string categoryId,bool isDescending,Expression<Func<PostEntity, bool>>? additionalFilter = null)
+
+        public async Task<ICollection<PostWithCategoryNameDto>> GetMostViewedPostsByCategoryIdAsync(string categoryId, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null)
         {
             if (!Guid.TryParse(categoryId, out var parsedCategoryId))
             {
@@ -187,6 +261,7 @@ namespace BlogProject.Infrastructure.Services
             }
 
             bool categoryExists = await _blogDbContext.Categories
+                                                      .AsNoTracking()
                                                       .AnyAsync(c => c.Id == parsedCategoryId);
 
             if (!categoryExists)
@@ -195,7 +270,7 @@ namespace BlogProject.Infrastructure.Services
             }
 
             var query = _blogDbContext.Posts
-                .Where(p => p.CategoryId == parsedCategoryId);
+                .Where(p => p.CategoryId == parsedCategoryId && !p.IsDeleted);
 
             if (additionalFilter != null)
             {
@@ -207,12 +282,22 @@ namespace BlogProject.Infrastructure.Services
                 : query.OrderBy(p => p.ViewCount);
 
             return await query
-                .Include(p => p.Category)
+                .Select(p => new PostWithCategoryNameDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    ViewCount = p.ViewCount,
+                    CreatedTime = p.CreatedTime,
+                    CoverImageUrl = p.CoverImageUrl,
+                    CategoryName = p.Category.Name
+                })
                 .AsNoTracking()
                 .ToListAsync();
         }
 
 
+        //bundan sonrası kaldı.
         public async Task<ICollection<PostEntity>> GetPostsByCommentCountAsync(bool isDescending)
         {
             var query = isDescending
@@ -297,14 +382,33 @@ namespace BlogProject.Infrastructure.Services
                 throw new Exception("Hata mesajı:" + ex.Message);
             }
         }
-        public async Task<ICollection<PostEntity>> GetCategorizedPostsByLikeCountsAsync(bool isDescending, string categoryId)
+        public async Task<ICollection<PostDto>> GetCategorizedPostsByLikeCountsAsync(bool isDescending, string categoryId)
         {
-            var query = isDescending
-                ? _blogDbContext.Posts.AsNoTracking().Where(p => p.CategoryId == Guid.Parse(categoryId)).OrderByDescending(p => p.Likes.Count())
-                : _blogDbContext.Posts.AsNoTracking().Where(p => p.CategoryId == Guid.Parse(categoryId)).OrderBy(p => p.Likes.Count());
+            var query = _blogDbContext.Posts
+                .AsNoTracking()
+                .Where(p => p.CategoryId == Guid.Parse(categoryId));
 
-            return await query.Include(p => p.Category).Take(3).ToListAsync();
+            query = isDescending
+                ? query.OrderByDescending(p => p.Likes.Count())
+                : query.OrderBy(p => p.Likes.Count());
+
+            return await query
+                .Select(p => new PostDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    Subtitle = p.Subtitle,
+                    LikeCount = p.Likes.Count(),
+                    CategoryName = p.Category.Name,
+                    CreatedTime = p.CreatedTime,
+                    ViewCount = p.ViewCount,
+                    CoverImageUrl = p.CoverImageUrl
+                })
+                .Take(3)
+                .ToListAsync();
         }
+
 
         public async Task<ICollection<PostEntity>> GetPostsByShareCountAsync(bool isDescending)
         {
@@ -419,23 +523,146 @@ namespace BlogProject.Infrastructure.Services
             await _blogDbContext.SaveChangesAsync();
         }
 
+        //public async Task<ServiceResult<object>> CreatePostAsync(CreatePostDto model)
+        //{
+        //    if (model == null)
+        //    {
+        //        return new ServiceResult<object>
+        //        {
+        //            IsSuccess = false,
+        //            Errors = new List<IdentityError> { new IdentityError { Code = "ModelNull", Description = "Post bilgileri boş bırakılamaz." } }
+        //        };
+        //    }
+        //    try
+        //    {
+
+        //        var newPostEntity = new PostEntity()
+        //        {
+        //            AuthorId = Guid.Parse(model!.AuthorId),
+        //            CategoryId = Guid.Parse(model.CategoryId),
+        //            Title = model.Title,
+        //            Subtitle = model.Subtitle,
+        //            Content = model.Content,
+        //            SubContent = model.SubContent,
+        //            IsDraft = model.IsDraft,
+        //            IsDeleted = false,
+        //            ViewCount = 0,
+        //            Likes = new List<LikeEntity>(),
+        //            Shares = new List<ShareEntity>(),
+
+        //        };
+        //        var author = await _blogDbContext.Users.FindAsync(Guid.Parse(model.AuthorId));
+        //        var category = await _blogDbContext.Categories.FindAsync(Guid.Parse(model.CategoryId));
+
+        //        newPostEntity.Author = author!;
+        //        newPostEntity.Category = category!;
+        //        newPostEntity.CreatedTime = DateTime.Now;
+
+        //        newPostEntity.CoverImageUrl = await ImageSaver.SaveUserImageAsync(model.CoverImage, model.Title);
+
+        //        var entity = await _blogDbContext.Posts.AddAsync(newPostEntity);
+        //        await _blogDbContext.SaveChangesAsync();
+
+        //        var addedPost = entity.Entity;
+        //        //var addedPost = _blogDbContext.Posts.Where(p => p.Id == entity.Entity.Id).FirstOrDefault();
+        //        if (addedPost is null)
+        //            throw new Exception("Post eklenirken bir hata oluştu.");
+
+        //        List<PostTagEntity> postTags = new List<PostTagEntity>();
+        //        if (model.TagIds != null)
+        //        {
+        //            foreach (var tagId in model.TagIds)
+        //            {
+        //                postTags.Add(new PostTagEntity() { TagId = Guid.Parse(tagId), PostId = addedPost.Id, AssignedDate = DateTime.Now });
+        //            }
+
+        //            if (postTags.Count > 0)
+        //            {
+        //                await _blogDbContext.PostTags.AddRangeAsync(postTags);
+        //                addedPost.TagPosts = postTags;
+        //                addedPost.Author = author!;
+        //                addedPost.Category = category!;
+        //                addedPost.CreatedTime = DateTime.Now;
+        //                await _blogDbContext.SaveChangesAsync();
+        //            }
+        //        }
+        //        else
+        //        {
+        //            addedPost.TagPosts = new List<PostTagEntity>();
+        //            addedPost.Author = author!;
+        //            addedPost.Category = category!;
+        //            addedPost.CreatedTime = DateTime.Now;
+        //            await _blogDbContext.SaveChangesAsync();
+        //        }
+
+        //        var result = new ServiceResult<object>
+        //        {
+        //            IsSuccess = true
+        //        };
+
+        //        return result;
+        //    }
+        //    catch (DbUpdateException ex)
+        //    {
+        //        var result = new ServiceResult<object>
+        //        {
+        //            IsSuccess = false,
+        //            Errors = new List<IdentityError> { new IdentityError { Code = "DbUpdateError", Description = "Veritabanına post eklenirken hata oluştu." } }
+        //        };
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var result = new ServiceResult<object>
+        //        {
+        //            IsSuccess = false,
+        //            Errors = new List<IdentityError> { new IdentityError { Code = "PostCreationError", Description = "Post ekleme sırasında hata oluştu." } }
+        //        };
+        //        return result;
+        //    }
+        //}
         public async Task<ServiceResult<object>> CreatePostAsync(CreatePostDto model)
         {
             if (model == null)
             {
-                new ServiceResult<object>
+                return new ServiceResult<object>
                 {
                     IsSuccess = false,
-                    Errors = new List<IdentityError> { new IdentityError { Code = "ModelNull", Description = "Post bilgileri boş bırakılamaz." } }
+                    Errors = new List<IdentityError>
+            {
+                new IdentityError
+                {
+                    Code = "ModelNull",
+                    Description = "Post bilgileri boş bırakılamaz."
+                }
+            }
                 };
             }
+
             try
             {
+                var authorId = Guid.Parse(model.AuthorId);
+                var categoryId = Guid.Parse(model.CategoryId);
 
-                var newPostEntity = new PostEntity()
+                var author = await _blogDbContext.Users.FindAsync(authorId);
+                var category = await _blogDbContext.Categories.FindAsync(categoryId);
+
+                if (author == null || category == null)
                 {
-                    AuthorId = Guid.Parse(model!.AuthorId),
-                    CategoryId = Guid.Parse(model.CategoryId),
+                    return new ServiceResult<object>
+                    {
+                        IsSuccess = false,
+                        Errors = new List<IdentityError>
+                {
+                    new IdentityError { Code = "NotFound", Description = "Yazar veya kategori bulunamadı." }
+                }
+                    };
+                }
+
+                var newPost = new PostEntity
+                {
+                    AuthorId = authorId,
+                    CategoryId = categoryId,
                     Title = model.Title,
                     Subtitle = model.Subtitle,
                     Content = model.Content,
@@ -445,98 +672,101 @@ namespace BlogProject.Infrastructure.Services
                     ViewCount = 0,
                     Likes = new List<LikeEntity>(),
                     Shares = new List<ShareEntity>(),
-
+                    CreatedTime = DateTime.Now,
+                    CoverImageUrl = await ImageSaver.SaveUserImageAsync(model.CoverImage, model.Title)
                 };
-                var author = await _blogDbContext.Users.FindAsync(Guid.Parse(model.AuthorId));
-                var category = await _blogDbContext.Categories.FindAsync(Guid.Parse(model.CategoryId));
 
-                newPostEntity.Author = author!;
-                newPostEntity.Category = category!;
-                newPostEntity.CreatedTime = DateTime.Now;
-
-                newPostEntity.CoverImageUrl = await ImageSaver.SaveUserImageAsync(model.CoverImage, model.Title);
-
-                var entity = await _blogDbContext.Posts.AddAsync(newPostEntity);
+                var result = await _blogDbContext.Posts.AddAsync(newPost);
                 await _blogDbContext.SaveChangesAsync();
 
-                var addedPost = _blogDbContext.Posts.Where(p => p.Id == entity.Entity.Id).FirstOrDefault();
-                if (addedPost is null)
-                    throw new Exception("Post eklenirken bir hata oluştu.");
-
-                List<PostTagEntity> postTags = new List<PostTagEntity>();
-                if (model.TagIds != null)
+                // Tag'ler ekleniyorsa işle
+                if (model.TagIds != null && model.TagIds.Any())
                 {
-                    foreach (var tagId in model.TagIds)
-                    {
-                        postTags.Add(new PostTagEntity() { TagId = Guid.Parse(tagId), PostId = addedPost.Id, AssignedDate = DateTime.Now });
-                    }
+                    var postTags = model.TagIds
+                        .Select(tagId => new PostTagEntity
+                        {
+                            TagId = Guid.Parse(tagId),
+                            PostId = result.Entity.Id,
+                            AssignedDate = DateTime.Now
+                        }).ToList();
 
-                    if (postTags.Count > 0)
-                    {
-                        await _blogDbContext.PostTags.AddRangeAsync(postTags);
-                        addedPost.TagPosts = postTags;
-                        addedPost.Author = author!;
-                        addedPost.Category = category!;
-                        addedPost.CreatedTime = DateTime.Now;
-                        await _blogDbContext.SaveChangesAsync();
-                    }
-                }
-                else
-                {
-                    addedPost.TagPosts = new List<PostTagEntity>();
-                    addedPost.Author = author!;
-                    addedPost.Category = category!;
-                    addedPost.CreatedTime = DateTime.Now;
+                    await _blogDbContext.PostTags.AddRangeAsync(postTags);
                     await _blogDbContext.SaveChangesAsync();
                 }
 
-                var result = new ServiceResult<object>
+                return new ServiceResult<object>
                 {
                     IsSuccess = true
                 };
-
-                return result;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
-                var result = new ServiceResult<object>
+                return new ServiceResult<object>
                 {
                     IsSuccess = false,
-                    Errors = new List<IdentityError> { new IdentityError { Code = "DbUpdateError", Description = "Veritabanına post eklenirken hata oluştu." } }
-                };
-                return result;
-            }
-            catch (Exception ex)
+                    Errors = new List<IdentityError>
             {
-                var result = new ServiceResult<object>
+                new IdentityError { Code = "DbUpdateError", Description = "Veritabanına post eklenirken hata oluştu." }
+            }
+                };
+            }
+            catch (Exception)
+            {
+                return new ServiceResult<object>
                 {
                     IsSuccess = false,
-                    Errors = new List<IdentityError> { new IdentityError { Code = "PostCreationError", Description = "Post ekleme sırasında hata oluştu." } }
+                    Errors = new List<IdentityError>
+            {
+                new IdentityError { Code = "PostCreationError", Description = "Post ekleme sırasında hata oluştu." }
+            }
                 };
-                return result;
             }
         }
 
-        public async Task<ICollection<PostEntity>> GetLatestPostsWithCount(int count = 3)
+        public async Task<ICollection<PostDto>> GetLatestPostsWithCount(int count = 3)
         {
-            var context = _contextFactory.CreateDbContext();
-            if (count <= 0)
-            {
-                throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
-            }
-            return await context.Posts
-                        .Include(p => p.Category)  // Include'u başa alın
-                        .OrderByDescending(p => p.CreatedTime)
-                        .Take(count)
-                        .AsNoTracking()
-                        .ToListAsync();
-        }
-        public async Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3, bool currentWeek = false)
-        {
-            var context = _contextFactory.CreateDbContext();
             if (count <= 0)
                 throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
 
+            using var context = _contextFactory.CreateDbContext();
+
+            var postsWithCounts = await context.Posts
+                .AsNoTracking()
+                .OrderByDescending(p => p.CreatedTime)
+                .Take(count)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    p.Content,
+                    LikeCount = p.Likes.Count(),
+                    CategoryName = p.Category.Name,
+                    p.CreatedTime,
+                    p.Subtitle,
+                    p.CoverImageUrl
+                })
+                .ToListAsync();
+
+            return postsWithCounts.Select(x => new PostDto
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Content = x.Content,
+                LikeCount = x.LikeCount,
+                CategoryName = x.CategoryName,
+                CreatedTime = x.CreatedTime,
+                Subtitle = x.Subtitle,
+                CoverImageUrl = x.CoverImageUrl
+            }).ToList();
+        }
+
+
+        public async Task<ICollection<PostDto>> GetMostViewedPostsWithCount(int count = 3, bool currentWeek = false)
+        {
+            if (count <= 0)
+                throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
+
+            using var context = _contextFactory.CreateDbContext();
             var query = context.Posts.AsNoTracking();
 
             if (currentWeek)
@@ -545,14 +775,39 @@ namespace BlogProject.Infrastructure.Services
                 query = query.Where(p => p.CreatedTime >= startsFrom);
             }
 
-            return await query
+            var postsWithCounts = await query
                 .OrderByDescending(p => p.ViewCount)
                 .ThenByDescending(p => p.CreatedTime)
-                .Include(p => p.Category)
                 .Take(count)
-                .AsNoTracking()
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    p.Subtitle,
+                    p.CoverImageUrl,
+                    p.Content,
+                    LikeCount = p.Likes.Count(),
+                    CategoryName = p.Category.Name,
+                    p.CreatedTime,
+                    p.ViewCount
+                })
                 .ToListAsync();
+
+            return postsWithCounts.Select(x => new PostDto
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Subtitle = x.Subtitle,
+                CoverImageUrl = x.CoverImageUrl,
+                Content = x.Content,
+                LikeCount = x.LikeCount,
+                CategoryName = x.CategoryName,
+                CreatedTime = x.CreatedTime,
+                ViewCount = x.ViewCount
+            }).ToList();
         }
+
+
 
     }
 }

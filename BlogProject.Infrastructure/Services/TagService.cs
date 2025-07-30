@@ -84,7 +84,7 @@ namespace BlogProject.Infrastructure.Services
             }
             // Assuming related tags are those that share the same name
             return await _context.Tags
-                .Where(t => t.Name == tag.Name && t.Id != tagGuid && !t.IsDeleted)
+                .Where(t => t.Name == tag.Name && t.Id != tagGuid && !t.IsDeleted).AsNoTracking()
                 .ToListAsync();
         }
 
@@ -333,15 +333,18 @@ namespace BlogProject.Infrastructure.Services
         }
         public async Task<List<TagEntity>> GetPopularTags(int count = 10)
         {
-            var context = _contextFactory.CreateDbContext();
-            try
-            {
-                return await context.Tags.AsNoTracking().Where(t => t.IsDeleted == false).Take(count).OrderByDescending(v => v.UsageCount).ToListAsync();
-            }
-            catch (Exception)
-            {
-                throw new Exception("An error occurred while retrieving all tags.");
-            }
+            if (count <= 0)
+                throw new ArgumentException("Count değeri 0'dan büyük olmalıdır.", nameof(count));
+
+            using var context = _contextFactory.CreateDbContext();
+
+            return await context.Tags
+                .AsNoTracking()
+                .Where(t => !t.IsDeleted)
+                .OrderByDescending(t => t.UsageCount)
+                .Take(count)
+                .ToListAsync();
         }
+
     }
 }

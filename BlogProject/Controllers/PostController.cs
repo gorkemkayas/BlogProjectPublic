@@ -119,36 +119,52 @@ namespace BlogProject.Controllers
         [HttpGet("Post/{id}")]
         public async Task<IActionResult> PostDetails(string id)
         {
-            bool isLiked = false;
-            var profilePicClaim = HttpContext.User.FindFirst("ProfilePictureUrl")?.Value;
-            Console.WriteLine("Controller claim: " + (profilePicClaim ?? "Claim yok"));
+            if (!Guid.TryParse(id, out var postId))
+                return BadRequest("Geçersiz gönderi kimliği.");
 
-            var post = await _postService.GetPostByIdAsync(Guid.Parse(id),true);
-            var recommendedPost = await _postService.GetLatestPostsWithCount(3);
-            if (post == null)
-            {
+            // Gönderiyi getir (DTO formatında, includeAuthor: true)
+            var post = await _postService.GetPostByIdAsync(postId, true);
+            if (post is null)
                 return NotFound();
-            }
-            if(User.Identity is null)
-            {
-                isLiked = true;
-            }
-            if(User.Identity!.IsAuthenticated)
-            { 
-                isLiked = await _postService.IsPostLikedByCurrentUserAsync(User.FindFirst(ClaimTypes.NameIdentifier)!.Value, id);
 
+            // Önerilen gönderiler
+            var recommendedPosts = await _postService.GetLatestPostsWithCount(3);
+
+            // Kullanıcı bilgisi
+            var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string? username = User.Identity?.Name;
+
+            // Beğenme kontrolü
+            bool isLiked = false;
+            if (isAuthenticated && userId is not null)
+            {
+                isLiked = await _postService.IsPostLikedByCurrentUserAsync(userId, id);
             }
-            var comments = await _commentService.GetCommentsByPostIdAsync(id);
+
+            // Giriş yapan kullanıcının bilgisi (profil fotoğrafı için)
+            CurrentUserDto? currentUser = null;
+            if (isAuthenticated && username is not null)
+            {
+                currentUser = await _userService.FindByUsernameWithDto(username);
+            }
+
+            // Yorumları getir (DTO'ya projeksiyon yapmış halini varsayıyoruz)
+            var comments = await _commentService.GetCommentsByPostIdAsync(id); // returns List<CommentViewModel>
+
+            // ViewModel oluştur
             var model = new PostDetailsViewModel
             {
-                Post = post,
-                RecommendedPosts = recommendedPost,
-                Comments = comments,
-                CurrentUser = await _userService.FindByUsername(User.Identity.Name),
+                Post = post,                             // PostDto
+                RecommendedPosts = recommendedPosts,     // List<PostDto>
+                Comments = comments,                     // List<CommentViewModel>
+                CurrentUser = currentUser,               // CurrentUserDto
                 IsLikedFromCurrentUser = isLiked
             };
+
             return View(model);
         }
+
 
         [HttpGet("Post/ListByCategory")]
         public IActionResult ListByCategory()

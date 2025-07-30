@@ -62,8 +62,8 @@ namespace BlogProject.Application.DTOs
 
         public string? WorkingAtLogo { get; set; }
 
-        public List<PostEntity>? FeaturedPosts { get; set; }
-        public List<PostEntity>? RecentPosts { get; set; }
+        public List<PostCardDto>? FeaturedPosts { get; set; }
+        public List<PostCardDto>? RecentPosts { get; set; }
 
         public bool? IsFollowing { get; set; }
     }

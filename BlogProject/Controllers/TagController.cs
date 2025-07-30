@@ -1,4 +1,5 @@
-﻿using BlogProject.Application.Interfaces;
+﻿using BlogProject.Application.DTOs;
+using BlogProject.Application.Interfaces;
 using BlogProject.Domain.Entities;
 using BlogProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace BlogProject.Web.Controllers
             ViewBag.TagId = id;
 
             if(posts is null)
-                posts = new List<PostEntity>();
+                posts = new List<PostListItemDto>();
 
             var viewModel = new TagViewModel
             {

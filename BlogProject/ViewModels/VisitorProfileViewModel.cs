@@ -1,4 +1,5 @@
-﻿using BlogProject.Application.Validators;
+﻿using BlogProject.Application.DTOs;
+using BlogProject.Application.Validators;
 using BlogProject.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
@@ -61,8 +62,8 @@ namespace BlogProject.Web.ViewModels
         public string? CoverImagePicture { get; set; }
 
         public string? WorkingAtLogo { get; set; }
-        public List<PostEntity>? FeaturedPosts { get; set; } = new List<PostEntity>();
-        public List<PostEntity>? RecentPosts { get; set; } = new List<PostEntity>();
+        public List<PostCardDto>? FeaturedPosts { get; set; }
+        public List<PostCardDto>? RecentPosts { get; set; }
 
         public bool? IsFollowing { get; set; }
     }

@@ -15,6 +15,7 @@ namespace BlogProject.Application.DTOs
         public bool TwoFactorEnabled { get; set; }
         public bool LockoutEnabled { get; set; }
 
+        public List<PostCardDto>? FeaturedPosts { get; set; }
         public string? SecurityStamp {  get; set; }
         public string? ConcurrencyStamp { get; set; }
 

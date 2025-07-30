@@ -9,18 +9,18 @@ namespace BlogProject.Application.Interfaces
     {
         Task<List<PostEntity>> LoadMoreMostLikedPostScrollPosts(int page, int pageSize, string? categoryId);
         Task<List<PostEntity>> LoadMoreMostViewedPostScrollPosts(int page, int pageSize, string? categoryId);
-        Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryIdAsync(string categoryId, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null);
-        Task<ICollection<PostEntity>> GetCategorizedPostsByLikeCountsAsync(bool isDescending, string categoryId);
-        Task<ICollection<PostEntity>> GetMostViewedPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null);
-        Task<List<PostEntity>> GetPostByTagIdAsync(string tagId);
-        Task<List<PostEntity>> GetByCategoryIdAsync(string categoryId);
-        Task<ICollection<PostEntity>> GetLatestPostsWithCount(int count = 3);
-        Task<ICollection<PostEntity>> GetMostViewedPostsWithCount(int count = 3, bool currentWeek = false);
+        Task<ICollection<PostWithCategoryNameDto>> GetMostViewedPostsByCategoryIdAsync(string categoryId, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null);
+        Task<ICollection<PostDto>> GetCategorizedPostsByLikeCountsAsync(bool isDescending, string categoryId);
+        Task<ICollection<PostWithCategoryNameDto>> GetMostViewedPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null);
+        Task<List<PostListItemDto>> GetPostByTagIdAsync(string tagId);
+        Task<List<PostListItemDto>> GetByCategoryIdAsync(string categoryId);
+        Task<ICollection<PostDto>> GetLatestPostsWithCount(int count = 3);
+        Task<ICollection<PostDto>> GetMostViewedPostsWithCount(int count = 3, bool currentWeek = false);
         Task<ServiceResult<object>> CreatePostAsync(CreatePostDto model);
         Task<int> GetPostCountByUserAsync(AppUser user);
         Task<bool> IsPostLikedByCurrentUserAsync(string userId, string PostId);
         public Task SoftDeletePostAsync(Guid postId);
-        public Task<PostEntity> GetPostByIdAsync(Guid postId, bool updateReadCount = false);
+        public Task<PostDetailsDto> GetPostByIdAsync(Guid postId, bool updateReadCount = false);
         public Task<ICollection<PostEntity>> GetPostsByCategoryAsync(string categoryName, bool isDescending, Expression<Func<PostEntity, bool>>? additionalFilter = null);
         public Task<ICollection<PostEntity>> GetPostsByTitleAsync(string title, bool isDescending);
         public Task<ICollection<PostEntity>> GetPostsByAuthorIdAsync(Guid AuthorId, bool isDescending);

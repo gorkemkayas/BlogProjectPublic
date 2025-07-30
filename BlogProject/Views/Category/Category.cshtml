@@ -15,7 +15,7 @@
 
 @model CategoryViewModel
 @{
-    var categoryName = Model.MostViewedPosts.FirstOrDefault()?.Category?.Name ?? "Category null";
+    var categoryName = Model.Category.Name ?? "Category null";
 }
 
 <!DOCTYPE html>

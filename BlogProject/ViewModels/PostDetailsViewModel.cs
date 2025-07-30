@@ -1,16 +1,17 @@
 ﻿
+using BlogProject.Application.DTOs;
 using BlogProject.Domain.Entities;
 using BlogProject.Infrastructure.CustomMethods;
 
 namespace BlogProject.Web.ViewModels
 {
-    internal class PostDetailsViewModel
+    public class PostDetailsViewModel
     {
-        public PostEntity Post { get; set; } = null!;
-        public List<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
-        public ICollection<PostEntity> RecommendedPosts { get; set; } = new List<PostEntity>();
+        public PostDetailsDto Post { get; set; } = null!;
+        public List<CommentViewModel> Comments { get; set; } = new List<CommentViewModel>();
+        public ICollection<PostDto> RecommendedPosts { get; set; } = new List<PostDto>();
         public bool IsLikedFromCurrentUser { get; set; } = false;
-        public AppUser? CurrentUser { get; set; }
+        public CurrentUserDto? CurrentUser { get; set; }
         public TimeSpan ReadingTime
         {
             get

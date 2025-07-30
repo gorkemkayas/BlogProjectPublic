@@ -20,6 +20,7 @@ namespace BlogProject.Application.Interfaces
         Task SaveChangesAsync();
         bool CheckEmailConfirmed(AppUser user);
         Task<AppUser?> FindByUsername(string? userName);
+        Task<CurrentUserDto?> FindByUsernameWithDto(string? userName);
         Task<List<AppUser>> GetUsersByCount(int countUser);
         Task<ServiceResult<AppUser>> SubscribeToNotificationsAsync(string email);
         Task<ExtendedProfileDto> ConfigurePictureAsync(ExtendedProfileDto newUserInfo, AppUser oldUserInfo, IFormFile? formFile, PhotoType type);
@@ -43,7 +44,7 @@ namespace BlogProject.Application.Interfaces
         Task<int> GetUserTotalLikeCount(AppUser user);
         Task<int> GetPostCountByUserAsync(AppUser user);
         Task<ExtendedProfileDto> GetExtendedProfileInformationAsync(AppUser currentUser);
-        VisitorProfileDto GetVisitorProfileInformation(AppUser visitedUser);
+        Task<VisitorProfileDto> GetVisitorProfileInformationAsync(AppUser visitedUser);
 
         Task<List<AppUser>> MostContributors(int countUser);
         Task<List<AppUser>> NewUsers(int countUser);

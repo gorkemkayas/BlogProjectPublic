@@ -765,7 +765,7 @@
 
         <article>
             <header class="post-header mb-0" style="position:inherit">
-                <span class="post-category">@Model.Post.Category.Name</span>
+                <span class="post-category">@Model.Post.CategoryName</span>
                 <h1>@Model.Post.Title</h1>
                 <div class="post-meta">Published on @Model.Post.CreatedTime.ToString("dddd d, yyyy", CultureInfo.InvariantCulture) · @Model.ReadingTime.Minutes min read</div>
             </header>
@@ -773,30 +773,6 @@
             <img src="@Model.Post.CoverImageUrl" alt="Web Development" class="post-image">
 
             <div class="post-content">
-                @* <p>Web development continues to evolve at a rapid pace, with new technologies and methodologies emerging constantly. This article explores the trends that are shaping the future of how we build for the web.</p>
-
-                <h2>The Rise of AI-Assisted Development</h2>
-                <p>Artificial intelligence is transforming how developers write code. Tools like GitHub Copilot suggest code snippets in real-time, potentially increasing productivity while raising questions about code originality and security.</p>
-
-                <blockquote>
-                    "The best developers of the future won't be those who can write the most code, but those who can most effectively leverage AI tools to solve problems." — Industry Expert
-                </blockquote>
-
-                <h2>WebAssembly (Wasm) Matures</h2>
-                <p>WebAssembly allows code written in languages like C++, Rust, and Go to run in the browser at near-native speed. As Wasm matures, we're seeing:</p>
-
-                <ul>
-                    <li>Performance-intensive applications (photo/video editors, games) moving to the web</li>
-                    <li>New possibilities for cross-platform development</li>
-                    <li>Improved execution of legacy codebases in modern browsers</li>
-                </ul>
-
-                <h2>Edge Computing Reshapes Architectures</h2>
-                <p>The traditional client-server model is giving way to edge computing, where processing happens closer to the user. This means:</p>
-
-                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Edge Computing">
-
-                <p>Reduced latency, improved privacy controls, and more resilient applications that can function with intermittent connectivity.</p> *@
                 @Html.Raw(Model.Post.Content)
             </div>
 
@@ -816,7 +792,7 @@
                         mx-3 fs-5  @(Model.IsLikedFromCurrentUser ? "liked" : "")"
                        data-post-id="@Model.Post.Id">
                     </a>
-                    <small class="like-count">@(Model.Post.Likes is null ? 0 : Model.Post.Likes.Count())</small>
+                    <small class="like-count">@(Model.Post.LikeCount)</small>
 
                 </div>
                 <div class="d-flex flex-column justify-content-start align-items-start">
@@ -1123,7 +1099,7 @@
                                         <button class="reply-btn" type="button" data-comment-id="@comment.Id" >Reply</button>
                                     }
                                     <button class="like-btn">
-                                        Like (@(comment.Likes?.Count() ?? 0))
+                                        Like (@(comment.LikeCount)))
                                     </button>
                                 </div>
                                 <!-- Dinamik olarak açılıp kapanan reply alanı -->
@@ -1169,7 +1145,7 @@
                                                     </div>
                                                     <div class="comment-footer">
                                                         <button class="like-btn">
-                                                            Like (@(reply.Likes?.Count() ?? 0))
+                                                            Like (@(reply.LikeCount))
                                                         </button>
                                                     </div>
                                                 </div>
@@ -1294,11 +1270,8 @@
                             commentList.insertAdjacentHTML('afterbegin', commentHtml);
                         }
                     </script>
-
-
                     <!-- JavaScript kodunu foreach döngüsü dışına taşıyın -->
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
                     <script>
                         $(document).ready(function () {
                             // Reply butonuna basınca o yorumun altındaki formu aç/kapat
@@ -1381,9 +1354,6 @@
                             });
                         });
                     </script>
-
-
-
                 }
             </div>
         </div>
@@ -1418,7 +1388,7 @@
                     <div class="col-md-4">
                     <article class="related-post post-title-link">
                         <a asp-controller="Post" asp-action="PostDetails" asp-route-id="@post.Id" class="text-decoration-none">
-                            <img src="@post.CoverImageUrl" alt="@post.Category.Name" class="related-post-img" />
+                            <img src="@post.CoverImageUrl" alt="@post.CategoryName" class="related-post-img" />
                             <div class="related-post-body">
                                 <h3 class="related-post-title">@post.Title</h3>
                                 <span class="related-post-link">Read article</span>

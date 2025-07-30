@@ -136,6 +136,10 @@ Console.WriteLine("SMTP Host: " + config["EmailSettings:Host"]);
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 ////bekleyen migrationları otomatik veritabanına göndermek için.
 //using (var scope = app.Services.CreateScope())

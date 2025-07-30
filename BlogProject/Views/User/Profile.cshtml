@@ -274,8 +274,8 @@ else if (TempData["Failed"] != null)
                                             <h5 class="fw-bold mb-2 text-dark">@item.Title</h5>
                                             <p class="text-secondary mb-3 post-description">@item.Subtitle</p>
                                             <div class="post-stats d-flex align-items-center text-muted">
-                                                <span class="me-3"><i class="fas fa-heart me-1"></i> @(item.Likes is null ? 0 : item.Likes.Count) likes</span>
-                                                    <span><i class="fas fa-comment me-1"></i> @(item.Comments is null ? 0 : item.Comments.Count) comments</span>
+                                                <span class="me-3"><i class="fas fa-heart me-1"></i> @(item.LikeCount) likes</span>
+                                                    <span><i class="fas fa-comment me-1"></i> @(item.CommentCount) comments</span>
                                             </div>
                                         </div>
                                         </a>
@@ -316,8 +316,8 @@ else if (TempData["Failed"] != null)
                                                 <h5 class="fw-bold mb-2 text-dark">@item.Title</h5>
                                                 <p class="text-secondary mb-3 post-description">@item.Subtitle</p>
                                                 <div class="post-stats d-flex align-items-center text-muted">
-                                                    <span class="me-3"><i class="fas fa-heart me-1"></i> @(item.Likes is null ? 0 : item.Likes.Count) likes</span>
-                                                    <span><i class="fas fa-comment me-1"></i> @(item.Comments is null ? 0 : item.Comments.Count) comments</span>
+                                                    <span class="me-3"><i class="fas fa-heart me-1"></i> @(item.LikeCount) likes</span>
+                                                    <span><i class="fas fa-comment me-1"></i> @(item.CommentCount) comments</span>
                                                 </div>
                                             </div>
                                             </a>

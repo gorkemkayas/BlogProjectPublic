@@ -103,7 +103,7 @@ namespace BlogProject.Infrastructure.Services
         }
         public async Task<int> GetFollowerCountByUserId(string userId)
         {
-            var followerCount = await _blogdbContext.Follows.AsNoTracking()
+            var followerCount = await _blogdbContext.Follows
         .CountAsync(f => f.FollowingId.ToString() == userId);
             return followerCount;
         }
@@ -151,7 +151,7 @@ namespace BlogProject.Infrastructure.Services
         }
         public async Task<List<AppUser>> GetUsers()
         {
-            var users = await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users.AsNoTracking().ToListAsync();
             return users;
         }
 
@@ -211,20 +211,63 @@ namespace BlogProject.Infrastructure.Services
                 .FirstOrDefaultAsync(f => f.FollowerId.ToString() == follower && f.FollowingId.ToString() == following);
             return follow != null;
         }
-        public VisitorProfileDto GetVisitorProfileInformation(AppUser visitedUser)
+        public async Task<VisitorProfileDto> GetVisitorProfileInformationAsync(AppUser visitedUser)
         {
-            var LikeCount = _blogdbContext.Posts
-    .Where(p => p.AuthorId == visitedUser.Id && p.Likes != null)
-    .SelectMany(p => p.Likes)
-    .Count();
-            var featuredPosts = _blogdbContext.Posts.AsNoTracking().Where(p => p.AuthorId == visitedUser.Id).OrderByDescending(p => p.ViewCount).Include(p => p.Likes).Include(p => p.Comments).Take(2).ToList();
-            var recentPosts = _blogdbContext.Posts.AsNoTracking().Where(p => p.AuthorId == visitedUser.Id).OrderByDescending(p => p.CreatedTime).Include(p => p.Likes).Include(p => p.Comments).Take(2).ToList();
-            var followersCount = _blogdbContext.Follows
-                .Count(f => f.FollowingId == visitedUser.Id);
-            var followingCount = _blogdbContext.Follows
-                .Count(f => f.FollowerId == visitedUser.Id);
+            var likeCountTask = _blogdbContext.Posts
+                .Where(p => p.AuthorId == visitedUser.Id)
+                .SelectMany(p => p.Likes)
+                .CountAsync();
 
-            var visitorProfileInfo = new VisitorProfileDto()
+            var featuredPostsTask = _blogdbContext.Posts.AsNoTracking()
+                .Where(p => p.AuthorId == visitedUser.Id)
+                .OrderByDescending(p => p.ViewCount)
+                .Take(2)
+                .Select(p => new PostCardDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    CoverImageUrl = p.CoverImageUrl,
+                    LikeCount = p.Likes.Count,
+                    CommentCount = p.Comments.Count
+                })
+                .ToListAsync();
+
+            var recentPostsTask = _blogdbContext.Posts.AsNoTracking()
+                .Where(p => p.AuthorId == visitedUser.Id)
+                .OrderByDescending(p => p.CreatedTime)
+                .Take(2)
+                .Select(p => new PostCardDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    CoverImageUrl = p.CoverImageUrl,
+                    LikeCount = p.Likes.Count,
+                    CommentCount = p.Comments.Count
+                })
+                .ToListAsync();
+
+            var followersCountTask = _blogdbContext.Follows
+                .CountAsync(f => f.FollowingId == visitedUser.Id);
+
+            var followingCountTask = _blogdbContext.Follows
+                .CountAsync(f => f.FollowerId == visitedUser.Id);
+
+            var commentCountTask = _commentService.GetCommentCountByUserAsync(visitedUser);
+            var postCountTask = _postService.GetPostCountByUserAsync(visitedUser);
+
+            await Task.WhenAll(
+                likeCountTask,
+                featuredPostsTask,
+                recentPostsTask,
+                followersCountTask,
+                followingCountTask,
+                commentCountTask,
+                postCountTask
+            );
+
+            return new VisitorProfileDto()
             {
                 UserName = visitedUser.UserName!,
                 Name = visitedUser.Name,
@@ -237,46 +280,71 @@ namespace BlogProject.Infrastructure.Services
                 ProfilePicture = visitedUser.ProfilePicture,
                 CoverImagePicture = visitedUser.CoverImagePicture,
                 WorkingAtLogo = visitedUser.WorkingAtLogo,
-                FollowersCount = followersCount,
-                FollowingCount = followingCount,
+                FollowersCount = followersCountTask.Result,
+                FollowingCount = followingCountTask.Result,
+                CommentCount = commentCountTask.Result,
+                PostCount = postCountTask.Result,
+                LikeCount = likeCountTask.Result,
+                FeaturedPosts = featuredPostsTask.Result,
+                RecentPosts = recentPostsTask.Result,
                 WorkingAt = visitedUser.WorkingAt,
-                CommentCount = _commentService.GetCommentCountByUserAsync(visitedUser).Result,
-                PostCount = _postService.GetPostCountByUserAsync(visitedUser).Result,
-                LikeCount = LikeCount,
-                FeaturedPosts = featuredPosts,
-                RecentPosts = recentPosts,
                 VisitedUserId = visitedUser.Id.ToString()
             };
-
-            return visitorProfileInfo;
-
         }
         public async Task<ExtendedProfileDto> GetExtendedProfileInformationAsync(AppUser currentUser)
         {
             var postCount = await _postService.GetPostCountByUserAsync(currentUser);
             var commentCount = await _commentService.GetCommentCountByUserAsync(currentUser);
-            var likeCount = _blogdbContext.Posts
-                                          .Where(p => p.AuthorId == currentUser.Id && p.Likes != null)
-                                          .SelectMany(p => p.Likes)
-                                          .Count();
+            var likeCount = await _blogdbContext.Posts
+                .Where(p => p.AuthorId == currentUser.Id)
+                .SelectMany(p => p.Likes)
+                .CountAsync();
 
-            var followersCount = _blogdbContext.Follows
-                .Count(f => f.FollowingId == currentUser.Id);
-            var followingCount = _blogdbContext.Follows
-                .Count(f => f.FollowerId == currentUser.Id);
-            var featuredPosts = _blogdbContext.Posts.AsNoTracking().Where(p => p.AuthorId == currentUser.Id).OrderByDescending(p => p.ViewCount).Include(p => p.Likes).Include(p => p.Comments).Take(2).ToList();
-            var recentPosts = _blogdbContext.Posts.AsNoTracking().Where(p => p.AuthorId == currentUser.Id).OrderByDescending(p => p.CreatedTime).Include(p => p.Likes).Include(p => p.Comments).Take(2).ToList();
+            var followersCount = await _blogdbContext.Follows
+                .CountAsync(f => f.FollowingId == currentUser.Id);
+            var followingCount = await _blogdbContext.Follows
+                .CountAsync(f => f.FollowerId == currentUser.Id);
+
+            var featuredPosts = await _blogdbContext.Posts.AsNoTracking()
+                .Where(p => p.AuthorId == currentUser.Id)
+                .OrderByDescending(p => p.ViewCount)
+                .Take(2)
+                .Select(p => new PostCardDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    CoverImageUrl = p.CoverImageUrl,
+                    LikeCount = p.Likes.Count,
+                    CommentCount = p.Comments.Count
+                })
+                .ToListAsync();
+
+            var recentPosts = await _blogdbContext.Posts.AsNoTracking()
+                .Where(p => p.AuthorId == currentUser.Id)
+                .OrderByDescending(p => p.CreatedTime)
+                .Take(2)
+                .Select(p => new PostCardDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    CoverImageUrl = p.CoverImageUrl,
+                    LikeCount = p.Likes.Count,
+                    CommentCount = p.Comments.Count
+                })
+                .ToListAsync();
 
             var extendedProfile = new ExtendedProfileDto()
             {
                 Id = currentUser.Id.ToString(),
                 PhoneNumber = currentUser.PhoneNumber,
-                EmailAddress = currentUser.Email!,
+                EmailAddress = currentUser.Email ?? string.Empty,
                 EmailConfirmed = currentUser.EmailConfirmed,
                 TwoFactorEnabled = currentUser.TwoFactorEnabled,
                 LockoutEnabled = currentUser.LockoutEnabled,
                 SecurityStamp = currentUser.SecurityStamp,
-                ConcurrencyStamp = currentUser.ConcurrencyStamp!.ToString(),
+                ConcurrencyStamp = currentUser.ConcurrencyStamp?.ToString(),
 
                 UserName = currentUser.UserName,
                 Name = currentUser.Name,
@@ -310,14 +378,8 @@ namespace BlogProject.Infrastructure.Services
                 FeaturedPosts = featuredPosts,
                 RecentPosts = recentPosts
             };
-            //extendedProfile.CommentCount = await GetCommentCountByUserAsync(currentUser);
-            //extendedProfile.LikeCount = await GetUserTotalLikeCount(currentUser);
-            //extendedProfile.PostCount = await GetPostCountByUserAsync(currentUser);
-
-
 
             return extendedProfile;
-
         }
 
 
@@ -449,12 +511,31 @@ namespace BlogProject.Infrastructure.Services
             return newUserInfo;
         }
 
+
+
         public async Task<List<AppUser>> MostContributors(int countUser)
         {
-            var context = _contextFactory.CreateDbContext();
-            var users = await context.Users.AsNoTracking().OrderByDescending(x => x.Posts.Count).Take(countUser).Include(p => p.Followers).AsNoTracking().ToListAsync();
-            return users;
+            if (countUser <= 0)
+                throw new ArgumentException("CountUser değeri 0'dan büyük olmalıdır.", nameof(countUser));
+
+            using var context = _contextFactory.CreateDbContext();
+
+            var usersWithCounts = await context.Users
+                .AsNoTracking()
+                .Select(u => new
+                {
+                    User = u,
+                    PostCount = u.Posts.Count(),
+                    FollowersCount = u.Followers.Count()
+                })
+                .OrderByDescending(x => x.PostCount)
+                .Take(countUser)
+                .ToListAsync();
+
+            // İstersen FollowersCount'u kullanabilirsin, ben sadece User döndürüyorum
+            return usersWithCounts.Select(x => x.User).ToList();
         }
+
         public async Task<List<AppUser>> NewUsers(int countUser)
         {
             var users = await _userManager.Users.AsNoTracking().OrderByDescending(x => x.RegisteredDate).Take(countUser).AsNoTracking().ToListAsync();
@@ -491,28 +572,44 @@ namespace BlogProject.Infrastructure.Services
         {
             if (string.IsNullOrEmpty(request.UserId) || string.IsNullOrEmpty(request.Token))
             {
-                return new ServiceResult<AppUser>()
-                {
-                    IsSuccess = false,
-                    Errors = new List<IdentityError> { new IdentityError() { Code = "ModelEmpty", Description = "Request cannot be null" } }
-                };
+                return Failure("InvalidRequest", "User ID or token cannot be null.");
             }
-            var user = await _userManager.FindByIdAsync(request.UserId);
 
-            var result = await _userManager.ConfirmEmailAsync(user!, request.Token);
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null)
+            {
+                return Failure("UserNotFound", "User not found.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, request.Token);
             if (!result.Succeeded)
             {
-                return new ServiceResult<AppUser>()
+                return new ServiceResult<AppUser>
                 {
                     IsSuccess = false,
                     Errors = result.Errors.ToList()
                 };
             }
-            return new ServiceResult<AppUser>()
+
+            return new ServiceResult<AppUser>
             {
-                IsSuccess = true
+                IsSuccess = true,
+                Data = user
             };
         }
+
+        private ServiceResult<AppUser> Failure(string code, string description)
+        {
+            return new ServiceResult<AppUser>
+            {
+                IsSuccess = false,
+                Errors = new List<IdentityError>
+        {
+            new IdentityError { Code = code, Description = description }
+        }
+            };
+        }
+
 
         public async Task<(bool, IEnumerable<IdentityError>?)> SignInAsync(SignInDto request)
         {
@@ -522,35 +619,22 @@ namespace BlogProject.Infrastructure.Services
 
             if (hasUser == null)
             {
-                errors.Add(new IdentityError { Code = "SignInError", Description = "The email or password is incorrect." });
+                errors.Add(CreateError("SignInError", "The email or password is incorrect."));
                 return (false, errors);
             }
 
-            if (hasUser.SuspendedTo != null && hasUser.SuspendedTo > DateTime.Now)
+            if (hasUser.SuspendedTo != null && hasUser.SuspendedTo > DateTime.UtcNow)
             {
-                errors.Add(new IdentityError { Code = "SuspendedAccount", Description = $"Your account is suspended, will be accessible at {hasUser.SuspendedTo}" });
-                errors.Add(new IdentityError { Code = "SuspendedAccountCategory", Description = hasUser.SuspensionReasonCategory ?? "" });
-                errors.Add(new IdentityError { Code = "SuspendedAccountReason", Description = hasUser.SuspensionReasonDetail ?? "" });
+                errors.Add(CreateError("SuspendedAccount", $"Your account is suspended and will be accessible at {hasUser.SuspendedTo}."));
+                errors.Add(CreateError("SuspendedAccountCategory", hasUser.SuspensionReasonCategory ?? string.Empty));
+                errors.Add(CreateError("SuspendedAccountReason", hasUser.SuspensionReasonDetail ?? string.Empty));
                 return (false, errors);
             }
 
             if (!hasUser.EmailConfirmed)
             {
-                errors.Add(new IdentityError { Code = "EmailNotConfirmed", Description = "Your email is not confirmed." });
+                errors.Add(CreateError("EmailNotConfirmed", "Your email is not confirmed."));
                 return (false, errors);
-            }
-
-            // ProfilePictureUrl claim kontrolü
-            var profilePicture = hasUser.ProfilePicture ?? "";
-            var existingClaims = await _userManager.GetClaimsAsync(hasUser);
-            var existingProfileClaim = existingClaims.FirstOrDefault(c => c.Type == "ProfilePictureUrl");
-
-            if (existingProfileClaim == null || existingProfileClaim.Value != profilePicture)
-            {
-                if (existingProfileClaim != null)
-                    await _userManager.RemoveClaimAsync(hasUser, existingProfileClaim);
-
-                await _userManager.AddClaimAsync(hasUser, new Claim("ProfilePictureUrl", profilePicture));
             }
 
             await _signInManager.SignOutAsync();
@@ -559,18 +643,31 @@ namespace BlogProject.Infrastructure.Services
 
             if (signInResult.Succeeded)
             {
-                // Sadece değerlerde değişiklik varsa güncelle
+                // Claim güncellemesi (sadece başarılı girişte)
+                var profilePicture = hasUser.ProfilePicture ?? string.Empty;
+                var existingClaims = await _userManager.GetClaimsAsync(hasUser);
+                var existingProfileClaim = existingClaims.FirstOrDefault(c => c.Type == "ProfilePictureUrl");
+
+                if (existingProfileClaim == null || existingProfileClaim.Value != profilePicture)
+                {
+                    if (existingProfileClaim != null)
+                        await _userManager.RemoveClaimAsync(hasUser, existingProfileClaim);
+
+                    await _userManager.AddClaimAsync(hasUser, new Claim("ProfilePictureUrl", profilePicture));
+                }
+
+                // Kullanıcı verilerini güncelle (varsa)
                 bool needsUpdate = hasUser.SuspendedTo != null ||
                                    hasUser.SuspensionReasonCategory != null ||
                                    hasUser.SuspensionReasonDetail != null ||
-                                   hasUser.LastLoginDate != DateTime.Today;
+                                   hasUser.LastLoginDate?.Date != DateTime.UtcNow.Date;
 
                 if (needsUpdate)
                 {
                     hasUser.SuspendedTo = null;
                     hasUser.SuspensionReasonCategory = null;
                     hasUser.SuspensionReasonDetail = null;
-                    hasUser.LastLoginDate = DateTime.Now;
+                    hasUser.LastLoginDate = DateTime.UtcNow;
 
                     await _userManager.UpdateAsync(hasUser);
                 }
@@ -580,15 +677,28 @@ namespace BlogProject.Infrastructure.Services
 
             if (signInResult.IsLockedOut)
             {
-                errors.Add(new IdentityError { Code = "SignInError", Description = $"Your account is locked and will be accessible at {hasUser.LockoutEnd}" });
+                errors.Add(CreateError("AccountLocked", $"Your account is locked and will be accessible at {hasUser.LockoutEnd}."));
                 return (false, errors);
             }
 
-            errors.Add(new IdentityError { Code = "SignInError", Description = $"You have tried {hasUser.AccessFailedCount} times. Remaining attempts: {5 - hasUser.AccessFailedCount}" });
-            errors.Add(new IdentityError { Code = "SignInError", Description = "The email or password is incorrect." });
+            // Kullanıcıyı güncel çek → AccessFailedCount değişmiş olabilir
+            hasUser = await _userManager.FindByEmailAsync(request.Email);
+
+            errors.Add(CreateError("SignInAttempts", $"You have tried {hasUser?.AccessFailedCount ?? 0} times. Remaining attempts: {5 - (hasUser?.AccessFailedCount ?? 0)}"));
+            errors.Add(CreateError("SignInError", "The email or password is incorrect."));
 
             return (false, errors);
         }
+
+        private IdentityError CreateError(string code, string description)
+        {
+            return new IdentityError
+            {
+                Code = code,
+                Description = description
+            };
+        }
+
 
 
         public async Task<AppUser?> FindByUsername(string? userName)
@@ -600,9 +710,18 @@ namespace BlogProject.Infrastructure.Services
             return await _blogdbContext.Users
                     .FirstOrDefaultAsync(u => u.UserName == userName);
         }
+        public async Task<CurrentUserDto?> FindByUsernameWithDto(string? userName)
+        {
+            if (userName == null)
+            {
+                return null;
+            }
+            return await _blogdbContext.Users.Select(u => new CurrentUserDto() { UserName = u.UserName, ProfilePicture = u.ProfilePicture })
+                    .FirstOrDefaultAsync(u => u.UserName == userName);
+        }
         public async Task<List<AppUser>> GetUsersByCount(int countUser)
         {
-            var users = await _userManager.Users.Take(countUser).ToListAsync();
+            var users = await _userManager.Users.AsNoTracking().Take(countUser).ToListAsync();
             return users;
         }
         public async Task SuspendUser(SuspendUserDto request)
