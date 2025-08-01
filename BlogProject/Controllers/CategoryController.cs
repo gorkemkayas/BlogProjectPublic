@@ -88,6 +88,7 @@ namespace BlogProject.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadMoreMostLikedPostScrollPosts(int page, string? categoryId)
         {
+            Console.WriteLine($"Page: {page}, CategoryId: {categoryId}");
             int pageSize = 3;
 
             var posts = await _postService.LoadMoreMostLikedPostScrollPosts(page, pageSize, categoryId);

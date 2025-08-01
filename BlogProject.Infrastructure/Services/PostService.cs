@@ -349,7 +349,7 @@ namespace BlogProject.Infrastructure.Services
                 throw new Exception("Hata mesajı:" + ex.Message);
             }
         }
-        public async Task<List<PostEntity>> LoadMoreMostLikedPostScrollPosts(int page, int pageSize, string? categoryId)
+        public async Task<List<PostDto>> LoadMoreMostLikedPostScrollPosts(int page, int pageSize, string? categoryId)
         {
             try
             {
@@ -367,11 +367,20 @@ namespace BlogProject.Infrastructure.Services
                 .Include(p => p.Category)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .Select(p => new PostDto()
+                {
+                    Title = p.Title,
+                    Subtitle = p.Subtitle,
+                    CoverImageUrl = p.CoverImageUrl,
+                    CategoryName = p.Category.Name,
+                    CreatedTime = p.CreatedTime,
+                    ViewCount = p.ViewCount
+                })
                 .ToListAsync();
 
                 if (posts == null || !posts.Any())
                 {
-                    return new List<PostEntity>();
+                    return new List<PostDto>();
                 }
 
                 return posts;

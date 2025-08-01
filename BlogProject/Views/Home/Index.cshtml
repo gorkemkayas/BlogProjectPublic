@@ -206,8 +206,39 @@
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 2rem;
         margin-bottom: 4rem;
+        
+        }
+        @@media (max-width: 576px) {
+            .post-grid
+
+        {
+            grid-template-columns: 1fr; /* Tek sütun */
+            padding: 0 1rem; /* Sağ-sol boşluk */
+            justify-items: center; /* Kartları ortala */
         }
 
+        .post-card {
+            width: 100%;
+            max-width: 360px; /* Mobilde sabit genişlik (taşma engeli) */
+        }
+
+        .post-img-container {
+            height: 180px; /* Dikeyde daha az yer kaplasın */
+        }
+
+        .post-body {
+            padding: 1rem; /* Daha kompakt içerik alanı */
+        }
+
+        .post-title {
+            font-size: 1.2rem; /* Daha okunabilir, ama dar görünüm */
+        }
+
+        .post-excerpt {
+            font-size: 0.9rem;
+        }
+
+        }
         /* Post Cards */
         .post-card {
         background: var(--white);
@@ -985,32 +1016,6 @@
                     </div>
                 </a>
                 </article>
-
-                @*    <!-- Post 2 -->
-            <article class="post-card post-title-link">
-                <div class="post-img-container">
-                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Design" class="post-img">
-                </div>
-                <div class="post-body">
-                    <span class="post-category">Design</span>
-                    <h3 class="post-title">Minimalism in UI Design</h3>
-                    <p class="post-excerpt">How removing elements can lead to more powerful user experiences and cleaner interfaces.</p>
-                    <a href="#" class="read-more">Read more</a>
-                </div>
-            </article>
-
-            <!-- Post 3 -->
-            <article class="post-card post-title-link">
-                <div class="post-img-container">
-                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Productivity" class="post-img">
-                </div>
-                <div class="post-body">
-                    <span class="post-category">Productivity</span>
-                    <h3 class="post-title">Deep Work in the Age of Distraction</h3>
-                    <p class="post-excerpt">Strategies to maintain focus and produce meaningful work in our increasingly connected world.</p>
-                    <a href="#" class="read-more">Read more</a>
-                </div>
-            </article> *@
             }
         </div>
     </div>

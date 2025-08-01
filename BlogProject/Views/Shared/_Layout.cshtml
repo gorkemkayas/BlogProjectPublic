@@ -122,6 +122,31 @@
             align-items: center;
             gap: 8px;
         }
+        @@media (max-width: 576px) {
+            .feedback-text
+
+        {
+            display: none;
+        }
+
+            
+
+        .feedback-button {
+            padding: 12px;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            justify-content: center;
+        }
+
+            .feedback-button svg {
+                width: 20px;
+                height: 20px;
+            }
+
+        }
+
+       
 
             .feedback-button:hover {
                 transform: translateY(-2px);
@@ -840,6 +865,28 @@
             align-items: center;
             gap: 8px;
         }
+        @@media (max-width: 576px) {
+            .development-text
+
+        {
+            display: none;
+        }
+
+        .development-button {
+            padding: 12px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            justify-content: center;
+        }
+
+            .development-button svg {
+                width: 28px;
+                height: 28px;
+            }
+
+        }
+
 
             .development-button:hover {
                 transform: translateY(-2px);
@@ -877,6 +924,32 @@
             .feedback-button:active {
                 transform: translateY(0);
             }
+        @@media (max-width: 576px) {
+            .feedback-button span, .development-text
+
+        {
+            display: none;
+        }
+
+        .feedback-button {
+            padding: 12px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            justify-content: center;
+        }
+
+            .development-button{
+                display:none;
+            }
+
+            .feedback-button svg,
+            .development-button svg {
+                width: 28px;
+                height: 28px;
+            }
+
+        }
 
         /* Geri bildirim formu overlay */
         .feedback-form {
@@ -949,6 +1022,36 @@
             text-align: center;
             margin-bottom: 32px;
         }
+
+        .auth-buttons .btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+            /* İkon biraz büyüsün */
+            .auth-buttons .btn i {
+                font-size: 16px;
+            }
+        @@media (max-width: 576px) {
+            .auth-buttons .btn {
+                margin-top: 8px;
+                padding: 8px 10px;
+                font-size: 0; /* Yazı alanı sıfırlansın */
+            }
+
+                .auth-buttons .btn i {
+                    font-size: 18px;
+                }
+
+            .auth-buttons .btn-label {
+                display: none;
+            }
+        }
+
+
 
         /* Kapatma butonu */
         .close-btn {
@@ -1258,6 +1361,13 @@
                 transform: translateY(0);
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
+
+        .disabled-link {
+            pointer-events: none; /* Tıklamayı engeller */
+            opacity: 0.5; /* Soluk görünüm */
+            cursor: not-allowed; /* Mouse ikonu değişir */
+        }
+
     </style>
     <style>
         .btn-secondary, .btn-primary {
@@ -1432,7 +1542,7 @@ else if (TempData["Failed"] != null)
                                 <button class="btn user-dropdown dropdown-toggle pb-0" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="user-dropdown-toggle mt-2">
                                         @await Component.InvokeAsync("NavProfilePhoto")
-                                        <span class="ms-2 small">@User.Identity.Name</span>
+                                        <span class="ms-2 small d-none d-sm-inline">@User.Identity.Name</span>
 
                                     </div>
                                 </button>
@@ -1443,13 +1553,14 @@ else if (TempData["Failed"] != null)
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                        <a class="dropdown-item d-flex justify-content-between align-items-center disabled-link" href="javascript:void(0);">
                                             <span><i class="fas fa-bell me-2"></i>Notifications</span>
                                             <span class="badge bg-danger rounded-pill text-gradient">99+</span>
                                         </a>
                                     </li>
+
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item d-flex justify-content-start align-items-center disabled-link" href="javascript:void(0);">
                                             <i class="fas fa-envelope me-2"></i> Messages
                                         </a>
                                     </li>
@@ -1482,8 +1593,18 @@ else if (TempData["Failed"] != null)
                         }
                         else
                         {
-                            <a href="/user/signin" class="btn btn-secondary px-2  me-2">Sign In</a>
-                            <a href="/user/signup" class="btn btn-primary px-2">Sign Up</a>
+                            <div class="auth-buttons d-flex">
+                                <a href="/user/signin" class="btn btn-secondary me-2">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <span class="btn-label ms-1">Sign In</span>
+                                </a>
+                                <a href="/user/signup" class="btn btn-primary">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span class="btn-label ms-1">Sign Up</span>
+                                </a>
+                            </div>
+
+
                         }
                     </div>
 
@@ -1522,7 +1643,7 @@ else if (TempData["Failed"] != null)
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
-        Give us your feedback
+        <span class="feedback-text">Give us your feedback</span>
     </button>
 
     <!-- Geri bildirim formu (başta gizli) -->
@@ -1558,7 +1679,7 @@ else if (TempData["Failed"] != null)
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
-            Progress & Plans
+            <span class="development-text">Progress & Plans</span>
         </button>
     </div>
 

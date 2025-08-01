@@ -656,6 +656,118 @@
         color: var(--accent);
         }
 
+        @@media (max-width: 576px) {
+            .related-grid {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+
+                .related-grid .col-md-4 {
+                    flex: unset;
+                    max-width: 100%;
+                    width: 100%;
+                }
+
+            .related-post {
+                width: 100%;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            }
+
+            .related-post-img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 9;
+                object-fit: cover;
+                display: block;
+            }
+
+            .related-post-body {
+                padding: 1rem;
+            }
+
+            .related-post-title {
+                font-size: 1.05rem;
+                line-height: 1.4;
+            }
+
+            .related-post-link {
+                font-size: 0.9rem;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .related-grid {
+                flex-direction: column;
+                align-items: center; /* 🔸 Kartları ortala */
+                gap: 1.2rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+                .related-grid .col-md-4 {
+                    flex: none;
+                    width: 100%;
+                    max-width: 400px; /* 🔸 Genişliği sınırlı tut */
+                }
+
+            .related-post {
+                width: 100%;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            }
+
+            .related-post-img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 9;
+                object-fit: cover;
+            }
+
+            .related-post-body {
+                padding: 1rem;
+            }
+
+            .related-post-title {
+                font-size: 1.05rem;
+            }
+
+            .related-post-link {
+                font-size: 0.9rem;
+            }
+        }
+        @@media (max-width: 576px) {
+            .related-grid .col-md-4
+
+        {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        .related-grid {
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1rem;
+            gap: 1.5rem;
+        }
+
+        .related-post {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 12px;
+        }
+
+        }
+
+
+
+
+
+
+
         /* Responsive */
         @@media (max-width: 640px) {
         .container {
@@ -755,6 +867,26 @@
             .social-link:hover .fa-solid {
                 color: white !important;
             }
+
+            /* Focus efekti: modern, zarif yeşil */
+            #commentText:focus {
+                outline: none;
+                border-color: #38b382; /* 🍃 Şık, doğal yeşil */
+                box-shadow: 0 0 0 4px rgba(56, 179, 130, 0.2); /* Yumuşak yeşil glow */
+            }
+
+        textarea[name="ReplyText"]:focus {
+            outline: none;
+            border-color: #38b382; /* 🍃 Şık, doğal yeşil */
+            box-shadow: 0 0 0 4px rgba(56, 179, 130, 0.2); /* Yumuşak yeşil glow */
+        }
+
+        .like-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1098,8 +1230,8 @@
                                     {
                                         <button class="reply-btn" type="button" data-comment-id="@comment.Id" >Reply</button>
                                     }
-                                    <button class="like-btn">
-                                        Like (@(comment.LikeCount)))
+                                    <button class="like-btn" data-bs-toggle="tooltip" disabled title="Will be added in future updates">
+                                        Like (@(comment.LikeCount))
                                     </button>
                                 </div>
                                 <!-- Dinamik olarak açılıp kapanan reply alanı -->
@@ -1144,7 +1276,7 @@
                                                         <p>@reply.Content</p>
                                                     </div>
                                                     <div class="comment-footer">
-                                                        <button class="like-btn">
+                                                            <button class="like-btn" disabled title="Will be added in future updates">
                                                             Like (@(reply.LikeCount))
                                                         </button>
                                                     </div>
@@ -1451,6 +1583,7 @@
 </script>
 
 <script>
+
     document.addEventListener("DOMContentLoaded", function () {
         const shareBtn = document.getElementById("shareBtn");
         const sharePopup = document.getElementById("sharePopup");

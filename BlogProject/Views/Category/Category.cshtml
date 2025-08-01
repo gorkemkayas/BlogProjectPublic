@@ -382,7 +382,7 @@
             }
 
         .post-card-sub {
-            max-height:200px;
+            max-height: 200px;
             background: var(--white);
             border: 1px solid var(--medium-gray);
             border-radius: 8px;
@@ -393,10 +393,54 @@
             flex: 0 0 calc(100% / 3); /* 3 kartlık yapı */
         }
 
-            .post-card-sub:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        @@media (max-width: 576px) {
+            .post-card-sub {
+                width: 100%;
+                max-width: 100%;
+                flex: unset;
+                display: block;
+                max-height: unset;
+                border-radius: 8px;
+                overflow: hidden;
+                margin-bottom: 1.5rem;
             }
+
+            .post-img-container,
+            .post-img-container-bottom {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 9;
+            }
+
+            .post-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            .post-body {
+                padding: 1rem;
+            }
+
+            .post-title {
+                font-size: 1.1rem;
+            }
+
+            .post-excerpt {
+                font-size: 0.9rem;
+                opacity: 0.8;
+                line-height: 1.4;
+            }
+        }
+
+
+
+
+        .post-card-sub:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
 
         .posts-grid.list-view .post-card {
             flex-direction: row;
@@ -514,6 +558,56 @@
             .read-more:hover::after {
                 transform: translateX(3px);
             }
+
+        @@media (max-width: 576px) {
+            .post-card, .post-card-sub {
+                flex: 0 0 100%;
+                min-height: auto;
+                width: 100%;
+            }
+
+            .posts-grid.list-view .post-card,
+            .posts-grid.list-view .post-card-sub {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .post-img-container,
+            .post-img-container-bottom {
+                width: 100%;
+                height: 180px;
+            }
+
+            .posts-grid.list-view .post-img-container,
+            .posts-grid.list-view .post-img-container-bottom {
+                width: 100%;
+                height: 180px;
+            }
+
+            .post-body {
+                padding: 1rem;
+            }
+
+            .post-title {
+                font-size: 1.2rem;
+            }
+
+            .post-excerpt {
+                -webkit-line-clamp: 4;
+                font-size: 0.9rem;
+            }
+
+            .read-more {
+                font-size: 0.85rem;
+            }
+
+            .post-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+
 
         .post-stats {
             display: flex;
@@ -706,29 +800,32 @@
         }
     </style>
     <style>
-    .post-slider {
-    display: flex;
-    gap: 20px;
-    transition: all 0.3s ease-in-out;
+        .post-slider {
+            display: flex;
+            gap: 20px;
+            transition: all 0.3s ease-in-out;
             align-items: stretch; /* 👈 hepsini aynı yüksekliğe zorlar */
-    }
-    .slider-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2rem;
-    background: white;
-    border: 1px solid #ccc;
-    width: 40px;
-    height: 40px;
-    z-index: 2;
-    }
-    .slider-nav.left {
-    left: -50px;
-    }
-    .slider-nav.right {
-    right: -90px;
-    }
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            background: white;
+            border: 1px solid #ccc;
+            width: 40px;
+            height: 40px;
+            z-index: 2;
+        }
+
+            .slider-nav.left {
+                left: -50px;
+            }
+
+            .slider-nav.right {
+                right: -90px;
+            }
 
         .post-img-container {
             width: 100%;
@@ -776,8 +873,24 @@
             }
 
             .slider-nav-v5.next {
-                right:-120px;
+                right: -120px;
             }
+
+        .chart-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @@media (max-width: 576px) {
+            .chart-container {
+                width: 100%;
+            }
+
+            #postChart {
+                width: 100% !important;
+                height: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -847,7 +960,10 @@
             }
         </div>
     </section>
-    <canvas id="postChart" width="800" height="200"></canvas>
+    <div class="chart-container">
+        <canvas id="postChart" width="800" height="200"></canvas>
+    </div>
+
     <!-- Posts Section -->
     <section class="posts-section mt-4">
         <div class="container">
@@ -874,10 +990,10 @@
         }
 
         /* body {
-                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-                            padding: 20px;
-                        } */
+                                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                                    padding: 20px;
+                                } */
 
         .related-categories {
             background: white;
@@ -1255,6 +1371,8 @@
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 250) {
                 isLoading = true;
                 $("#loader").show();
+                        console.log("categoryId:", categoryId);
+        console.log("URL:", "/Category/LoadMoreMostLikedPostScrollPosts?page=" + page + "&categoryId=" + categoryId);
 
                 $.get("/Category/LoadMoreMostLikedPostScrollPosts?page=" + page + "&categoryId=" + categoryId, function (data) {
                     if ($.trim(data) === "") {
