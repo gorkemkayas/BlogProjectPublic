@@ -35,8 +35,11 @@
             body {
                 background-color: var(--secondary-bg);
                 color: var(--text-primary);
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+                /* font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; */
             }
+
+            
+
 
             .full-width-container {
                 width: 100%;
@@ -327,6 +330,24 @@
                     margin-top: 2rem;
                 }
             }
+            /* form-control üzerinde focus olduğunda kenar rengi ve gölge efekti */
+            .form-control:focus {
+                border-color: #28a745; /* Yeşil renk */
+                box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25); /* Hafif gölge efekti */
+            }
+
+            .quick-actions .quick-action-btn {
+                pointer-events: none; /* Tıklamayı engeller */
+                opacity: 0.5; /* Şeffaflık ekler, görünürlük azaltır */
+                cursor: not-allowed; /* İzin verilmedi simgesi */
+            }
+
+            .card-body[disabled], .card-body[disabled] * {
+                pointer-events: none; /* Tıklamaları engeller */
+                opacity: 0.5; /* Şeffaflık ekler, öğeyi devre dışı yapar */
+                cursor: not-allowed; /* İzin verilmedi simgesi */
+            }
+
         </style>
 
         <form asp-controller="Post" asp-action="NewPost" method="post" enctype="multipart/form-data">
@@ -343,27 +364,28 @@
                             <div class="card-body">
                                 <h5 class="card-title">Quick Actions</h5>
                                 <div class="quick-actions">
-                                    <a href="#" class="quick-action-btn post-title-link">
+                                    <a href="#" class="quick-action-btn post-title-link" title="Will be added in future updates">
                                         <i class="fas fa-save"></i>
-                                        <span>Save Draft</span>
+                                        <span>Publish</span>
                                     </a>
-                                    <a href="#" class="quick-action-btn  post-title-link">
+                                    <a href="#" class="quick-action-btn post-title-link" title="Will be added in future updates">
                                         <i class="fas fa-eye"></i>
                                         <span>Preview</span>
                                     </a>
-                                    <a href="#" class="quick-action-btn  post-title-link">
+                                    <a href="#" class="quick-action-btn post-title-link" title="Will be added in future updates">
                                         <i class="fas fa-file-alt"></i>
                                         <span>Drafts</span>
                                     </a>
-                                    <a href="#" class="quick-action-btn  post-title-link">
+                                    <a href="#" class="quick-action-btn post-title-link" title="Will be added in future updates">
                                         <i class="fas fa-history"></i>
                                         <span>History</span>
                                     </a>
-                                    <a href="#" class="quick-action-btn  post-title-link">
+                                    <a href="#" class="quick-action-btn post-title-link" title="Will be added in future updates">
                                         <i class="fas fa-cog"></i>
                                         <span>Settings</span>
                                     </a>
                                 </div>
+
                             </div>
                         </div>
 
@@ -415,7 +437,7 @@
 
                         <!-- Alt İçerik -->
                         <div class="mb-5">
-                            <label asp-for="SubContent" class="form-label fw-bold mb-2 d-block">Summary Content (Optional)</label>
+                            <label asp-for="SubContent" class="form-label fw-bold mb-2 d-block">Summary Content (Required)</label>
                             <textarea asp-for="SubContent" class="form-control" rows="5"></textarea>
                             <span asp-validation-for="SubContent" class="text-danger small d-block mt-2"></span>
                         </div>
@@ -426,7 +448,8 @@
                                 <i class="fas fa-eye me-2"></i>Preview
                             </button>
                             <button type="submit" class="btn btn-primary" id="submitBtn">
-                                <i class="fas fa-paper-plane me-2"></i>@(Model.IsDraft ? "Save Draft" : "Publish")
+                                @* <i class="fas fa-paper-plane me-2"></i>@(Model.IsDraft ? "Save Draft" : "Publish") *@
+                                <i class="fas fa-paper-plane me-2"></i>Publish
                             </button>
                         </div>
                     </div>
@@ -478,11 +501,11 @@
 
                         <!-- Yayın Ayarları -->
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body" disabled>
                                 <h5 class="card-title">Publish Settings</h5>
                                 <div class="form-check form-switch mb-3 d-flex align-content-center">
                                     <input asp-for="IsDraft" class="form-check-input" type="checkbox" id="draftSwitch">
-                                    <label asp-for="IsDraft" class="form-check-label fw-bold ms-2" style="margin-top:2px">Save as draft</label>
+                                    <label asp-for="IsDraft" class="form-check-label fw-bold ms-2" style="margin-top:2px">Publish</label>
                                 </div>
                                 <small class="text-muted d-block">Posts saved as drafts will not be published.</small>
 
@@ -500,6 +523,7 @@
                                     </label>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -707,7 +731,7 @@
                     if (this.checked) {
                         submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Save Draft';
                     } else {
-                        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Publish';
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Publish' ;
                     }
                 });
 
