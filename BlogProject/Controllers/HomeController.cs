@@ -63,7 +63,7 @@ namespace BlogProject.Controllers
                 MostViewedPosts = mostViewedTask.IsCompletedSuccessfully ? mostViewedTask.Result : new List<PostDto>(),
                 LatestPosts = latestPostsTask.IsCompletedSuccessfully ? latestPostsTask.Result : new List<PostDto>(),
                 PopularTags = popularTagsTask.IsCompletedSuccessfully ? popularTagsTask.Result : new List<TagEntity>(),
-                MostContributors = mostContributorsTask.IsCompletedSuccessfully ? mostContributorsTask.Result : new List<AppUser>(),
+                MostContributors = mostContributorsTask.IsCompletedSuccessfully ? mostContributorsTask.Result : new List<ContributorDto>(),
                 MostReadPostsThisWeek = mostReadThisWeekTask.IsCompletedSuccessfully ? mostReadThisWeekTask.Result : new List<PostDto>()
             };
 

@@ -1095,15 +1095,15 @@
                     <!-- Author 1 -->
                     <div class="author-card">
                         <div class="author-img-container">
-                            <img src="/img/userPhotos/@contributor.UserName/@contributor.ProfilePicture"
+                            <img src="/img/userPhotos/@contributor.UserName/@contributor.ProfileImageUrl"
                             alt="@contributor.FullName" class="author-img">
                         </div>
                         <div class="author-info">
                             <h3 class="author-name">@contributor.FullName</h3>
                             <p class="author-expertise">@contributor.Title</p>
                             <div class="author-stats">
-                                <span class="stat">@(contributor.Posts is null ? "0" : $"{contributor.Posts.Count}") Articles</span>
-                                <span class="stat">@(contributor.Followers is null ? "0" : $"{contributor.Followers.Count} ") Followers</span>
+                                <span class="stat">@(contributor.PostCount) Articles</span>
+                                <span class="stat">@(contributor.FollowerCount) Followers</span>
                             </div>
                         </div>
                         <a asp-controller="User" asp-action="Profile" asp-route-userName="@contributor.UserName" class="author-view text-white">View</a>

@@ -1336,7 +1336,20 @@
 
         .fade-in {
             animation: fadeInUp 0.5s ease-in-out;
-        }</style>
+        }
+
+        .feedback-content2 {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            margin: auto; /* 🎯 Bu satır içeriği ortalar */
+        }
+
+
+    </style>
 </head>
 @if (TempData["Succeed"] != null)
 {
@@ -1541,7 +1554,7 @@ else if (TempData["Failed"] != null)
 
     <!-- Sabit buton grubu -->
     <div class="floating-buttons">
-        <button id="developmentButton" class="development-button">
+        <button id="progressPlansButton" class="development-button">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
@@ -1549,11 +1562,11 @@ else if (TempData["Failed"] != null)
         </button>
     </div>
 
-    <!-- Development Status Modal -->
-    <div id="developmentForm" class="feedback-form">
-        <div class="feedback-content" style="max-width: 700px;">
-            <button id="closeDevelopment" class="close-btn">&times;</button>
-            <h2>Our Current Progress & Plans</h2>
+    <!-- Progress & Plans Modal -->
+    <div id="progressPlansModal" class="feedback-form">
+        <div class="feedback-content2" style="max-width: 700px;">
+            <button id="progressPlansCloseIcon" class="close-btn">&times;</button>
+            <h2 class="text-center section-title">Our Current Progress & Plans</h2>
             <p class="feedback-subtitle">A snapshot of what we're working on and what's coming next</p>
 
             <!-- Planned Features -->
@@ -1613,10 +1626,40 @@ else if (TempData["Failed"] != null)
             </div>
 
             <div class="button-group">
-                <button id="closeDevelopmentBtn" class="cancel-btn">Close</button>
+                <button id="progressPlansCloseBtn" class="cancel-btn">Close</button>
             </div>
         </div>
     </div>
+    <script>
+        // Benzersiz ID'lerle öğeleri seçiyoruz
+        const progressPlansButton = document.getElementById("progressPlansButton");
+        const progressPlansModal = document.getElementById("progressPlansModal");
+        const progressPlansCloseIcon = document.getElementById("progressPlansCloseIcon");
+        const progressPlansCloseBtn = document.getElementById("progressPlansCloseBtn");
+
+        // Modal'ı aç
+        progressPlansButton.addEventListener("click", () => {
+            progressPlansModal.style.display = "block";
+        });
+
+        // Modal'ı kapat (çarpı butonu)
+        progressPlansCloseIcon.addEventListener("click", () => {
+            progressPlansModal.style.display = "none";
+        });
+
+        // Modal'ı kapat (alt buton)
+        progressPlansCloseBtn.addEventListener("click", () => {
+            progressPlansModal.style.display = "none";
+        });
+
+        // Sayfanın dışına tıklanırsa modal'ı kapat (opsiyonel)
+        window.addEventListener("click", (event) => {
+            if (event.target === progressPlansModal) {
+                progressPlansModal.style.display = "none";
+            }
+        });
+    </script>
+
     <script>
         // DOM elementleri
         const feedbackButton = document.getElementById('feedbackButton');

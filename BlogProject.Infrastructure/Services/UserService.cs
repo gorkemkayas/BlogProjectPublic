@@ -513,7 +513,7 @@ namespace BlogProject.Infrastructure.Services
 
 
 
-        public async Task<List<AppUser>> MostContributors(int countUser)
+        public async Task<List<ContributorDto>> MostContributors(int countUser)
         {
             if (countUser <= 0)
                 throw new ArgumentException("CountUser değeri 0'dan büyük olmalıdır.", nameof(countUser));
@@ -522,18 +522,21 @@ namespace BlogProject.Infrastructure.Services
 
             var usersWithCounts = await context.Users
                 .AsNoTracking()
-                .Select(u => new
+                .Select(u => new ContributorDto
                 {
-                    User = u,
-                    PostCount = u.Posts.Count(),
-                    FollowersCount = u.Followers.Count()
+                     FullName = $"{u.Name} {u.Surname}",
+                     Title = u.Title ?? string.Empty,
+                    UserName = u.UserName,
+                    ProfileImageUrl = u.ProfilePicture ?? string.Empty,
+                    PostCount = context.Posts.Count(p => p.AuthorId == u.Id),
+                    FollowerCount = context.Follows.Count(f => f.FollowingId == u.Id)
                 })
                 .OrderByDescending(x => x.PostCount)
                 .Take(countUser)
                 .ToListAsync();
 
             // İstersen FollowersCount'u kullanabilirsin, ben sadece User döndürüyorum
-            return usersWithCounts.Select(x => x.User).ToList();
+            return usersWithCounts;
         }
 
         public async Task<List<AppUser>> NewUsers(int countUser)

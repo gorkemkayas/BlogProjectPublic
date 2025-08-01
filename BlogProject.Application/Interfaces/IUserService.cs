@@ -46,7 +46,7 @@ namespace BlogProject.Application.Interfaces
         Task<ExtendedProfileDto> GetExtendedProfileInformationAsync(AppUser currentUser);
         Task<VisitorProfileDto> GetVisitorProfileInformationAsync(AppUser visitedUser);
 
-        Task<List<AppUser>> MostContributors(int countUser);
+        Task<List<ContributorDto>> MostContributors(int countUser);
         Task<List<AppUser>> NewUsers(int countUser);
         Task<List<AppUser>> GetUsers();
 

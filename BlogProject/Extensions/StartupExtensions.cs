@@ -21,12 +21,12 @@ namespace BlogProject.Extensions
             // Oluşturulan tokenlerın ömrünü belirliyoruz.
             services.Configure<DataProtectionTokenProviderOptions>(opt =>
             {
-                opt.TokenLifespan = TimeSpan.FromHours(1);
+                opt.TokenLifespan = TimeSpan.FromMinutes(30);
             });
             // SecurityStamp değerinin hangi aralıklar ile kontrol edileceğini belirliyoruz.
             services.Configure<SecurityStampValidatorOptions>(opt =>
             {
-                opt.ValidationInterval = TimeSpan.FromMinutes(30);
+                opt.ValidationInterval = TimeSpan.FromHours(12);
             });
 
             services.AddIdentity<AppUser, AppRole>(options =>
@@ -36,7 +36,7 @@ namespace BlogProject.Extensions
 
                 options.Password.RequireNonAlphanumeric = false;
 
-                options.Lockout.DefaultLockoutTimeSpan.Add(TimeSpan.FromMinutes(3));
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
                 options.Lockout.MaxFailedAccessAttempts = 5;
 
             }).AddPasswordValidator<PasswordValidator>()

@@ -15,16 +15,9 @@ namespace BlogProject.Web.Extensions.Classes
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(AppUser user)
         {
             var identity = await base.GenerateClaimsAsync(user);
-            var roles = await UserManager.GetRolesAsync(user);
 
-
-            identity.AddClaim(new Claim("ProfilePictureUrl", user.ProfilePicture ?? ""));
-
-            foreach (var role in roles)
-            {
-                Console.WriteLine($"Role eklendi: {role}");
-                identity.AddClaim(new Claim(ClaimTypes.Role, role));
-            }
+            // Sadece ProfilePicture claim'i ekle - roles zaten base'de ekleniyor
+            identity.AddClaim(new Claim("ProfilePictureUrl", user.ProfilePicture ?? "/images/default-avatar.png"));
 
             return identity;
         }
