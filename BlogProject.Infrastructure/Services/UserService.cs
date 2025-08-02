@@ -212,85 +212,76 @@ namespace BlogProject.Infrastructure.Services
             return follow != null;
         }
         public async Task<VisitorProfileDto> GetVisitorProfileInformationAsync(AppUser visitedUser)
+{
+    var likeCount = await _blogdbContext.Posts
+        .Where(p => p.AuthorId == visitedUser.Id)
+        .SelectMany(p => p.Likes)
+        .CountAsync();
+
+    var featuredPosts = await _blogdbContext.Posts.AsNoTracking()
+        .Where(p => p.AuthorId == visitedUser.Id)
+        .OrderByDescending(p => p.ViewCount)
+        .Take(2)
+        .Select(p => new PostCardDto
         {
-            var likeCountTask = _blogdbContext.Posts
-                .Where(p => p.AuthorId == visitedUser.Id)
-                .SelectMany(p => p.Likes)
-                .CountAsync();
+            Id = p.Id,
+            Title = p.Title,
+            Subtitle = p.Subtitle,
+            CoverImageUrl = p.CoverImageUrl,
+            LikeCount = p.Likes.Count,
+            CommentCount = p.Comments.Count
+        })
+        .ToListAsync();
 
-            var featuredPostsTask = _blogdbContext.Posts.AsNoTracking()
-                .Where(p => p.AuthorId == visitedUser.Id)
-                .OrderByDescending(p => p.ViewCount)
-                .Take(2)
-                .Select(p => new PostCardDto
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Subtitle = p.Subtitle,
-                    CoverImageUrl = p.CoverImageUrl,
-                    LikeCount = p.Likes.Count,
-                    CommentCount = p.Comments.Count
-                })
-                .ToListAsync();
+    var recentPosts = await _blogdbContext.Posts.AsNoTracking()
+        .Where(p => p.AuthorId == visitedUser.Id)
+        .OrderByDescending(p => p.CreatedTime)
+        .Take(2)
+        .Select(p => new PostCardDto
+        {
+            Id = p.Id,
+            Title = p.Title,
+            Subtitle = p.Subtitle,
+            CoverImageUrl = p.CoverImageUrl,
+            LikeCount = p.Likes.Count,
+            CommentCount = p.Comments.Count
+        })
+        .ToListAsync();
 
-            var recentPostsTask = _blogdbContext.Posts.AsNoTracking()
-                .Where(p => p.AuthorId == visitedUser.Id)
-                .OrderByDescending(p => p.CreatedTime)
-                .Take(2)
-                .Select(p => new PostCardDto
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Subtitle = p.Subtitle,
-                    CoverImageUrl = p.CoverImageUrl,
-                    LikeCount = p.Likes.Count,
-                    CommentCount = p.Comments.Count
-                })
-                .ToListAsync();
+    var followersCount = await _blogdbContext.Follows
+        .CountAsync(f => f.FollowingId == visitedUser.Id);
 
-            var followersCountTask = _blogdbContext.Follows
-                .CountAsync(f => f.FollowingId == visitedUser.Id);
+    var followingCount = await _blogdbContext.Follows
+        .CountAsync(f => f.FollowerId == visitedUser.Id);
 
-            var followingCountTask = _blogdbContext.Follows
-                .CountAsync(f => f.FollowerId == visitedUser.Id);
+    var commentCount = await _commentService.GetCommentCountByUserAsync(visitedUser);
+    var postCount = await _postService.GetPostCountByUserAsync(visitedUser);
 
-            var commentCountTask = _commentService.GetCommentCountByUserAsync(visitedUser);
-            var postCountTask = _postService.GetPostCountByUserAsync(visitedUser);
+    return new VisitorProfileDto()
+    {
+        UserName = visitedUser.UserName!,
+        Name = visitedUser.Name,
+        Surname = visitedUser.Surname,
+        Bio = visitedUser.Bio,
+        BirthDate = visitedUser.BirthDate,
+        Country = visitedUser.Country,
+        Title = visitedUser.Title,
+        RegisteredDate = visitedUser.RegisteredDate,
+        ProfilePicture = visitedUser.ProfilePicture,
+        CoverImagePicture = visitedUser.CoverImagePicture,
+        WorkingAtLogo = visitedUser.WorkingAtLogo,
+        FollowersCount = followersCount,
+        FollowingCount = followingCount,
+        CommentCount = commentCount,
+        PostCount = postCount,
+        LikeCount = likeCount,
+        FeaturedPosts = featuredPosts,
+        RecentPosts = recentPosts,
+        WorkingAt = visitedUser.WorkingAt,
+        VisitedUserId = visitedUser.Id.ToString()
+    };
+}
 
-            await Task.WhenAll(
-                likeCountTask,
-                featuredPostsTask,
-                recentPostsTask,
-                followersCountTask,
-                followingCountTask,
-                commentCountTask,
-                postCountTask
-            );
-
-            return new VisitorProfileDto()
-            {
-                UserName = visitedUser.UserName!,
-                Name = visitedUser.Name,
-                Surname = visitedUser.Surname,
-                Bio = visitedUser.Bio,
-                BirthDate = visitedUser.BirthDate,
-                Country = visitedUser.Country,
-                Title = visitedUser.Title,
-                RegisteredDate = visitedUser.RegisteredDate,
-                ProfilePicture = visitedUser.ProfilePicture,
-                CoverImagePicture = visitedUser.CoverImagePicture,
-                WorkingAtLogo = visitedUser.WorkingAtLogo,
-                FollowersCount = followersCountTask.Result,
-                FollowingCount = followingCountTask.Result,
-                CommentCount = commentCountTask.Result,
-                PostCount = postCountTask.Result,
-                LikeCount = likeCountTask.Result,
-                FeaturedPosts = featuredPostsTask.Result,
-                RecentPosts = recentPostsTask.Result,
-                WorkingAt = visitedUser.WorkingAt,
-                VisitedUserId = visitedUser.Id.ToString()
-            };
-        }
         public async Task<ExtendedProfileDto> GetExtendedProfileInformationAsync(AppUser currentUser)
         {
             var postCount = await _postService.GetPostCountByUserAsync(currentUser);

@@ -332,10 +332,18 @@ namespace BlogProject.Controllers
                 var mappedProfileInfo2 = _mapper.Map<ExtendedProfileViewModel>(extendedProfileInfo);
                 return View(mappedProfileInfo2);
             }
-            var isFollowing = await _userService.IsFollowing(currentUser!.Id.ToString(), visitedUser.Id.ToString());
             var visitorProfileInfo = await _userService.GetVisitorProfileInformationAsync(visitedUser);
+            if (currentUser is null)
+            {
+                visitorProfileInfo.IsFollowing = false;
+            }
+            else
+            {
+                var isFollowing = await _userService.IsFollowing(currentUser!.Id.ToString(), visitedUser.Id.ToString());
             visitorProfileInfo.IsFollowing = isFollowing;
-            var mappedProfileInfo = _mapper.Map<ExtendedProfileViewModel>(visitorProfileInfo);
+
+            }
+            var mappedProfileInfo = _mapper.Map<VisitorProfileViewModel>(visitorProfileInfo);
 
 
             return View(mappedProfileInfo);

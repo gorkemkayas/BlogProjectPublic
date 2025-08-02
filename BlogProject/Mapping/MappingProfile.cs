@@ -11,6 +11,7 @@ namespace BlogProject.Web.Mapping
     {
         public MappingProfile() 
         {
+            CreateMap<VisitorProfileViewModel, VisitorProfileDto>().ReverseMap();
             CreateMap<BlogProject.Areas.Admin.Models.CategoryViewModel, CategoryDto>().ReverseMap();
             CreateMap<CategoryAddViewModel, CategoryAddDto>().ReverseMap();
             CreateMap<CategoryUpdateViewModel, CategoryUpdateDto>().ReverseMap();

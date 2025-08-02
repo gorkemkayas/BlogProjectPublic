@@ -1,4 +1,5 @@
-﻿@using BlogProject.Web.ViewModels
+﻿@using BlogProject.Application.DTOs
+@using BlogProject.Web.ViewModels
 @{
     ViewData["Title"] = "Profile";
     Layout = "_Layout";
@@ -129,9 +130,12 @@ else if (TempData["Failed"] != null)
                     }
                     else
                     {
+                        if(User.Identity.IsAuthenticated)
+                        {   
                         <button id="followBtn" data-userid="@Model.VisitedUserId" type="button" class="btn btn-dark" style="border-radius:0%">
                             @(Model.IsFollowing is true ? "Unfollow" : "Follow")
                         </button>
+                        }
                     }
                     @* <span>Takipçi: <span id="followerCount">@Model.FollowersCount</span></span> *@
 
