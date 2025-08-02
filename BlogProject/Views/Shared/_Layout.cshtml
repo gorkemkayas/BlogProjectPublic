@@ -123,6 +123,10 @@
             gap: 8px;
         }
         @@media (max-width: 576px) {
+            .px-0 {
+                padding-right: 0 !important;
+                padding-left: 0 !important;
+            }
             .feedback-text
 
         {
@@ -1457,7 +1461,18 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.3);
             margin: auto; /* 🎯 Bu satır içeriği ortalar */
         }
+        @@media (max-width: 768px) {
+.container
 
+        {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+            .nav-links {
+                gap: 1rem !important;
+            }
+        }
 
     </style>
 </head>

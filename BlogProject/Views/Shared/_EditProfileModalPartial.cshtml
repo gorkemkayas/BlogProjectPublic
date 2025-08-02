@@ -71,10 +71,11 @@
         border-radius: 50%; /* İkonu yuvarlak yapar */
     }
 
-.image-container-header:hover .overlay-icon-header {
+
+    .image-container-header:hover .overlay-icon-header {
         opacity: 1;
-    } 
-    
+    }
+
     /* Üzerine gelindiğinde göster */
     .image-container-headerr {
         position: relative;
@@ -90,14 +91,290 @@
         transition: opacity 0.3s ease; /* Geçiş efekti */
         font-size: 16px; /* İkon boyutu */
         /* color: white; /* İkon rengi */ */
-        /* background-color: rgba(0, 0, 0, 0.5); /* Arkaplan rengi */ */
-        padding: 5px; /* İkon etrafına boşluk */
+        /* background-color: rgba(0, 0, 0, 0.5); /* Arkaplan rengi */ */ padding: 5px; /* İkon etrafına boşluk */
         border-radius: 50%; /* İkonu yuvarlak yapar */
         cursor: pointer; /* İmleci pointer yap */
     }
 
     .image-container-headerr:hover .overlay-icon-headerr {
         opacity: 1; /* Üzerine gelindiğinde görünür yap */
+    }
+
+    /* Mobil Duyarlılık CSS'leri */
+    @@media (max-width: 768px) {
+        .profile-header-container {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center;
+            height: auto !important;
+        }
+
+        .profile-picture-wrapper {
+            position: static !important;
+            margin-top: 1rem !important;
+            width: 150px !important;
+            align-items: center !important;
+        }
+
+            .profile-picture-wrapper img {
+                width: 150px !important;
+                height: 150px !important;
+            }
+
+        .p-4.text-black.bg-body-tertiary.justify-content-between.d-flex.align-items-start {
+            flex-direction: column !important;
+            text-align: center !important;
+            gap: 1rem;
+            align-items: center !important;
+        }
+
+        .container.mt-2.d-flex.justify-content-between.align-items-center {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 1rem;
+        }
+        /* Form alanları için mobil düzenlemeler */
+        .d-flex.ms-3.flex-column {
+            margin-left: 0 !important;
+            align-items: center !important;
+            width: 100%;
+        }
+
+        .d-flex.input-group-sm.align-items-center {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            width: 100%;
+            margin-bottom: 1rem !important;
+        }
+
+        .custom-label {
+            margin-bottom: 0.5rem !important;
+            text-align: left;
+            width: 100%;
+        }
+
+        .custom-input {
+            width: 100% !important;
+        }
+
+        .d-flex.ms-4.flex-column {
+            margin-left: 0 !important;
+            align-items: center !important;
+            width: 100%;
+        }
+        /* Stats section mobil düzeni */
+        .d-flex.justify-content-end.text-center.py-2 {
+            justify-content: center !important;
+            margin-top: 1rem;
+        }
+        /* Working at section mobil düzeni */
+        .me-3.mb-auto.d-flex.align-content-center {
+            margin-right: 0 !important;
+            justify-content: center !important;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        /* Social platforms mobil düzeni */
+        .px-4.d-flex.mt-4 {
+            flex-direction: column !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        .col-md-6.d-flex.flex-column {
+            width: 100% !important;
+            margin-bottom: 1rem;
+        }
+
+        .input-group.mb-3.align-items-center {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+
+            .input-group.mb-3.align-items-center span {
+                margin-bottom: 0.5rem;
+                margin-right: 0 !important;
+            }
+
+            .input-group.mb-3.align-items-center input {
+                width: 100% !important;
+            }
+        /* Security Information mobil düzeni */
+        .d-flex.me-5.justify-content-around {
+            flex-direction: column !important;
+            margin-right: 0 !important;
+            align-items: center !important;
+            gap: 1rem;
+        }
+
+            .d-flex.me-5.justify-content-around > div {
+                text-align: center;
+                padding: 0.5rem !important;
+            }
+        /* Contact Information mobil düzeni */
+        .d-flex.ms-5.justify-content-between {
+            flex-direction: column !important;
+            margin-left: 0 !important;
+            align-items: center !important;
+            gap: 1rem;
+        }
+
+        .py-1.d-flex.flex-column.col-md-7 {
+            width: 100% !important;
+        }
+
+        .d-flex.justify-content-center {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+
+        .py-1.d-flex.align-items-center.col-md-5 {
+            width: 100% !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+        /* Post cards mobil düzeni */
+        .row.g-3.px-2 > .card.col-md-6 {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 1rem;
+        }
+        /* Stats section mobil düzeni */
+        .row.text-center.d-flex > div {
+            margin-bottom: 1rem;
+        }
+        /* Error mesajları için mobil düzenleme */
+        .invalid-feedback[style*="margin-inline-start"] {
+            margin-inline-start: 0 !important;
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+        /* Başlıklar için mobil padding */
+        .fw-bold.ms-4, .fw-bold.ms-5 {
+            margin-left: 1rem !important;
+        }
+        /* Modal genişliği mobilde */
+        .modal-dialog.modal-xl {
+            max-width: 95% !important;
+            margin: 1rem auto;
+        }
+        /* Placeholder alanları mobil düzeni */
+        .px-2.mt-4.d-flex.justify-content-center.flex-column.align-items-center p {
+            width: 100% !important;
+            text-align: center;
+        }
+
+        .placeholder[style*="width"] {
+            width: 90% !important;
+        }
+        /* Save button mobil düzeni */
+        .btn.btn-success.shadow.rounded-pill.btn-sm {
+            width: 80% !important;
+        }
+    }
+
+    /* Ek mobil düzenlemeler - profil sayfasından alınan */
+    @@media (max-width: 768px) {
+        .profile-info-wrapper {
+            left: 0px !important;
+            bottom: 0px !important;
+        }
+
+        .working-at-wrapper {
+            display: flex !important;
+            justify-content: center !important;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+            .working-at-wrapper .d-flex {
+                justify-content: center;
+            }
+
+        .user-info-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .no-ms-mobile {
+            margin-left: 0 !important;
+        }
+
+        .user-info-inner {
+            align-items: center !important;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .security-info-wrapper {
+            text-align: center;
+        }
+
+            .security-info-wrapper > div {
+                margin-left: auto !important;
+                margin-right: auto !important;
+                min-width: auto !important;
+                max-width: 90%;
+                text-align: left;
+            }
+    }
+
+    /* Mobilde ms-1 kaldırmak için */
+    @@media (max-width: 767.98px) {
+        .no-ms-on-mobile {
+            margin-left: 0 !important;
+        }
+
+        .contact-info-container {
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 1rem;
+        }
+
+        .contact-info-item {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center;
+            min-width: 200px;
+            white-space: normal !important;
+            word-break: break-word;
+            margin-bottom: 0.5rem;
+        }
+
+        .phone-ms-2 strong {
+            margin-left: 0.5rem !important;
+        }
+    }
+    /* Kalem ikonu başlangıçta görünmesin */
+    #uploadIconProfile {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+    }
+
+    /* Masaüstünde: hover olunca göster */
+    .profile-picture-wrapper:hover #uploadIconProfile {
+        opacity: 1;
+    }
+
+    /* Mobilde: her zaman görünür */
+    #uploadIconProfile {
+        display: none;
+    }
+
+    .profile-picture-wrapper:hover #uploadIconProfile {
+        display: inline-block;
+    }
+    @@media (max-width: 767.98px) {
+        #uploadIconProfile
+
+    {
+        display: inline-block !important;
+        opacity: 1 !important;
+    }
+
     }
 </style>
 
@@ -118,7 +395,7 @@
         <div class="modal-body">
             <div class="container py-5 h-100">
                 <div class="row d-flex justify-content-center">
-                    <div class="col col-lg-9 col-xl-0">
+                    <div class="col col-lg-9 col-xl-0 px-0 px-lg-auto">
                         <div class="card shadow-lg modal-content">
                             <form asp-controller="User" asp-action="EditProfile" method="post" enctype="multipart/form-data">
                                 <input type="hidden" asp-for="@Model.Id" value="@Model.Id" />
@@ -128,7 +405,7 @@
                                 <input type="hidden" asp-for="@Model.RegisteredDate" value="@Model.RegisteredDate" />
                                 <input type="hidden" asp-for="@Model.EmailConfirmed" value="@Model.EmailConfirmed" />
                                 <!-- Profile Header -->
-                                <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
+                                <div class="rounded-top text-white d-flex flex-row profile-header-container" style="background-color: #000; height: 250px; position: relative;">
                                     <!-- Cover Image -->
                                     <div class="w-100 h-100 position-absolute image-container-header">
                                         <img src=@(string.IsNullOrEmpty(Model.CoverImagePicture) ? "/img/defaultCoverPicture.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.CoverImagePicture}")
@@ -146,7 +423,7 @@
 
 
                                     <!-- Profile Picture and Basic Info -->
-                                    <div class="ms-5 mt-5 d-flex flex-column image-container-profile" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
+                                    <div class="ms-lg-5 mt-5 d-flex flex-column image-container-profile profile-picture-wrapper" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
                                         <img src=@(string.IsNullOrEmpty(Model.ProfilePicture) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.ProfilePicture}")
                                              alt="Profile Picture"
                                              id="profileImage"
@@ -161,11 +438,9 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                                 <!-- Profile Stats and Buttons -->
                                 <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-start">
-                                    <div class="d-flex ms-3 flex-column" style="position: relative; bottom: 20px; top:0px">
+                                    <div class="d-flex ms-3 flex-column profile-info-wrapper" style="position: relative; bottom: 20px; top:0px">
 
                                         <div class="d-flex input-group-sm  align-items-center mb-1">
 
@@ -204,7 +479,7 @@
                                 </div>
                                 <div class="container mt-2 d-flex justify-content-between align-items-center">
 
-                                    <div class="d-flex ms-4 flex-column" style="position: relative; bottom: 20px; top:0px">
+                                    <div class="d-flex ms-4 flex-column user-info-wrapper" style="position: relative; bottom: 20px; top:0px">
                                         <div class="d-flex input-group-sm  align-items-center mb-1">
                                             <label class="me-1 col-md-5 my-0 custom-label" asp-for="Address">Lives in:</label>
                                             <input asp-for="Address" class="form-control col-md-7 custom-input" placeholder="Please indicate where you live" value="@Model.Address">
@@ -223,7 +498,7 @@
 
                                     </div>
 
-                                    <div class="me-3 mb-auto d-flex align-content-center" style="height:100%">
+                                    <div class="me-3 mb-auto d-flex align-content-center working-at-wrapper" style="height:100%">
                                         <div class="d-flex align-items-center position-relative image-container-headerr">
                                             <img src="@(string.IsNullOrEmpty(Model.WorkingAtLogo) ? "/img/defaultWorkingLogo.jpg" : $"/img/userPhotos/{@Model.UserName}/{@Model.WorkingAtLogo}")"
                                                  class="me-2" id="workingAtLogo" name="workingAtLogo"
@@ -319,12 +594,14 @@
                                 <div class="card-body p-2 text-black">
                                     <!-- Security Information -->
                                     <div class="mb-2">
-                                        <div class="d-flex ms-5 align-items-center">
-
-                                            <h5 class="mb-1 mt-4 d-flex ">Security Information |<p class="text-muted align-items-center ms-1" style="font-weight:300">Hidden from users </p></h5>
-
+                                        <div class="d-flex align-items-center justify-content-center justify-content-md-start ms-0 ms-md-5 px-2 px-md-0">
+                                            <h5 class="mb-1 mt-3 mt-md-4 d-flex flex-wrap align-items-center text-center text-md-start" style="font-size: 1rem;">
+                                                <span class="fw-bold me-1" style="font-size: 0.95rem;">Security Information |</span>
+                                                <span class="text-muted no-ms-mobile" style="font-weight:300; font-size: 0.85rem;">Hidden from users</span>
+                                            </h5>
                                         </div>
-                                        <div class="d-flex me-5 justify-content-around">
+
+                                        <div class="d-flex me-5 justify-content-around security-info-wrapper">
 
                                             <div class="py-4" style="padding-inline-start:0px">
                                                 <strong>Two-Factor Authentication:</strong><i class=" ms-2 fa-solid @(Model.TwoFactorEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger") "></i>
@@ -342,157 +619,178 @@
                                 <div class="card-body p-2 text-black">
                                     <!-- Contact Information -->
                                     <div class="mb-2">
-                                        <h5 class="mb-1 ms-5 mt-4 d-flex">Contact Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
-                                        <div class="d-flex ms-5 justify-content-between">
+                                        <div class="mb-1 mt-3 mt-md-4 text-center text-md-start ms-0 ms-md-5 px-2 px-md-0">
+                                            <h5 class="fw-bold d-inline" style="font-size: 1rem;">
+                                                Contact Information |
+                                                <span class="text-muted fw-normal" style="font-weight:300; font-size: 0.85rem;">Hidden from users</span>
+                                            </h5>
+                                        </div>
 
-                                            <div class="py-1 d-flex flex-column  col-md-7">
-                                                <div class="d-flex justify-content-center">
-                                                <strong class="col-md-4 ps-2 align-content-center">Email Address:</strong>
-                                                <input asp-for="@Model.EmailAddress" id="emailInput" class="form-control custom-input" value="@Model.EmailAddress">
 
-                                                </div>
-                                                <div id="emailError" class="invalid-feedback" style="display: none;margin-inline-start:9rem;">The value you entered does not match the email format.</div>
+
+
+                                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-4 px-0 px-md-5 mt-3">
+                                            <!-- Email -->
+                                            <div class="d-flex flex-column align-items-center w-100" style="max-width: 500px;">
+                                                <label class="form-label fw-semibold text-center text-md-start w-100">Email Address:</label>
+                                                <input asp-for="@Model.EmailAddress" id="emailInput" class="form-control custom-input text-center text-md-start" style="max-width: 100%;" value="@Model.EmailAddress">
+                                                <div id="emailError" class="invalid-feedback text-start w-100" style="display: none;">The value you entered does not match the email format.</div>
                                             </div>
-                                            <div class="py-1 d-flex align-items-center col-md-5">
-                                                <strong asp-for="@Model.PhoneNumber">Phone Number:</strong><input type="tel" class="form-control custom-input" asp-for="@Model.PhoneNumber" placeholder="No Information" value="@Model.PhoneNumber">
+
+                                            <!-- Phone -->
+                                            <div class="d-flex flex-column align-items-center w-100" style="max-width: 500px;">
+                                                <label class="form-label fw-semibold text-center text-md-start w-100">Phone Number:</label>
+                                                <input type="tel" class="form-control custom-input text-center text-md-start" asp-for="@Model.PhoneNumber" placeholder="No Information" value="@Model.PhoneNumber" style="max-width: 100%;">
                                             </div>
                                         </div>
                                     </div>
+
+
+
+
                                 </div>
                                 <hr class="" style="margin-top:10px" />
 
-                                <div class="card-body p-2 text-black">
-                                    <!-- Featured Posts Section -->
-                                    <div class="mb-2">
-                                        <h4 class="fw-bold ms-5 mb-3">Featured Posts</h4>
-                                        <div class="row g-3 px-2">
-                                            <div class="card col-md-6 pe-0 border-0" aria-hidden="true">
-                                                <div class="p-3  rounded-3 h-100">
-                                                    <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
-                                                    <div class="card-body ms-1 pe-0">
-                                                        <h5 class="card-title placeholder-glow">
-                                                            <span class="placeholder col-6"></span>
-                                                        </h5>
-                                                        <p class="card-text placeholder-glow">
-                                                            <span class="placeholder col-7"></span>
-                                                            <span class="placeholder col-4"></span>
-                                                            <span class="placeholder col-4"></span>
-                                                            <span class="placeholder col-6"></span>
-                                                            <span class="placeholder col-8"></span>
-                                                        </p>
+                                <div class="d-none d-lg-block">
+                                    <div class="card-body p-2 text-black">
+                                        <!-- Featured Posts Section -->
+                                        <div class="mb-2">
+                                            <h4 class="fw-bold ms-5 mb-3">Featured Posts</h4>
+                                            <div class="row g-3 px-2">
+                                                <div class="card col-md-6 pe-0 border-0" aria-hidden="true">
+                                                    <div class="p-3  rounded-3 h-100">
+                                                        <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
+                                                        <div class="card-body ms-1 pe-0">
+                                                            <h5 class="card-title placeholder-glow">
+                                                                <span class="placeholder col-6"></span>
+                                                            </h5>
+                                                            <p class="card-text placeholder-glow">
+                                                                <span class="placeholder col-7"></span>
+                                                                <span class="placeholder col-4"></span>
+                                                                <span class="placeholder col-4"></span>
+                                                                <span class="placeholder col-6"></span>
+                                                                <span class="placeholder col-8"></span>
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="card col-md-6 ps-0 border-0" aria-hidden="true">
-                                                <div class="p-3  rounded-3 h-100">
-                                                    <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
-                                                    <div class="card-body ms-1 pe-0">
-                                                        <h5 class="card-title placeholder-glow">
-                                                            <span class="placeholder col-6"></span>
-                                                        </h5>
-                                                        <p class="card-text placeholder-glow">
-                                                            <span class="placeholder col-7"></span>
-                                                            <span class="placeholder col-4"></span>
-                                                            <span class="placeholder col-4"></span>
-                                                            <span class="placeholder col-6"></span>
-                                                            <span class="placeholder col-8"></span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr />
-                                <div class="card-body p-2 text-black">
-                                    <!-- Recent Posts Section -->
-                                    <div class="mb-2">
-                                        <h4 class="fw-bold ms-5 mb-3">Recent Posts</h4>
-                                        <div class="row g-3 px-2">
-                                            <div class="card col-md-6 pe-0 border-0" aria-hidden="true">
-                                                <div class="p-3  rounded-3 h-100">
-                                                    <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
-                                                    <div class="card-body ms-1 pe-0">
-                                                        <h5 class="card-title placeholder-glow">
-                                                            <span class="placeholder col-6"></span>
-                                                        </h5>
-                                                        <p class="card-text placeholder-glow">
-                                                            <span class="placeholder col-7"></span>
-                                                            <span class="placeholder col-4"></span>
-                                                            <span class="placeholder col-4"></span>
-                                                            <span class="placeholder col-6"></span>
-                                                            <span class="placeholder col-8"></span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card col-md-6 ps-0 border-0" aria-hidden="true">
-                                                <div class="p-3  rounded-3 h-100">
-                                                    <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
-                                                    <div class="card-body ms-1 pe-0">
-                                                        <h5 class="card-title placeholder-glow">
-                                                            <span class="placeholder col-6"></span>
-                                                        </h5>
-                                                        <p class="card-text placeholder-glow">
-                                                            <span class="placeholder col-7"></span>
-                                                            <span class="placeholder col-4"></span>
-                                                            <span class="placeholder col-4"></span>
-                                                            <span class="placeholder col-6"></span>
-                                                            <span class="placeholder col-8"></span>
-                                                        </p>
+                                                <div class="card col-md-6 ps-0 border-0" aria-hidden="true">
+                                                    <div class="p-3  rounded-3 h-100">
+                                                        <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
+                                                        <div class="card-body ms-1 pe-0">
+                                                            <h5 class="card-title placeholder-glow">
+                                                                <span class="placeholder col-6"></span>
+                                                            </h5>
+                                                            <p class="card-text placeholder-glow">
+                                                                <span class="placeholder col-7"></span>
+                                                                <span class="placeholder col-4"></span>
+                                                                <span class="placeholder col-4"></span>
+                                                                <span class="placeholder col-6"></span>
+                                                                <span class="placeholder col-8"></span>
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <hr />
-                                <div class="card-body p-0 text-black">
-                                    <!-- New Stats Section -->
-                                    <div class="">
-                                        <div class="p-0">
-                                            <div class="row text-center d-flex">
-                                                <div class="col-md-4">
-                                                    <p class="mb-1 h6">@Model.PostCount</p>
-                                                    <p class="small text-muted mb-0">Posts</p>
+                                    <hr />
+                                    <div class="card-body p-2 text-black">
+                                        <!-- Recent Posts Section -->
+                                        <div class="mb-2">
+                                            <h4 class="fw-bold ms-5 mb-3">Recent Posts</h4>
+                                            <div class="row g-3 px-2">
+                                                <div class="card col-md-6 pe-0 border-0" aria-hidden="true">
+                                                    <div class="p-3  rounded-3 h-100">
+                                                        <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
+                                                        <div class="card-body ms-1 pe-0">
+                                                            <h5 class="card-title placeholder-glow">
+                                                                <span class="placeholder col-6"></span>
+                                                            </h5>
+                                                            <p class="card-text placeholder-glow">
+                                                                <span class="placeholder col-7"></span>
+                                                                <span class="placeholder col-4"></span>
+                                                                <span class="placeholder col-4"></span>
+                                                                <span class="placeholder col-6"></span>
+                                                                <span class="placeholder col-8"></span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <p class="mb-1 h6">@Model.CommentCount</p>
-                                                    <p class="small text-muted mb-0">Comments</p>
-                                                </div>
-                                                <div class="col-md-4 mb-3 mb-md-0">
-                                                    <p class="mb-1 h6">@Model.LikeCount</p>
-                                                    <p class="small text-muted mb-0">Total Likes</p>
+                                                <div class="card col-md-6 ps-0 border-0" aria-hidden="true">
+                                                    <div class="p-3  rounded-3 h-100">
+                                                        <img src="/img/placeholderimg.png" class="ms-4 placeholder-wave" style="height:200px;width:300px" class="card-img-top" alt="...">
+                                                        <div class="card-body ms-1 pe-0">
+                                                            <h5 class="card-title placeholder-glow">
+                                                                <span class="placeholder col-6"></span>
+                                                            </h5>
+                                                            <p class="card-text placeholder-glow">
+                                                                <span class="placeholder col-7"></span>
+                                                                <span class="placeholder col-4"></span>
+                                                                <span class="placeholder col-4"></span>
+                                                                <span class="placeholder col-6"></span>
+                                                                <span class="placeholder col-8"></span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <hr class="" />
+                                    <hr />
+                                    <div class="card-body p-0 text-black">
+                                        <!-- New Stats Section -->
+                                        <div class="">
+                                            <div class="p-0">
+                                                <div class="row text-center d-flex">
+                                                    <div class="col-md-4">
+                                                        <p class="mb-1 h6">@Model.PostCount</p>
+                                                        <p class="small text-muted mb-0">Posts</p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <p class="mb-1 h6">@Model.CommentCount</p>
+                                                        <p class="small text-muted mb-0">Comments</p>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 mb-md-0">
+                                                        <p class="mb-1 h6">@Model.LikeCount</p>
+                                                        <p class="small text-muted mb-0">Total Likes</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="" />
 
-                                <div class="card-body box mb-2 px-4 py-2 text-black">
-                                    <!-- Comments Section -->
-                                    <div class="mb-2">
-                                        <h4 class="fw-bold ms-4 mb-5">Recent Comments</h4>
-                                        <div class="px-2 mt-4 d-flex justify-content-center flex-column  align-items-center">
-                                            <p class="placeholder-glow">
-                                                <span class="placeholder" style="width:15rem"></span>
-                                                <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
-                                            </p>
-                                            <p class="placeholder-glow">
-                                                <span class="placeholder" style="width:25rem"></span>
-                                                <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
-                                            </p>
-                                            <p class="placeholder-glow">
-                                                <span class="placeholder" style="width:35rem"></span>
-                                                <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
-                                            </p>
+                                    <div class="card-body box mb-2 px-4 py-2 text-black">
+                                        <!-- Comments Section -->
+                                        <div class="mb-2">
+                                            <h4 class="fw-bold ms-4 mb-5">Recent Comments</h4>
+                                            <div class="px-2 mt-4 d-flex justify-content-center flex-column  align-items-center">
+                                                <p class="placeholder-glow">
+                                                    <span class="placeholder" style="width:15rem"></span>
+                                                    <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                                </p>
+                                                <p class="placeholder-glow">
+                                                    <span class="placeholder" style="width:25rem"></span>
+                                                    <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                                </p>
+                                                <p class="placeholder-glow">
+                                                    <span class="placeholder" style="width:35rem"></span>
+                                                    <img class="placeholder" src="/img/defaultProfilePhoto.jpg" style="height:20px;width:20px;border-radius:50%" />
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <hr class="mb-0" style="margin-top:0px" />
                                 <div class="card-body box mb-2 px-4 py-1 mt-2 text-black d-flex justify-content-center">
-                                    <button class="btn btn-success shadow rounded-pill btn-sm" id="saveChangesButton" style="width:40%;" type="submit">Save Changes</button>
+                                    <button class="btn btn-success shadow rounded-pill btn-sm mx-auto d-block"
+                                            id="saveChangesButton"
+                                            style="width: 75%; max-width: 300px;"
+                                            type="submit">
+                                        Save Changes
+                                    </button>
+
 
                                 </div>
                             </form>
@@ -513,6 +811,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
 
 <script>
+
         document.addEventListener('DOMContentLoaded', function () {
         const uploadIcon = document.getElementById('uploadIconProfile');
         const fileInput = document.getElementById('fileInputProfile');
@@ -584,7 +883,7 @@
 
             reader.readAsDataURL(file);
 
-            
+
         }
     });
 
@@ -622,4 +921,3 @@
         }
     });
 </script>
-

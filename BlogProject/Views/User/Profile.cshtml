@@ -93,6 +93,173 @@ else if (TempData["Failed"] != null)
     font-size: 0.9rem;
     }
 </style>
+<style>
+    @@media (max-width: 768px) {
+        .profile-header-container
+
+    {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        height: auto !important;
+    }
+
+    .profile-picture-wrapper {
+        position: static !important;
+        margin-top: 1rem !important;
+        width: 150px !important;
+        align-items: center !important;
+    }
+
+        .profile-picture-wrapper img {
+            width: 150px !important;
+            height: 150px !important;
+        }
+
+    .p-4.text-black.bg-body-tertiary.justify-content-between.d-flex.align-items-center {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 1rem;
+    }
+
+    .container.mt-2.d-flex.justify-content-between.align-items-center {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+
+    .card-body .d-flex.justify-content-around {
+        flex-direction: column !important;
+        gap: 0.75rem;
+        text-align: left !important;
+    }
+
+    .card-body .d-flex.justify-content-end {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center !important;
+    }
+
+    .row.text-center.d-flex > div {
+        margin-bottom: 1rem;
+    }
+
+    .card .row.g-3 > .col-md-6 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    .btn[data-toggle="modal"], #followBtn {
+        display: block !important;
+        width: 100% !important;
+        /* margin: 0.5rem auto !important; */
+    }
+
+    .post-card {
+        padding: 1rem !important;
+    }
+
+    }
+    @@media (max-width: 768px) {
+        .profile-info-wrapper
+
+    {
+        left: 0px !important;
+            bottom: 0px !important;
+    }
+
+    }
+</style>
+<style>
+    @@media (max-width: 768px) {
+        .working-at-wrapper
+
+    {
+        display: flex !important;
+        justify-content: center !important;
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .working-at-wrapper .d-flex {
+        justify-content: center;
+    }
+
+    }
+    @@media (max-width: 768px) {
+        .user-info-wrapper
+
+    {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 1rem;
+        }
+
+        .no-ms-mobile {
+            margin-left: 0 !important;
+        }
+
+    .user-info-inner {
+        align-items: center !important;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+        strong.phone-ms-2 {
+            margin-left: 0.5rem !important; /* ms-2 değerine eşdeğer */
+        }
+
+        .security-info-wrapper {
+            text-align: center;
+        }
+
+            .security-info-wrapper > div {
+                margin-left: auto !important;
+                margin-right: auto !important;
+                min-width: auto !important; /* min-width kaldırılır mobilde */
+                max-width: 90%; /* dar ekranda genişlik sınırı */
+                text-align: left; /* yazılar soldan hizalanır */
+            }
+    }
+
+    /* Mobilde ms-1 kaldırmak için */
+    @@media (max-width: 767.98px) {
+        .no-ms-on-mobile
+
+    {
+        margin-left: 0 !important;
+    }
+
+    /* Container flex-wrap ve ortalama */
+    .contact-info-container {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 1rem;
+    }
+
+    /* Itemler dikey ve ortalı */
+    .contact-info-item {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        min-width: 200px; /* genişlik istersen ayarla */
+        white-space: normal !important;
+        word-break: break-word;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Telefon label'ına ekstra ms-2 */
+    .phone-ms-2 strong {
+        margin-left: 0.5rem !important;
+    }
+
+    }
+
+</style>
+
+
 <section class="h-100 gradient-custom-2">
 
     <div class="container py-5 h-100">
@@ -100,23 +267,26 @@ else if (TempData["Failed"] != null)
             <div class="col col-lg-9 col-xl-0">
                 <div class="card shadow-lg">
                     <!-- Profile Header -->
-                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 250px; position: relative;">
+                    <!-- Profile Header -->
+                    <div class="rounded-top text-white d-flex flex-row profile-header-container" style="background-color: #000; height: 250px; position: relative;">
                         <!-- Cover Image -->
                         <div class="w-100 h-100 position-absolute">
                             <img src=@(string.IsNullOrEmpty(Model.CoverImagePicture) ? "/img/defaultCoverPicture.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.CoverImagePicture}")
-                            alt="Cover Image"
-                            class="w-100 h-100"
-                            style="object-fit: cover;" />
+                                 alt="Cover Image"
+                                 class="w-100 h-100"
+                                 style="object-fit: cover;" />
                         </div>
 
                         <!-- Profile Picture and Basic Info -->
-                        <div class="ms-5 mt-5 d-flex flex-column" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
+                        <div class="ms-lg-5 mt-5 d-flex flex-column profile-picture-wrapper" style="width: 200px; position: absolute; z-index: 1; bottom: -10px;">
+
                             <img src=@(string.IsNullOrEmpty(Model.ProfilePicture) ? "/img/defaultProfilePhoto.jpg" : $"/img/userPhotos/{Model.UserName}/{Model.ProfilePicture}")
-                            alt="Profile Picture"
-                            class="img-fluid img-thumbnail mt-4 mb-2 "
-                            style="width: 175px; height: 175px; " />
+                                 alt="Profile Picture"
+                                 class="img-fluid img-thumbnail mt-4 mb-2"
+                                 style="width: 175px; height: 175px;" />
                         </div>
                     </div>
+
                     @if (ViewBag.IsOwner != null && ViewBag.IsOwner == true)
                     {
 
@@ -142,8 +312,9 @@ else if (TempData["Failed"] != null)
 
                     <!-- Profile Stats and Buttons -->
                     <div class="p-4 text-black bg-body-tertiary justify-content-between d-flex align-items-center">
-                        <div class="d-flex flex-column" style="position: relative; bottom: 20px; left: 30px; top:0px">
-                            <h3 class="mb-1 align-content-center">@Model.Name @Model.Surname <i class="fa-solid fs-5 fa-circle-check text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i></h3>
+                        <div class="d-flex flex-column profile-info-wrapper" style="position: relative; bottom: 20px; left: 30px;">
+
+                            <h3 class="mb-1 mt-lg-3 align-content-center">@Model.Name @Model.Surname <i class="fa-solid fs-5 fa-circle-check text-success" title="Bu hesap iki aşamalı doğrulanmıştır!"></i></h3>
                             <p class="mb-2 text-muted">@Model.Title</p>
                             <small class="text-muted ">@Model.Country</small>
                         </div>
@@ -158,16 +329,30 @@ else if (TempData["Failed"] != null)
                             </div>
                         </div>
                     </div>
-                    <div class="container mt-2 d-flex justify-content-between align-items-center">
-                        <div class="ms-1">
-                            <div class="d-flex ms-4 ps-2 align-content-center flex-column">
-                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Lives in:</p><p class="text-muted">@(Model.Address ?? "No Information")</p></div>
-                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Born on:</p><p class="text-muted">@Model.BirthDate.ToString("MMMM d, yyyy")</p></div>
-                                <div class="d-flex"> <p class="me-2" style="font-weight:500">Member since:</p><p class="text-muted">@Model.RegisteredDate.ToString("MMMM d, yyyy")</p></div>
+                    <div class="container mt-2 d-flex justify-content-between align-items-start">
+                        <div class="user-info-wrapper ms-md-4">
+                            <div class="d-flex flex-column user-info-inner">
+                                <div class="d-flex flex-wrap justify-content-start">
+                                    <p class="me-2 fw-semibold mb-1">Lives in:</p>
+                                    <p class="text-muted mb-1">@(Model.Address ?? "No Information")</p>
+                                </div>
+                                <div class="d-flex flex-wrap justify-content-start">
+                                    <p class="me-2 fw-semibold mb-1">Born on:</p>
+                                    <p class="text-muted mb-1">@Model.BirthDate.ToString("MMMM d, yyyy")</p>
+                                </div>
+                                <div class="d-flex flex-wrap justify-content-start">
+                                    <p class="me-2 fw-semibold mb-0">Member since:</p>
+                                    <p class="text-muted mb-0">@Model.RegisteredDate.ToString("MMMM d, yyyy")</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="me-3 mb-auto pe-2" style="height:100%">
+
+
+
+
+                        <div class="me-lg-3 mb-auto pe-lg-2 working-at-wrapper" style="height:100%">
+
                             @if (string.IsNullOrEmpty(Model.WorkingAt))
                             {
                                 <div class="d-flex align-content-center">
@@ -215,17 +400,28 @@ else if (TempData["Failed"] != null)
                         <div class="card-body p-2 text-black">
                             <!-- Security Information -->
                             <div class="mb-2">
-                                <h5 class="mb-1 ms-5 mt-4 d-flex">Security Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
-                                <div class="d-flex mt-2 justify-content-around">
+                                <h5 class="mb-1 ms-5 mt-4 d-flex">
+                                    Security Information |<p class="text-muted ms-1 no-ms-mobile" style="font-weight:300">Hidden from users</p>
+                                </h5>
 
-                                    <div class="p-1">
-                                        <p class="mb-0 "><strong>Two-Factor Authentication:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.TwoFactorEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
+                                <div class="d-flex flex-column flex-md-row justify-content-center mt-2 security-info-wrapper" style="gap: 1.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                                    <div class="text-start" style="min-width: 180px;">
+                                        <p class="mb-0">
+                                            <strong>Two-Factor Authentication:</strong>
+                                            <i class="fa-solid fs-6 @(extendedProfileViewModel.TwoFactorEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i>
+                                        </p>
                                     </div>
-                                    <div class="p-1">
-                                        <p class="mb-0 "><strong>Email Confirmed:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.EmailConfirmed ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
+                                    <div class="text-start" style="min-width: 180px;">
+                                        <p class="mb-0">
+                                            <strong>Email Confirmed:</strong>
+                                            <i class="fa-solid fs-6 @(extendedProfileViewModel.EmailConfirmed ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i>
+                                        </p>
                                     </div>
-                                    <div class="p-1">
-                                        <p class="mb-0 "><strong>Lockout:</strong>  <i class="fa-solid fs-6 @(extendedProfileViewModel.LockoutEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i></p>
+                                    <div class="text-start" style="min-width: 180px;">
+                                        <p class="mb-0">
+                                            <strong>Lockout:</strong>
+                                            <i class="fa-solid fs-6 @(extendedProfileViewModel.LockoutEnabled ? "fa-circle-check text-success" : "fa-circle-xmark text-danger")"></i>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -234,16 +430,19 @@ else if (TempData["Failed"] != null)
                         <div class="card-body py-0 mt-0 text-black">
                             <!-- Contact Information -->
                             <div class="mb-2 ms-4">
-                                <h5 class="mb-1 mt-4 ms-2 d-flex">Contact Information |<p class="text-muted ms-1" style="font-weight:300">Hidden from users </p></h5>
-                                <div class="d-flex justify-content-around">
+                                <h5 class="mb-1 mt-4 ms-2 d-flex">
+                                    Contact Information |
+                                    <p class="text-muted ms-1 no-ms-on-mobile" style="font-weight:300">Hidden from users </p>
+                                </h5>
+                                <div class="d-flex justify-content-around flex-wrap contact-info-container">
 
-                                    <div class="py-1 me-5 d-flex align-content-center">
+                                    <div class="py-1 me-5 d-flex align-content-center contact-info-item">
                                         <strong class="pe-2 ms-2">Email Address:</strong>
-                                        <p>@extendedProfileViewModel.EmailAddress</p>
+                                        <p class="text-muted">@extendedProfileViewModel.EmailAddress</p>
                                     </div>
-                                    <div class="py-1 me-5 d-flex align-content-center">
+                                    <div class="py-1 me-5 d-flex align-content-center contact-info-item phone-ms-2">
                                         <strong class="pe-2">Phone Number:</strong>
-                                        @if(string.IsNullOrEmpty(extendedProfileViewModel.PhoneNumber))
+                                        @if (string.IsNullOrEmpty(extendedProfileViewModel.PhoneNumber))
                                         {
                                             <p class="text-muted">No Information</p>
                                         }
@@ -254,6 +453,7 @@ else if (TempData["Failed"] != null)
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         <hr class="" style="margin-top:10px" />
                     }
