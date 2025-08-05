@@ -369,6 +369,7 @@ namespace BlogProject.Infrastructure.Services
                 .Take(pageSize)
                 .Select(p => new PostDto()
                 {
+                    Id = p.Id,
                     Title = p.Title,
                     Subtitle = p.Subtitle,
                     CoverImageUrl = p.CoverImageUrl,
