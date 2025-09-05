@@ -62,6 +62,7 @@ namespace BlogProject.Extensions
             services.AddScoped<IUsernameGenerator, UsernameGenerator>();
             services.AddScoped<IUserTokenGenerator, UserTokenGenerator>();
             services.AddScoped<IUrlGenerator, UrlGenerator>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
