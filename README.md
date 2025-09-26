@@ -1,4 +1,4 @@
-📖 BlogProject - Comprehensive Documentation
+# 📖 BlogProject - Comprehensive Documentation
 
 [![.NET](https://img.shields.io/badge/.NET-8-blue)](https://dotnet.microsoft.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
