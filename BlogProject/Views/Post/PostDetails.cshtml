@@ -894,7 +894,12 @@
 <body>
     <div class="post-area">
 
+        <div>
+            <input type="hidden" id="postId" value="@Model.Post.Id" />
 
+            <button id="summarizeBtn">Özetle</button>
+            <div id="summaryResult"></div>
+        </div>
         <article>
             <header class="post-header mb-0" style="position:inherit">
                 <span class="post-category">@Model.Post.CategoryName</span>
@@ -1622,3 +1627,33 @@
         });
     });
 </script>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const btn = document.getElementById("summarizeBtn");
+            if (btn) {
+
+                btn.addEventListener("click", async () => {
+        const postId = document.getElementById("postId").value;
+
+                    console.log("Butona basıldı, postId:", postId);
+
+                    const res = await fetch("/api/chat/summarize", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ postId })
+                    });
+
+                    if (!res.ok) {
+                        console.error("Fetch hatası:", res.status, res.statusText);
+                        return;
+                    }
+
+                    const data = await res.json();
+                    document.getElementById("summaryResult").innerText = data.summary;
+                });
+            }
+        });
+    </script>
+}
+
