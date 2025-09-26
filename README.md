@@ -1,19 +1,23 @@
-# 📖 BlogProject - Comprehensive Documentation
+📖 BlogProject - Comprehensive Documentation
 
-A modern and scalable **blog platform** built with **.NET 8** and **Razor Pages**.  
-It includes categories, posts, user management, and an admin panel with a **responsive UI** and improved **user experience**.  
+[![.NET](https://img.shields.io/badge/.NET-8-blue)](https://dotnet.microsoft.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue)](https://kayas.dev)
+
+A **modern and scalable blog platform** built with **.NET 8** and **Razor Pages**.  
+Includes categories, posts, user management, and an admin panel with a **responsive UI** and excellent **user experience**.
 
 ---
 
 ## 📑 Table of Contents
 - [Overview](#-overview)
-- [Technologies and Architecture](#-technologies-and-architecture)
-- [Installation and Setup](#-installation-and-setup)
+- [Technologies & Architecture](#-technologies--architecture)
+- [Installation & Setup](#-installation--setup)
 - [Configuration](#-configuration)
-- [Main Modules and Features](#-main-modules-and-features)
+- [Main Modules & Features](#-main-modules--features)
 - [Database Structure](#-database-structure)
 - [Security](#-security)
-- [Development and Contribution](#-development-and-contribution)
+- [Development & Contribution](#-development--contribution)
 - [Deployment](#-deployment)
 - [Troubleshooting](#-troubleshooting)
 - [License](#-license)
@@ -21,179 +25,165 @@ It includes categories, posts, user management, and an admin panel with a **resp
 ---
 
 ## 🔎 Overview
-**BlogProject** is designed to be a **lightweight yet powerful blogging system**.  
-It can be deployed to IIS, Azure, or Linux servers and supports **scalability and modularity**.
+**BlogProject** is a lightweight, flexible, and powerful blogging system.  
+Can be deployed to **IIS, Azure, or Linux servers**. Supports modularity, scalability, and modern web standards.
+
+**Live Demo:** [kayas.dev](https://kayas.dev)
 
 ---
 
-## 🛠 Technologies and Architecture
-| Layer         | Stack                                                                 |
-|---------------|----------------------------------------------------------------------|
-| **Backend**   | .NET 8, Razor Pages, Entity Framework Core                           |
-| **Frontend**  | HTML5, CSS3 (Bootstrap), JavaScript                                  |
-| **Database**  | SQL Server (or any RDBMS compatible with EF Core)                    |
-| **Session**   | ASP.NET Core Session                                                 |
-| **Auth**      | ASP.NET Core Identity (optional)                                     |
-| **Email**     | SMTP                                                                 |
-| **Security**  | ASP.NET Core Data Protection, HTTPS/HSTS                             |
+## 🛠 Technologies & Architecture
+| Layer       | Technology Stack |
+|------------|----------------|
+| Backend    | .NET 8, Razor Pages, Entity Framework Core |
+| Frontend   | HTML5, CSS3 (Bootstrap), JavaScript |
+| Database   | SQL Server (or EF Core compatible RDBMS) |
+| Session    | ASP.NET Core Session |
+| Authentication | ASP.NET Core Identity (optional) |
+| Email      | SMTP |
+| Security   | ASP.NET Core Data Protection, HTTPS/HSTS |
 
 ---
 
-## ⚙️ Installation and Setup
+## ⚙️ Installation & Setup
 
-### 1. Requirements
+### Requirements
 - .NET 8 SDK  
 - Visual Studio 2022  
-- SQL Server (or compatible DB)  
+- SQL Server (or compatible DB)
 
-### 2. Restore Dependencies
+### Steps
+1. Restore dependencies:
 ```bash
 dotnet restore
-
-3. Apply Database Migrations
-
+```
+2. Apply database migrations:
+```bash
 dotnet ef database update
-
-4. Run the Application
-
+```
+3. Run the application:
+```bash
 dotnet run
+```
 
-⚡ Configuration
-SMTP Settings
+## ⚡ Configuration
 
-Edit appsettings.json:
-
+SMTP Settings (appsettings.json):
+```bash
 "EmailSettings": {
   "Host": "smtp.example.com",
   "Port": 587,
   "Username": "your@email.com",
   "Password": "yourpassword"
 }
+```
+Data Protection: Keys stored in App_Data/keys. Use SetApplicationName for environment isolation.
 
-Data Protection
+Session: Add app.UseSession() in Program.cs.
 
-    Keys are stored in App_Data/keys.
+## 📦 Main Modules & Features
+Category Management
 
-    Use SetApplicationName to isolate across environments.
+List categories and posts
 
-Session
+Supports grid, list, and masonry layouts
 
-    Add app.UseSession() in Program.cs.
+Post Management
 
-📦 Main Modules and Features
-🗂 Category Management
+Add posts with drag-drop cover image upload and preview
 
-    List categories & posts per category.
+Draft/publish toggle, edit, and delete posts
 
-    Supports grid, list, and masonry layouts.
+User Management (Admin)
 
-✍️ Post Management
+List, activate, delete users
 
-    Add posts with drag-drop cover image upload (preview).
+Modal confirmations and tooltips
 
-    Draft/publish toggle & preview option.
+Comments (Optional)
 
-    Edit & delete posts.
+Users can comment on posts
 
-👤 User Management (Admin)
+Admin can manage comments
 
-    List, delete, and activate users.
+Error Management
 
-    Modal confirmations & tooltip support.
+Detailed error pages in development
 
-💬 Comments (Optional)
+Custom error pages + HSTS in production
 
-    Users can add comments to posts.
+Centralized ExceptionMiddleware
 
-    Admin can manage comments.
+Session & Authentication
 
-⚠️ Error Management
+User sessions and role-based access control
 
-    Dev mode: detailed error page.
+Secure admin panel authorization
 
-    Prod mode: custom error page + HSTS.
+## 🗄 Database Structure
 
-    Centralized ExceptionMiddleware.
+Tables:
 
-🔐 Session & Authentication
+Users → User info & roles
 
-    User sessions & authorization.
+Posts → Title, content, cover image, status
 
-    Role-based access for admin panel.
+Categories → Name & description
 
-🗄 Database Structure
-Tables
+Comments (optional) → Text, linked to posts/users
 
-    Users → User info & roles
+Relationships:
 
-    Posts → Title, content, cover image, status
+1 Category → Many Posts
 
-    Categories → Name & description
+1 Post → Many Comments
 
-    Comments (optional) → Comment text, linked to posts/users
+1 User → Many Posts/Comments
 
-Relationships
+## 🔒 Security
 
-    Category ↔ Posts: 1 → Many
+Secure key storage with Data Protection
 
-    Post ↔ Comments: 1 → Many
+Identity, roles, and session management
 
-    User ↔ Posts/Comments: 1 → Many
+HTTPS & HSTS enforced in production
 
-🔒 Security
+OWASP Top 10 secure coding practices followed
 
-    Data Protection → Secure key storage
+## 🤝 Development & Contribution
 
-    Authentication → Identity, roles, and session handling
+Workflow:
 
-    HTTPS & HSTS enforced in production
+Fork the repository & create a branch
 
-    OWASP Top 10 secure coding guidelines followed
+Make changes & test
 
-🤝 Development and Contribution
-Contributing Workflow
+Submit a Pull Request
 
-    Fork the repo & create a new branch
+Code Standards:
 
-    Make changes & test thoroughly
+Follow C# 12 and .NET 8 standards
 
-    Submit a Pull Request
+Razor Pages architecture
 
-Code Standards
+Include inline comments & documentation
 
-    Follow C# 12 and .NET 8 standards
+## 🚀 Deployment
 
-    Razor Pages architecture
-
-    Add comments & inline documentation
-
-🚀 Deployment
-Build for Production
-
+Build for production:
+```bash
 dotnet publish -c Release
+```
+Deploy to IIS, Azure, or Linux server
 
-Deploy To
+Use environment variables for SMTP and database connections
 
-    IIS
+## 🛠 Troubleshooting
 
-    Azure
+Migration Errors → Check dependencies & connection string
 
-    Linux server
+SMTP Errors → Verify host, port, credentials
 
-Environment Variables
+Session Errors → Ensure app.UseSession() is configured
 
-    Manage SMTP & DB connections via environment variables
-
-🛠 Troubleshooting
-
-    Migration Errors → Check dependencies & connection string
-
-    SMTP Errors → Verify host, port, and credentials
-
-    Session Errors → Ensure app.UseSession() is configured
-
-    Static Files Issues → Add app.UseStaticFiles()
-
-📬 Contact & Support
-
-For questions, suggestions, or issues → please use GitHub Issues.
+Static Files Issues → Ensure app.UseStaticFiles() is added
